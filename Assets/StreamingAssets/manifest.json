@@ -1,0 +1,408 @@
+{
+    "version": "1.0.0",
+    "build_date": "2026-04-23",
+    "artifacts": [
+        {
+            "id": "INFO-TEST-001",
+            "name": "Test Image 1 - Info Only",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "test_image_1",
+            "gps_lat": 0.0,
+            "gps_lng": 0.0,
+            "gps_altitude": 0.0,
+            "gps_geofence_radius_meters": 0.0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "Test Image 1 - Info Only",
+                "category": "Image Tracking Test",
+                "description": "This is test image 1 for info-only image tracking. No 3D model appears - only this scroll. You can trigger this multiple times by pointing your camera at test image 1!",
+                "location": "Test Location 1",
+                "specs": {
+                    "Test Number": "1",
+                    "Artifact Type": "Info Only",
+                    "Anchor Mode": "Image Tracking"
+                }
+            }
+        },
+        {
+            "id": "INFO-TEST-002",
+            "name": "Test Image 2 - Info Only",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "test_image_2",
+            "gps_lat": 0.0,
+            "gps_lng": 0.0,
+            "gps_altitude": 0.0,
+            "gps_geofence_radius_meters": 0.0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "Test Image 2 - Info Only",
+                "category": "Image Tracking Test",
+                "description": "This is test image 2 for info-only image tracking. Point your camera at different test images to see different scrolls appear in AR!",
+                "location": "Test Location 2",
+                "specs": {
+                    "Test Number": "2",
+                    "Artifact Type": "Info Only",
+                    "Anchor Mode": "Image Tracking"
+                }
+            }
+        },
+        {
+            "id": "INFO-TEST-003",
+            "name": "Test Image 3 - Info Only",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "test_image_3",
+            "gps_lat": 0.0,
+            "gps_lng": 0.0,
+            "gps_altitude": 0.0,
+            "gps_geofence_radius_meters": 0.0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "Test Image 3 - Info Only",
+                "category": "Image Tracking Test",
+                "description": "This is test image 3 for info-only image tracking. Each test image shows a different scroll to verify image tracking is working correctly!",
+                "location": "Test Location 3",
+                "specs": {
+                    "Test Number": "3",
+                    "Artifact Type": "Info Only",
+                    "Anchor Mode": "Image Tracking"
+                }
+            }
+        },
+        {
+            "id": "INFO-TEST-004",
+            "name": "Test Image 4 - Info Only",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "test_image_4",
+            "gps_lat": 0.0,
+            "gps_lng": 0.0,
+            "gps_altitude": 0.0,
+            "gps_geofence_radius_meters": 0.0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "Test Image 4 - Info Only",
+                "category": "Image Tracking Test",
+                "description": "This is test image 4 for info-only image tracking. Testing that ScrollUIManager correctly displays different content for different images!",
+                "location": "Test Location 4",
+                "specs": {
+                    "Test Number": "4",
+                    "Artifact Type": "Info Only",
+                    "Anchor Mode": "Image Tracking"
+                }
+            }
+        },
+        {
+            "id": "INFO-TEST-005",
+            "name": "Test Image 5 - Info Only",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "test_image_5",
+            "gps_lat": 0.0,
+            "gps_lng": 0.0,
+            "gps_altitude": 0.0,
+            "gps_geofence_radius_meters": 0.0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "Test Image 5 - Info Only",
+                "category": "Image Tracking Test",
+                "description": "This is test image 5 for info-only image tracking. Final test image to verify all 5 image anchors work independently in AR!",
+                "location": "Test Location 5",
+                "specs": {
+                    "Test Number": "5",
+                    "Artifact Type": "Info Only",
+                    "Anchor Mode": "Image Tracking"
+                }
+            }
+        },
+        {
+            "id": "GPS-TEST-001",
+            "name": "Bolo Knife",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "gps_progression_mode": "distance_chain",
+            "sequence_index": 1,
+            "distance_from_previous_meters": 1.0,
+            "spawn_distance_from_player_meters": 1.0,
+            "spawn_presentation": "camera_forward",
+            "marker_name": "",
+            "gps_lat": 14.598660,
+            "gps_lng": 121.011841,
+            "gps_altitude": 0.0,
+            "gps_geofence_radius_meters": 25.0,
+            "soldier_id": "S-001",
+            "division_id": "D-21",
+            "bundle_key": "artifacts/bolo_knife",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "Bolo Knife",
+                "category": "Filipino Infantry Weapon",
+                "description": "Standard-issue weapon of Filipino guerrilla fighters during the Battle of Bataan, 1942. Used by soldiers of the USAFFE Philippine Army in close-combat situations across the jungle terrain of Bataan.",
+                "location": "GPS Test Location 1",
+                "specs": {
+                    "Blade Length": "45 cm",
+                    "Origin": "Philippines",
+                    "Year Used": "1941-1942",
+                    "Test Mode": "GPS Collectible"
+                }
+            }
+        },
+        {
+            "id": "GPS-TEST-002",
+            "name": "M2 60mm Mortar",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "gps_progression_mode": "distance_chain",
+            "sequence_index": 2,
+            "distance_from_previous_meters": 5.0,
+            "spawn_distance_from_player_meters": 1.0,
+            "spawn_presentation": "camera_forward",
+            "marker_name": "",
+            "gps_lat": 14.598518,
+            "gps_lng": 121.011664,
+            "gps_altitude": 0.0,
+            "gps_geofence_radius_meters": 15.0,
+            "soldier_id": "S-001",
+            "division_id": "D-21",
+            "bundle_key": "artifacts/mortar",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "M2 60mm Mortar",
+                "category": "Artillery Weapon",
+                "description": "The M2 60mm Mortar was a light infantry mortar used by American and Filipino forces during the Battle of Bataan. It provided crucial fire support for defensive positions across the peninsula.",
+                "location": "GPS Test Location 2",
+                "specs": {
+                    "Caliber": "60mm",
+                    "Range": "1,815 meters",
+                    "Weight": "19.1 kg",
+                    "Origin": "United States",
+                    "Test Mode": "GPS Collectible"
+                }
+            }
+        },
+        {
+            "id": "GPS-TEST-003",
+            "name": "Thompson Submachine Gun",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "gps_progression_mode": "distance_chain",
+            "sequence_index": 3,
+            "distance_from_previous_meters": 10.0,
+            "spawn_distance_from_player_meters": 1.0,
+            "spawn_presentation": "camera_forward",
+            "marker_name": "",
+            "gps_lat": 14.598205,
+            "gps_lng": 121.011665,
+            "gps_altitude": 0.0,
+            "gps_geofence_radius_meters": 15.0,
+            "soldier_id": "S-003",
+            "division_id": "D-21",
+            "bundle_key": "artifacts/thompson",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "Thompson Submachine Gun",
+                "category": "American Infantry Weapon",
+                "description": "The Thompson Submachine Gun, known as the Tommy Gun, was widely used by American forces during World War II. USAFFE soldiers carried this weapon during the defense of Bataan in 1942.",
+                "location": "GPS Test Location 3",
+                "specs": {
+                    "Caliber": ".45 ACP",
+                    "Rate of Fire": "700 rpm",
+                    "Weight": "4.8 kg",
+                    "Origin": "United States",
+                    "Test Mode": "GPS Collectible"
+                }
+            }
+        },
+        {
+            "id": "A-001",
+            "name": "Bolo Knife",
+            "type": "collectible",
+            "anchor_mode": "image",
+            "marker_name": "bolo_knife_display_case",
+            "gps_lat": 0.0,
+            "gps_lng": 0.0,
+            "gps_altitude": 0.0,
+            "gps_geofence_radius_meters": 15.0,
+            "soldier_id": "S-001",
+            "division_id": "D-21",
+            "bundle_key": "artifacts/bolo_knife",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "Bolo Knife",
+                "category": "Filipino Infantry Weapon",
+                "description": "Standard-issue weapon of Filipino guerrilla fighters during the Battle of Bataan, 1942. Used by soldiers of the USAFFE Philippine Army in close-combat situations across the jungle terrain of Bataan.",
+                "location": "Weapons Display, West Wing — Mt. Samat Shrine",
+                "specs": {
+                    "Blade Length": "45 cm",
+                    "Origin": "Philippines",
+                    "Year Used": "1941-1942"
+                }
+            }
+        },
+        {
+            "id": "A-002",
+            "name": "Type 38 Arisaka Rifle",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "marker_name": "",
+            "gps_lat": 14.554712,
+            "gps_lng": 120.424683,
+            "gps_altitude": 12.5,
+            "gps_geofence_radius_meters": 15.0,
+            "soldier_id": "S-002",
+            "division_id": "D-31",
+            "bundle_key": "artifacts/arisaka_rifle",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "Type 38 Arisaka Rifle",
+                "category": "Imperial Infantry Weapon",
+                "description": "Primary bolt-action rifle of the Imperial Japanese Army during the Battle of Bataan, 1942. Known for its remarkable length and accuracy, designed by Colonel Arisaka Nariakira.",
+                "location": "North Entrance — Memorial Grounds",
+                "specs": {
+                    "Cartridge": "6.5x50mmSR",
+                    "Action": "Bolt-action",
+                    "Weight": "3.95 kg",
+                    "Origin": "Empire of Japan"
+                }
+            }
+        },
+        {
+            "id": "A-003",
+            "name": "21st Division Emblem",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "21st_division_emblem_wall",
+            "gps_lat": 0.0,
+            "gps_lng": 0.0,
+            "gps_altitude": 0.0,
+            "gps_geofence_radius_meters": 0.0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "21st Division - Mountain Watchers",
+                "category": "Philippine Army Division",
+                "description": "The 21st Division was one of the ten reserve divisions of the Philippine Army mobilized in 1941. They defended the northern sector of the Bataan Peninsula during the fierce winter offensive.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": {
+                    "Activated": "September 1, 1941",
+                    "Area Defended": "North Bataan",
+                    "Commander": "Brig. Gen. Mateo Capinpin"
+                }
+            }
+        },
+        {
+            "id": "A-004",
+            "name": "Dambana ng Kagitingan Cross",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "dambana_cross_photo",
+            "gps_lat": 0.0,
+            "gps_lng": 0.0,
+            "gps_altitude": 0.0,
+            "gps_geofence_radius_meters": 0.0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "Dambana ng Kagitingan",
+                "category": "National Shrine",
+                "description": "The Shrine of Valor stands atop Mt. Samat in Bataan, Philippines. Built to commemorate the gallantry and heroism of Filipino and American soldiers during the Battle of Bataan in World War II.",
+                "location": "Summit — Mt. Samat National Shrine",
+                "specs": {
+                    "Height": "92 meters",
+                    "Constructed": "1966",
+                    "Dedicated": "April 9, 1966"
+                }
+            }
+        }
+    ],
+    "soldiers": [
+        {
+            "id": "S-001",
+            "name": "Filipino Soldier",
+            "nationality": "Filipino",
+            "bundle_key": "soldiers/filipino_soldier",
+            "required_artifacts": [ "A-001", "A-005", "A-009", "A-013", "A-017" ],
+            "token_badge": {
+                "badge_id": "BADGE-S-001",
+                "badge_name": "Guardian of Bataan",
+                "badge_description": "Awarded for collecting all artifacts of the Filipino Soldier.",
+                "badge_bundle_key": "ui/badges/filipino_soldier_badge"
+            }
+        },
+        {
+            "id": "S-002",
+            "name": "Japanese Soldier",
+            "nationality": "Japanese",
+            "bundle_key": "soldiers/japanese_soldier",
+            "required_artifacts": [ "A-002", "A-006", "A-010", "A-014", "A-018" ],
+            "token_badge": {
+                "badge_id": "BADGE-S-002",
+                "badge_name": "Imperial Witness",
+                "badge_description": "Awarded for collecting all artifacts of the Japanese Soldier.",
+                "badge_bundle_key": "ui/badges/japanese_soldier_badge"
+            }
+        },
+        {
+            "id": "S-003",
+            "name": "American Soldier",
+            "nationality": "American",
+            "bundle_key": "soldiers/american_soldier",
+            "required_artifacts": [ "A-003", "A-007", "A-011", "A-015", "A-019" ],
+            "token_badge": {
+                "badge_id": "BADGE-S-003",
+                "badge_name": "USAFFE Ally",
+                "badge_description": "Awarded for collecting all artifacts of the American Soldier.",
+                "badge_bundle_key": "ui/badges/american_soldier_badge"
+            }
+        }
+    ],
+    "divisions": [
+        {
+            "id": "D-21",
+            "name": "21st Division",
+            "motto": "Mountain Watchers",
+            "emblem_key": "ui/emblems/21st_division",
+            "required_artifacts": [ "A-001", "A-020", "A-021", "A-022", "A-023", "A-024" ],
+            "token_badge": {
+                "badge_id": "BADGE-D-21",
+                "badge_name": "21st Division - Mountain Watchers",
+                "badge_description": "Awarded for uncovering all artifacts belonging to the 21st Division.",
+                "badge_bundle_key": "ui/badges/21st_division_badge"
+            }
+        },
+        {
+            "id": "D-31",
+            "name": "31st Division",
+            "motto": "Victory through Valor",
+            "emblem_key": "ui/emblems/31st_division",
+            "required_artifacts": [ "A-002", "A-025", "A-026", "A-027", "A-028", "A-029" ],
+            "token_badge": {
+                "badge_id": "BADGE-D-31",
+                "badge_name": "31st Division - Victory through Valor",
+                "badge_description": "Awarded for uncovering all artifacts belonging to the 31st Division.",
+                "badge_bundle_key": "ui/badges/31st_division_badge"
+            }
+        }
+    ]
+}
