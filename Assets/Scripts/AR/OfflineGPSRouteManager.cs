@@ -16,6 +16,7 @@ public class OfflineGPSRouteManager : MonoBehaviour
     [Header("Route Progression")]
     public float routeCheckInterval = 0.15f;
     public float defaultSpawnDistanceFromPlayer = 1f;
+    // Note: ArtifactSpawner.SPAWN_OFFSET adds +0.05m on top of this. Net GPS spawn = camera Y + 0.05m.
     public float spawnHeightOffset = 0f;
 
     private readonly Dictionary<string, GameObject> _presentationAnchors = new Dictionary<string, GameObject>();
