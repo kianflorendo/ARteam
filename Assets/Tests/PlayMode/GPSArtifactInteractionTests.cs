@@ -1,8 +1,13 @@
+#if UNITY_INCLUDE_TESTS
 // ============================================================
 // GPSArtifactInteractionTests.cs
 // Location: Assets/Tests/PlayMode/GPSArtifactInteractionTests.cs
 // Play Mode tests for GPSArtifactInteraction.
 // Run via: Window → General → Test Runner → PlayMode → Run All
+// Wrapped in #if UNITY_INCLUDE_TESTS — Unity defines this symbol
+// automatically when the Test Runner is active, making NUnit and
+// UnityEngine.TestTools available. Outside test context the file
+// is empty and causes no compilation errors.
 // ============================================================
 
 using System.Collections;
@@ -68,13 +73,10 @@ public class GPSArtifactInteractionTests
     public IEnumerator Start_PreservesIdentityRotation_WhenSpawnedWithNoRotation()
     {
         var go = new GameObject("TestArtifact_ZeroRotation");
-        // Spawn with identity rotation — same as ArtifactSpawner does
         go.transform.localRotation = Quaternion.identity;
         go.AddComponent<GPSArtifactInteraction>();
         yield return null; // one frame — Start() runs
 
-        // Start() reads localEulerAngles but does NOT write localRotation —
-        // rotation only changes when the user drags. Identity must be preserved.
         Assert.AreEqual(
             Quaternion.identity,
             go.transform.localRotation,
@@ -87,7 +89,7 @@ public class GPSArtifactInteractionTests
     public IEnumerator Start_PreservesNonZeroRotation_WhenSpawnedWithExistingRotation()
     {
         var go = new GameObject("TestArtifact_NonZeroRotation");
-        var spawnRotation = Quaternion.Euler(0f, 180f, 0f); // ArtifactSpawner sets 180° Y
+        var spawnRotation = Quaternion.Euler(0f, 180f, 0f);
         go.transform.localRotation = spawnRotation;
         go.AddComponent<GPSArtifactInteraction>();
         yield return null; // one frame — Start() runs
@@ -100,3 +102,4 @@ public class GPSArtifactInteractionTests
         Object.Destroy(go);
     }
 }
+#endif
