@@ -35,9 +35,8 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
 
     private void Start()
     {
-        // Bootstrap: only apply if already tracking. Toggling ARCameraBackground
-        // before tracking is confirmed can interrupt ARCore camera pipeline setup.
-        if (ARSession.state >= ARSessionState.SessionTracking)
+        // Bootstrap: session may already be past initialization when we first enable.
+        if (ARSession.state >= ARSessionState.SessionInitializing)
             ScheduleApply();
     }
 
@@ -50,11 +49,7 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
 
     private void OnARSessionStateChanged(ARSessionStateChangedEventArgs args)
     {
-        // Wait for full tracking before toggling ARCameraBackground.
-        // Applying during SessionInitializing can interrupt ARCore camera
-        // pipeline initialization on some Android devices, causing the session
-        // to stay stuck at Initializing indefinitely.
-        if (args.state >= ARSessionState.SessionTracking)
+        if (args.state >= ARSessionState.SessionInitializing)
             ScheduleApply();
     }
 
