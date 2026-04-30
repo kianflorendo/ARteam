@@ -120,6 +120,23 @@ public class InventoryManager : MonoBehaviour
         return _inventory.collected_artifact_ids?.Contains(artifactId) ?? false;
     }
 
+    /// Removes artifact IDs from collected list and auto-saves.
+    /// Used by the debug reset button to un-collect GPS test artifacts.
+    public void RemoveCollectedArtifacts(System.Collections.Generic.List<string> artifactIds)
+    {
+        if (_inventory.collected_artifact_ids == null || artifactIds == null) return;
+        bool changed = false;
+        foreach (var id in artifactIds)
+        {
+            if (_inventory.collected_artifact_ids.Remove(id))
+            {
+                changed = true;
+                Debug.Log($"[InventoryManager] Reset collected: {id}");
+            }
+        }
+        if (changed) Save();
+    }
+
     /// Records artifact as collected and auto-saves.
     /// Does nothing if already collected (prevents duplicates).
     public void CollectArtifact(string artifactId)

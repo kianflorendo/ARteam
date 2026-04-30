@@ -397,6 +397,38 @@ public class OfflineGPSRouteManager : MonoBehaviour
         return new Vector3(position.x, 0f, position.z);
     }
 
+    /// Resets GPS route state and in-memory tracking for testing.
+    /// Call after clearing inventory GPS artifacts via InventoryManager.
+    public void ResetForTesting()
+    {
+        if (GPSRouteStateStore.Instance != null)
+        {
+            var state = GPSRouteStateStore.Instance.State;
+            state.has_origin = false;
+            state.next_sequence_index = 1;
+            state.active_artifact_id = "";
+            state.origin_lat = 0;
+            state.origin_lng = 0;
+            state.origin_accuracy_m = 0;
+            state.initialized_at = "";
+            GPSRouteStateStore.Instance.Save();
+        }
+
+        // Despawn any active GPS artifact from the current session
+        if (!string.IsNullOrEmpty(ActiveArtifactId))
+            ArtifactSpawner.Instance?.Despawn(ActiveArtifactId);
+
+        foreach (var anchor in _presentationAnchors.Values)
+            if (anchor != null) Destroy(anchor);
+        _presentationAnchors.Clear();
+
+        _hasSegmentStart = false;
+        _currentSegmentDistance = 0f;
+        _routeLoaded = false;
+
+        Debug.Log("[OfflineGPSRouteManager] Reset for testing — route starts from seq=1.");
+    }
+
     private void OnDestroy()
     {
         foreach (var anchor in _presentationAnchors.Values)

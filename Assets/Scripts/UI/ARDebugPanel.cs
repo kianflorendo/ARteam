@@ -123,4 +123,43 @@ public class ARDebugPanel : MonoBehaviour
 
         debugText.text = sb.ToString();
     }
+
+    // ── Debug reset button ────────────────────────────────────
+    // Renders a one-tap button that resets GPS route state and
+    // un-collects GPS test artifacts so the sequence starts from
+    // Bolo Knife again. Useful when old save data persists after
+    // a reinstall over an existing build.
+    private void OnGUI()
+    {
+        float btnW = 220f;
+        float btnH = 70f;
+        float x = Screen.width - btnW - 10f;
+        float y = Screen.height - btnH - 10f;
+
+        GUI.color = new Color(1f, 0.3f, 0.3f, 0.9f);
+        if (GUI.Button(new Rect(x, y, btnW, btnH), "RESET GPS\nTEST DATA"))
+        {
+            ResetGPSTestData();
+        }
+        GUI.color = Color.white;
+    }
+
+    private void ResetGPSTestData()
+    {
+        Debug.Log("[ARDebugPanel] RESETTING GPS TEST DATA — route will restart from Bolo Knife.");
+
+        // Remove GPS test artifact collected status from inventory
+        InventoryManager.Instance?.RemoveCollectedArtifacts(
+            new System.Collections.Generic.List<string>
+            {
+                "GPS-TEST-001",
+                "GPS-TEST-002",
+                "GPS-TEST-003"
+            });
+
+        // Reset route state and in-memory tracking
+        OfflineGPSRouteManager.Instance?.ResetForTesting();
+
+        Debug.Log("[ARDebugPanel] Reset complete. Next: walk 1m to see Bolo Knife.");
+    }
 }
