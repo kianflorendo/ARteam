@@ -126,6 +126,9 @@ public class ArtifactSpawner : MonoBehaviour
                                    ?? spawnedObject.AddComponent<ArtifactInstance>();
                     instance.Initialise(artifact, artifact.anchor_mode);
 
+                    if (artifact.anchor_mode == AnchorMode.GPS)
+                        spawnedObject.AddComponent<GPSArtifactInteraction>();
+
                     _spawnedArtifacts[artifact.id] = spawnedObject;
                     OnArtifactSpawned?.Invoke(instance);
                     Debug.Log($"[ArtifactSpawner] Spawned 3D artifact: {artifact.name}");
