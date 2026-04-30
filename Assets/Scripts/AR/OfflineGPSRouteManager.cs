@@ -276,6 +276,18 @@ public class OfflineGPSRouteManager : MonoBehaviour
         if (Camera.main == null)
             return;
 
+        // Wait until the AR session has moved the camera away from world origin.
+        // On app launch, Camera.main exists but sits at (0,0,0) for the first
+        // few frames before ARFoundation places it at the real device position.
+        // Spawning here would place the artifact at the scene origin, which the
+        // player can never reach. We retry every routeCheckInterval until the
+        // camera is at a real position.
+        if (Camera.main.transform.position.sqrMagnitude < 0.01f)
+        {
+            Debug.Log($"[OfflineGPSRouteManager] Camera still at world origin — deferring spawn of {artifact.id}.");
+            return;
+        }
+
         if (_presentationAnchors.TryGetValue(artifact.id, out var existingAnchor)
             && existingAnchor != null)
         {

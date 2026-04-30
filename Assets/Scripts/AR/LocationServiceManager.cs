@@ -68,6 +68,17 @@ public class LocationServiceManager : MonoBehaviour
         if (!_serviceRequested)
         {
             TryStartService();
+            return;
+        }
+
+        // Recovery: if the startup coroutine timed out but the device GPS later
+        // became Running on its own, start consuming samples. Without this the
+        // status stays "Initializing" forever even after GPS locks.
+        if (!_serviceRunning && Input.location.status == LocationServiceStatus.Running)
+        {
+            _serviceRunning = true;
+            Debug.Log("[LocationServiceManager] GPS running (post-timeout recovery).");
+            ConsumeLatestSample();
         }
 
         if (!_serviceRunning || Input.location.status != LocationServiceStatus.Running)
