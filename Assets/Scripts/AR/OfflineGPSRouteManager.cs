@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
 
 /// <summary>
 /// Offline route controller for GPS artifacts.
@@ -276,15 +277,14 @@ public class OfflineGPSRouteManager : MonoBehaviour
         if (Camera.main == null)
             return;
 
-        // Wait until the AR session has moved the camera away from world origin.
-        // On app launch, Camera.main exists but sits at (0,0,0) for the first
-        // few frames before ARFoundation places it at the real device position.
-        // Spawning here would place the artifact at the scene origin, which the
-        // player can never reach. We retry every routeCheckInterval until the
-        // camera is at a real position.
-        if (Camera.main.transform.position.sqrMagnitude < 0.01f)
+        // Wait until ARCore is actively tracking before spawning.
+        // During SessionInitializing the camera sits at world origin (0,0,0) and
+        // the camera feed is not yet live. Spawning here places the artifact at
+        // the scene origin rather than in front of the player, making it impossible
+        // to find. We retry every routeCheckInterval until tracking is confirmed.
+        if (ARSession.state < ARSessionState.SessionTracking)
         {
-            Debug.Log($"[OfflineGPSRouteManager] Camera still at world origin — deferring spawn of {artifact.id}.");
+            Debug.Log($"[OfflineGPSRouteManager] AR not tracking yet (state={ARSession.state}) — deferring spawn of {artifact.id}.");
             return;
         }
 
