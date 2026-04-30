@@ -16,7 +16,7 @@ public class OfflineGPSRouteManager : MonoBehaviour
     [Header("Route Progression")]
     public float routeCheckInterval = 0.15f;
     public float defaultSpawnDistanceFromPlayer = 1f;
-    public float spawnHeightOffset = -0.3f;
+    public float spawnHeightOffset = 0f;
 
     private readonly Dictionary<string, GameObject> _presentationAnchors = new Dictionary<string, GameObject>();
 
