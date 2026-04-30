@@ -42,7 +42,7 @@ public class GPSArtifactInteraction : MonoBehaviour
     {
         if (Camera.main == null || Input.touchCount == 0)
         {
-            ResetDrag();
+            if (_isDragging) ResetDrag();
             return;
         }
 
