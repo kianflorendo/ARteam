@@ -3,100 +3,117 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
 /// <summary>
-/// Ensures the AR camera renders the device camera feed.
+/// Continuously ensures the AR camera renders the device camera feed.
 ///
 /// Root causes addressed:
-/// 1. transparent backgroundColor (alpha=0) composited over Android's white window = white screen.
-///    Fix: always use opaque black as the camera clear color.
-/// 2. ARCameraBackground set up BEFORE ARSession is re-enabled by ARPermissionRequester.
-///    The component loses its frame subscription during the disable/re-enable cycle.
-///    Fix: force a disable→enable cycle on ARCameraBackground once the session is tracking.
+/// 1. transparent backgroundColor (alpha=0) on Android composites as white against the
+///    system window background. Fix: always use opaque black as the camera clear color.
+/// 2. ARCameraBackground loses its ARCameraManager.frameReceived subscription whenever
+///    ARSession is disabled/re-enabled (e.g. by ARPermissionRequester, or app resume).
+///    Fix: force a disable→enable cycle on ARCameraBackground on every session init/resume.
+/// 3. Single-shot fixes break when the app backgrounds and foregrounds.
+///    Fix: re-apply on every state transition to SessionInitializing or above, and add a
+///    keep-alive check in Update to revive a silently-disabled ARCameraBackground.
 /// </summary>
 [DefaultExecutionOrder(-120)]
 public class ARCameraBackgroundEnforcer : MonoBehaviour
 {
-    private bool _applied = false;
+    private Camera _camera;
+    private ARCameraBackground _background;
+    private bool _applyPending;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void EnsureExists()
     {
-        if (FindAnyObjectByType<ARCameraBackgroundEnforcer>() != null)
-            return;
-
-        var go = new GameObject("[AUTO] ARCameraBackgroundEnforcer");
-        go.AddComponent<ARCameraBackgroundEnforcer>();
-        DontDestroyOnLoad(go);
+        if (FindAnyObjectByType<ARCameraBackgroundEnforcer>() != null) return;
+        DontDestroyOnLoad(new GameObject("[AUTO] ARCameraBackgroundEnforcer",
+            typeof(ARCameraBackgroundEnforcer)));
     }
 
-    private void OnEnable()
+    private void OnEnable()  => ARSession.stateChanged += OnARSessionStateChanged;
+    private void OnDisable() => ARSession.stateChanged -= OnARSessionStateChanged;
+
+    private void Start()
     {
-        ARSession.stateChanged += OnARSessionStateChanged;
+        // Bootstrap: only apply if already tracking. Toggling ARCameraBackground
+        // before tracking is confirmed can interrupt ARCore camera pipeline setup.
+        if (ARSession.state >= ARSessionState.SessionTracking)
+            ScheduleApply();
     }
 
-    private void OnDisable()
+    private void OnApplicationPause(bool paused)
     {
-        ARSession.stateChanged -= OnARSessionStateChanged;
+        // On Android, coming back from background resets the camera pipeline.
+        if (!paused)
+            ScheduleApply();
     }
 
     private void OnARSessionStateChanged(ARSessionStateChangedEventArgs args)
     {
-        if (args.state >= ARSessionState.SessionInitializing && !_applied)
-            StartCoroutine(ApplyAfterDelay());
+        // Wait for full tracking before toggling ARCameraBackground.
+        // Applying during SessionInitializing can interrupt ARCore camera
+        // pipeline initialization on some Android devices, causing the session
+        // to stay stuck at Initializing indefinitely.
+        if (args.state >= ARSessionState.SessionTracking)
+            ScheduleApply();
     }
 
     private void Update()
     {
-        // Fallback: catch the case where stateChanged fired before we subscribed.
-        if (!_applied && ARSession.state >= ARSessionState.SessionInitializing)
-            StartCoroutine(ApplyAfterDelay());
+        // Keep-alive: if ARCameraBackground gets silently disabled while the session
+        // is running (can happen after certain OS interruptions), immediately revive it.
+        if (_background != null &&
+            !_background.enabled &&
+            ARSession.state >= ARSessionState.SessionTracking)
+        {
+            _background.enabled = true;
+            Debug.Log("[ARCameraBackgroundEnforcer] Keep-alive: re-enabled ARCameraBackground.");
+        }
+    }
+
+    private void ScheduleApply()
+    {
+        if (_applyPending) return;
+        _applyPending = true;
+        StartCoroutine(ApplyAfterDelay());
     }
 
     private IEnumerator ApplyAfterDelay()
     {
-        // Wait two frames for AR subsystems to fully start after the session enables.
+        // Wait two frames for AR subsystems to fully initialise after the session enables.
         yield return null;
         yield return null;
-        ApplyFix();
+        _applyPending = false;
+        Apply();
     }
 
-    private void ApplyFix()
+    private void Apply()
     {
-        if (_applied) return;
+        var manager = FindAnyObjectByType<ARCameraManager>(FindObjectsInactive.Include);
+        _camera = manager != null ? manager.GetComponent<Camera>() : Camera.main;
 
-        var cameraManager = FindAnyObjectByType<ARCameraManager>(FindObjectsInactive.Include);
-        Camera targetCamera = cameraManager != null
-            ? cameraManager.GetComponent<Camera>()
-            : Camera.main;
-
-        if (targetCamera == null)
+        if (_camera == null)
         {
-            Debug.LogWarning("[ARCameraBackgroundEnforcer] Camera not found — will retry.");
+            Debug.LogWarning("[ARCameraBackgroundEnforcer] Camera not found — will retry on next state change.");
             return;
         }
 
         // Ensure ARCameraBackground is present.
-        var background = targetCamera.GetComponent<ARCameraBackground>();
-        if (background == null)
-            background = targetCamera.gameObject.AddComponent<ARCameraBackground>();
+        _background = _camera.GetComponent<ARCameraBackground>();
+        if (_background == null)
+            _background = _camera.gameObject.AddComponent<ARCameraBackground>();
 
         // Force a disable→enable cycle so ARCameraBackground re-subscribes to
-        // ARCameraManager.frameReceived after the ARSession was enabled.
-        background.enabled = false;
-        background.enabled = true;
+        // ARCameraManager.frameReceived after any ARSession disable/enable cycle.
+        _background.enabled = false;
+        _background.enabled = true;
 
-        // CRITICAL: use opaque black (alpha=1), NOT transparent (alpha=0).
-        // Transparent pixels on Android composite against the white system window,
-        // producing a white background whenever ARCameraBackground isn't rendering.
-        targetCamera.clearFlags = CameraClearFlags.SolidColor;
-        targetCamera.backgroundColor = Color.black;
+        // CRITICAL: use opaque black (alpha=1).
+        // Transparent pixels (alpha=0) on Android composite against the white system
+        // window, producing a white background whenever ARCameraBackground isn't rendering.
+        _camera.clearFlags = CameraClearFlags.SolidColor;
+        _camera.backgroundColor = Color.black;
 
-        _applied = true;
-
-        if (cameraManager != null)
-            Debug.Log($"[ARCameraBackgroundEnforcer] Applied on '{targetCamera.name}'. " +
-                      $"Session: {ARSession.state}");
-        else
-            Debug.LogWarning("[ARCameraBackgroundEnforcer] ARCameraManager not found — " +
-                             "background may not render.");
+        Debug.Log($"[ARCameraBackgroundEnforcer] Applied on '{_camera.name}'. Session={ARSession.state}");
     }
 }
