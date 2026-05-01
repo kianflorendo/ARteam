@@ -414,7 +414,13 @@ public class OfflineGPSRouteManager : MonoBehaviour
             GPSRouteStateStore.Instance.Save();
         }
 
-        // Despawn any active GPS artifact from the current session
+        // Despawn ALL tracked GPS artifacts so ArtifactSpawner._spawnedArtifacts is
+        // fully cleared. Without this, stale dictionary entries from a previous session
+        // cause IsSpawned() to return true for artifacts that should spawn fresh,
+        // silently preventing GPS-TEST-002 / 003 from ever appearing.
+        foreach (var id in new System.Collections.Generic.List<string>(_presentationAnchors.Keys))
+            ArtifactSpawner.Instance?.Despawn(id);
+
         if (!string.IsNullOrEmpty(ActiveArtifactId))
             ArtifactSpawner.Instance?.Despawn(ActiveArtifactId);
 
