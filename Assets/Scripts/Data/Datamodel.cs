@@ -35,6 +35,7 @@ public class ArtifactData
     public int sequence_index;                 // ordered route step for GPS artifacts
     public float distance_from_previous_meters;// how far player must walk after previous GPS artifact
     public float spawn_distance_from_player_meters; // local AR presentation distance from player
+    public float spawn_height_offset_meters;   // per-artifact Y offset from camera level (0 = eye level; negative = lower)
     public string spawn_presentation;          // "camera_forward" or future "detected_plane"
     public string marker_name;                 // XRReferenceImageLibrary image name
     public double gps_lat;

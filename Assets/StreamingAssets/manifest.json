@@ -141,6 +141,7 @@
             "sequence_index": 1,
             "distance_from_previous_meters": 1.0,
             "spawn_distance_from_player_meters": 1.0,
+            "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
             "gps_lat": 14.598660,

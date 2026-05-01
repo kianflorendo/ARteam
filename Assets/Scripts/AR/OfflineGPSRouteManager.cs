@@ -341,10 +341,15 @@ public class OfflineGPSRouteManager : MonoBehaviour
         else
             flatForward.Normalize();
 
+        // Per-artifact height override: spawn_height_offset_meters in manifest lets
+        // individual artifacts sit lower or higher relative to camera eye level.
+        // Negative = below camera (more natural for ground-level objects like a bolo knife).
+        float heightOffset = spawnHeightOffset + artifact.spawn_height_offset_meters;
+
         anchorObject.transform.position =
             new Vector3(
                 Camera.main.transform.position.x,
-                Camera.main.transform.position.y + spawnHeightOffset,
+                Camera.main.transform.position.y + heightOffset,
                 Camera.main.transform.position.z)
             + flatForward * spawnDistance;
 
