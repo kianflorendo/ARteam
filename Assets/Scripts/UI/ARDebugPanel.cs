@@ -70,6 +70,10 @@ public class ARDebugPanel : MonoBehaviour
         sb.AppendLine($"GpsPerm: {(gpsPerm ? "GRANTED" : "DENIED")}");
 #endif
 
+        // Show AR guidance when session is stuck initializing
+        if (ARSession.state == ARSessionState.SessionInitializing)
+            sb.AppendLine(">> Point camera at ground + move slowly <<");
+
         if (LocationServiceManager.Instance != null)
         {
             sb.AppendLine($"GPS: {LocationServiceManager.Instance.GetStatusString()}");
