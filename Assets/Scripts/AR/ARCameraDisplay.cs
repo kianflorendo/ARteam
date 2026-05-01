@@ -4,14 +4,19 @@
 // Mt. Samat AR Scavenger Hunt — Terra App
 //
 // Shows the AR camera feed using CPU image conversion while
-// ARSession.state < SessionTracking. ARCameraBackground cannot
-// receive GPU frames on some Android devices during initialization,
-// so this bypasses the URP rendering pipeline entirely by reading
-// CPU-side camera images from ARCameraManager and uploading them
-// to a RawImage in a ScreenSpaceOverlay canvas behind the main UI.
+// ARSession.state < SessionTracking. ARCameraBackground relies on
+// URP's ARBackgroundRendererFeature (GPU path) which can silently
+// fail on some Android device/driver combinations. This bypasses
+// that pipeline entirely: it reads CPU-side camera images from
+// ARCameraManager and uploads them to a RawImage in a
+// ScreenSpaceOverlay canvas behind the main UI canvas.
+//
+// The RawImage starts fully transparent (Color.clear) and only
+// becomes opaque once the first real camera frame is decoded, so
+// the user never sees a solid white or black flash.
 //
 // Once SessionTracking is established, this hides itself and
-// ARCameraBackground takes over for proper AR compositing.
+// ARCameraBackground (GPU path) takes over for proper AR compositing.
 // ============================================================
 
 using System;
@@ -28,6 +33,7 @@ public class ARCameraDisplay : MonoBehaviour
     private RawImage _displayImage;
     private Texture2D _cameraTexture;
     private bool _isShowing;
+    private bool _hasTexture;
     private int _frameSkip;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -39,9 +45,9 @@ public class ARCameraDisplay : MonoBehaviour
 
     private void Start()
     {
-        // Build a full-screen canvas at sortingOrder -100 so it sits behind
-        // the main UI canvas (sortingOrder 100). The transparent CameraScreen
-        // area in the main canvas lets this camera image show through.
+        // Full-screen canvas at sortingOrder -100 so it sits behind the main UI
+        // canvas (sortingOrder 100). The transparent CameraScreen area in the main
+        // canvas lets this camera image show through.
         var canvasGo = new GameObject("[AR Camera Fallback Canvas]");
         DontDestroyOnLoad(canvasGo);
 
@@ -53,7 +59,8 @@ public class ARCameraDisplay : MonoBehaviour
         rawGo.transform.SetParent(canvasGo.transform, false);
 
         _displayImage = rawGo.AddComponent<RawImage>();
-        _displayImage.color = Color.white;
+        // Start fully transparent — only opaque once a real frame is decoded.
+        _displayImage.color = Color.clear;
 
         var rect = rawGo.GetComponent<RectTransform>();
         rect.anchorMin = Vector2.zero;
@@ -61,16 +68,21 @@ public class ARCameraDisplay : MonoBehaviour
         rect.offsetMin = Vector2.zero;
         rect.offsetMax = Vector2.zero;
 
-        // Start hidden — Update() will show it once session begins initializing.
         _displayImage.gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        // Subscribe to ARCameraManager when it becomes available
-        if (_cameraManager == null)
+        // Subscribe / re-subscribe to ARCameraManager when it (re-)appears.
+        // ARSession restarts can swap out the component reference.
+        var mgr = FindAnyObjectByType<ARCameraManager>();
+        if (mgr != _cameraManager)
         {
-            _cameraManager = FindAnyObjectByType<ARCameraManager>();
+            if (_cameraManager != null)
+                _cameraManager.frameReceived -= OnCameraFrameReceived;
+
+            _cameraManager = mgr;
+
             if (_cameraManager != null)
             {
                 _cameraManager.frameReceived += OnCameraFrameReceived;
@@ -78,43 +90,52 @@ public class ARCameraDisplay : MonoBehaviour
             }
         }
 
-        // Show during initialization, hide once tracking is established
+        // Show during initialization, hide once tracking is established.
         bool needsShow = ARSession.state >= ARSessionState.SessionInitializing
                          && ARSession.state < ARSessionState.SessionTracking;
 
-        if (needsShow == _isShowing) return;
-
-        _isShowing = needsShow;
-
-        if (_displayImage != null)
+        if (_displayImage != null && needsShow != _isShowing)
+        {
+            _isShowing = needsShow;
             _displayImage.gameObject.SetActive(_isShowing);
 
-        Debug.Log(_isShowing
-            ? "[ARCameraDisplay] Showing CPU camera fallback."
-            : "[ARCameraDisplay] SessionTracking reached — hiding CPU fallback.");
+            if (!_isShowing)
+                _hasTexture = false; // reset so next init cycle starts fresh
+
+            Debug.Log(_isShowing
+                ? "[ARCameraDisplay] Showing CPU camera fallback."
+                : "[ARCameraDisplay] SessionTracking reached — hiding CPU fallback.");
+        }
+
+        // Polling fallback: attempt image capture every other Update() frame
+        // in case frameReceived never fires on this device/session.
+        if (_isShowing && _cameraManager != null)
+        {
+            _frameSkip++;
+            if (_frameSkip % 2 == 0)
+                TryDecodeCpuImage();
+        }
     }
 
     private void OnCameraFrameReceived(ARCameraFrameEventArgs args)
     {
         if (!_isShowing || _cameraManager == null) return;
+        TryDecodeCpuImage();
+    }
 
-        // Convert every 2nd frame to reduce CPU load
-        _frameSkip++;
-        if (_frameSkip % 2 != 0) return;
-
-        if (!_cameraManager.TryAcquireLatestCpuImage(out var image))
-            return;
+    private void TryDecodeCpuImage()
+    {
+        if (_cameraManager == null) return;
+        if (!_cameraManager.TryAcquireLatestCpuImage(out var image)) return;
 
         using (image)
         {
             try
             {
                 // Downsample to 1/4 resolution for performance.
-                // Camera is typically 1080×1920 → outputs at ~270×480.
                 int w = Mathf.Max(1, image.width / 4);
                 int h = Mathf.Max(1, image.height / 4);
 
-                // Re-create texture only when dimensions change.
                 if (_cameraTexture == null
                     || _cameraTexture.width != w
                     || _cameraTexture.height != h)
@@ -128,17 +149,23 @@ public class ARCameraDisplay : MonoBehaviour
 
                 var convParams = new XRCpuImage.ConversionParams
                 {
-                    inputRect = new RectInt(0, 0, image.width, image.height),
+                    inputRect        = new RectInt(0, 0, image.width, image.height),
                     outputDimensions = new Vector2Int(w, h),
-                    outputFormat = TextureFormat.RGBA32,
-                    // MirrorY is the standard transform for Android back cameras.
-                    transformation = XRCpuImage.Transformation.MirrorY,
+                    outputFormat     = TextureFormat.RGBA32,
+                    transformation   = XRCpuImage.Transformation.MirrorY,
                 };
 
-                // Write directly into the Texture2D's native memory — no extra allocation.
                 var rawData = _cameraTexture.GetRawTextureData<byte>();
                 image.Convert(convParams, rawData);
                 _cameraTexture.Apply();
+
+                // First successful decode: make the image visible.
+                if (!_hasTexture && _displayImage != null)
+                {
+                    _hasTexture = true;
+                    _displayImage.color = Color.white;
+                    Debug.Log("[ARCameraDisplay] First camera frame decoded — display is now visible.");
+                }
             }
             catch (Exception e)
             {
