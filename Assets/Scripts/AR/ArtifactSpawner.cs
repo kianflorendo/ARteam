@@ -83,44 +83,13 @@ public class ArtifactSpawner : MonoBehaviour
                         anchorTransform
                     );
 
-                    // Wait up to 5 frames for Renderer.bounds to be initialized.
-                    // Bounds are zero in the same frame as Instantiate() for complex
-                    // GLTFast-loaded meshes; reading them before they're ready causes
-                    // the fallback path (localScale = 0.5f) which still leaves large
-                    // models (e.g. mortar at 30 m) filling the screen.
-                    {
-                        float maxDim = 0f;
-                        for (int _attempt = 0; _attempt < 5; _attempt++)
-                        {
-                            yield return null;
-                            if (spawnedObject == null) break;
-                            var _renderers = spawnedObject.GetComponentsInChildren<Renderer>();
-                            if (_renderers.Length > 0)
-                            {
-                                Bounds _b = _renderers[0].bounds;
-                                for (int _i = 1; _i < _renderers.Length; _i++)
-                                    _b.Encapsulate(_renderers[_i].bounds);
-                                maxDim = Mathf.Max(_b.size.x, _b.size.y, _b.size.z);
-                                if (maxDim > 0.001f) break;
-                            }
-                        }
-                        if (spawnedObject != null)
-                        {
-                            if (maxDim > 0.001f)
-                            {
-                                float _s = spawnedObject.transform.localScale.x;
-                                spawnedObject.transform.localScale =
-                                    Vector3.one * _s * (targetModelSize / maxDim);
-                                Debug.Log($"[ArtifactSpawner] AutoScale {artifact.name}: " +
-                                          $"{maxDim:F2}m → {targetModelSize}m");
-                            }
-                            else
-                            {
-                                Debug.LogWarning($"[ArtifactSpawner] AutoScale {artifact.name}: " +
-                                                 $"bounds unavailable after 5 frames.");
-                            }
-                        }
-                    }
+                    // Hide all renderers immediately so the model is invisible while
+                    // we wait for GLTFast to upload mesh data to the GPU. Without this,
+                    // complex models (e.g. mortar exported at wrong units = 50+ Unity meters)
+                    // fill the entire screen for up to 3 seconds while auto-scale runs.
+                    // GetComponentsInChildren(true) includes disabled components.
+                    var _initialRenderers = spawnedObject.GetComponentsInChildren<Renderer>(true);
+                    foreach (var r in _initialRenderers) r.enabled = false;
 
                     var instance = spawnedObject.GetComponent<ArtifactInstance>()
                                    ?? spawnedObject.AddComponent<ArtifactInstance>();
@@ -131,33 +100,85 @@ public class ArtifactSpawner : MonoBehaviour
 
                     _spawnedArtifacts[artifact.id] = spawnedObject;
                     OnArtifactSpawned?.Invoke(instance);
+
+                    // Show scroll immediately — user can read artifact info while the
+                    // model finishes loading and scaling in the background.
+                    TryShowScroll(artifact, anchorTransform);
+
+                    // Auto-scale: wait up to 3 seconds for Renderer.bounds to initialize.
+                    // GLTFast uploads mesh data to the GPU asynchronously. Simple models
+                    // (e.g. Bolo Knife) are ready within 1-2 frames; complex models
+                    // (e.g. M2 Mortar) can take up to 90+ frames on low-end devices.
+                    // Using (true) in GetComponentsInChildren finds disabled renderers.
+                    {
+                        float maxDim = 0f;
+                        float _elapsed = 0f;
+                        const float _maxWait = 3f;
+
+                        while (_elapsed < _maxWait && spawnedObject != null)
+                        {
+                            yield return null;
+                            _elapsed += Time.deltaTime;
+
+                            var _renderers = spawnedObject.GetComponentsInChildren<Renderer>(true);
+                            if (_renderers.Length > 0)
+                            {
+                                Bounds _b = _renderers[0].bounds;
+                                for (int _i = 1; _i < _renderers.Length; _i++)
+                                    _b.Encapsulate(_renderers[_i].bounds);
+                                maxDim = Mathf.Max(_b.size.x, _b.size.y, _b.size.z);
+                                if (maxDim > 0.001f) break;
+                            }
+                        }
+
+                        if (spawnedObject != null)
+                        {
+                            if (maxDim > 0.001f)
+                            {
+                                float _s = spawnedObject.transform.localScale.x;
+                                spawnedObject.transform.localScale =
+                                    Vector3.one * _s * (targetModelSize / maxDim);
+                                Debug.Log($"[ArtifactSpawner] AutoScale {artifact.name}: " +
+                                          $"{maxDim:F2}m → {targetModelSize}m ({_elapsed:F2}s)");
+                            }
+                            else
+                            {
+                                // Bounds never became valid — apply a safe fallback scale.
+                                // 0.5f prevents a screen-filling giant while still showing something.
+                                spawnedObject.transform.localScale = Vector3.one * 0.5f;
+                                Debug.LogWarning($"[ArtifactSpawner] AutoScale {artifact.name}: " +
+                                                 $"bounds unavailable after {_maxWait:F1}s — fallback 0.5");
+                            }
+
+                            // Reveal the model now that it is correctly scaled.
+                            var _finalRenderers = spawnedObject.GetComponentsInChildren<Renderer>(true);
+                            foreach (var r in _finalRenderers) r.enabled = true;
+                        }
+                    }
+
                     Debug.Log($"[ArtifactSpawner] Spawned 3D artifact: {artifact.name}");
                 }
                 else
                 {
                     Debug.LogWarning($"[ArtifactSpawner] Prefab not found for " +
                                      $"'{artifact.bundle_key}'. Scroll will show only.");
-                    // Still register so the geofence doesn't retry every frame
-                    // and the scroll (its only visible element) remains shown.
                     var fallback = new GameObject($"FallbackAnchor_{artifact.id}");
                     fallback.transform.SetParent(anchorTransform);
                     fallback.transform.localPosition = Vector3.zero;
                     _spawnedArtifacts[artifact.id] = fallback;
+                    TryShowScroll(artifact, anchorTransform);
                 }
             }
         }
         else if (artifact.type == ArtifactType.InfoOnly)
         {
-            // Info-only: create empty anchor object, scroll will attach to it
             var anchor = new GameObject($"InfoAnchor_{artifact.id}");
             anchor.transform.SetParent(anchorTransform);
             anchor.transform.localPosition = Vector3.zero;
             _spawnedArtifacts[artifact.id] = anchor;
             Debug.Log($"[ArtifactSpawner] Info-only anchor: {artifact.name}");
+            TryShowScroll(artifact, anchorTransform);
         }
-
-        // -- Step 2: Show scroll UI --
-        TryShowScroll(artifact, anchorTransform);
 
         yield return null;
     }

@@ -3,25 +3,27 @@
 // Location: Assets/Scripts/AR/ARCameraDisplay.cs
 // Mt. Samat AR Scavenger Hunt — Terra App
 //
-// CPU-path camera fallback. Activates ONLY when the GPU path
-// (ARCameraBackground) is not handling the display.
+// CPU-path camera display that shows the real environment on ALL
+// Android devices, including those where ARCameraBackground's GPU
+// OES blit renders a white/grey rectangle (known AR Foundation + URP
+// issue on certain Xiaomi/Redmi GPU drivers — ARCameraBackground
+// can be enabled AND rendering while still outputting white garbage;
+// "enabled == true" does NOT mean "outputting real camera feed").
 //
-// With URP IntermediateTextureMode=Auto (correct setting),
-// ARCameraBackground renders the OES camera feed directly and
-// this canvas stays Color.clear (transparent) — zero overhead.
-//
-// With IntermediateTextureMode=Always (broken setting), the GPU
-// OES blit fails. In that case this class decodes CPU images and
-// shows them via ScreenSpaceCamera at 15 m so that GPS artifacts
-// spawned at ~1 m remain visually in front of the background.
+// This class always shows the CPU-decoded camera image. It replaces
+// whatever ARCameraBackground draws with real camera pixels.
 //
 // Canvas mode transitions:
 //   ScreenSpaceOverlay  (SessionInitializing)
-//     — renders on top of the black AR-init clear color without
-//       needing a Camera reference.
+//     — renders on top of everything; no Camera reference needed.
+//     — covers the black AR-init clear color while ARCore starts up.
+//     — no GPS artifacts exist yet, so depth-sorting is irrelevant.
+//
 //   ScreenSpaceCamera at planeDistance=15 m  (SessionTracking)
-//     — depth-tested so GPS artifacts (~1 m) stay in front.
-//     — only matters when CPU feed is showing (Color.white).
+//     — depth-tested inside the 3D scene.
+//     — GPS artifacts spawned at ~1 m are CLOSER → appear IN FRONT
+//       of this 15 m canvas (correct depth ordering).
+//     — covers the white GPU-OES texture from ARCameraBackground.
 // ============================================================
 
 using System;
@@ -33,6 +35,9 @@ using UnityEngine.XR.ARSubsystems;
 [DefaultExecutionOrder(-110)]
 public class ARCameraDisplay : MonoBehaviour
 {
+    // Canvas depth in ScreenSpaceCamera mode. Must be inside the AR
+    // camera frustum [nearClip≈0.1, farClip=20]. GPS artifacts spawn
+    // at ~1 m, so any value >1 m keeps them depth-sorted in front.
     private const float PLANE_DISTANCE = 15f;
 
     private ARCameraManager _cameraManager;
@@ -40,8 +45,7 @@ public class ARCameraDisplay : MonoBehaviour
     private RawImage        _displayImage;
     private Texture2D       _cameraTexture;
     private bool            _isShowing;
-    private bool            _hasCheckedGpu;   // have we determined if GPU path is active?
-    private bool            _gpuPathActive;   // true = ARCameraBackground is handling display
+    private bool            _hasTexture;   // true once first CPU frame decoded and shown
     private int             _frameSkip;
     private bool            _inSceneMode;
 
@@ -63,13 +67,13 @@ public class ARCameraDisplay : MonoBehaviour
 
         _canvas              = canvasGo.AddComponent<Canvas>();
         _canvas.renderMode   = RenderMode.ScreenSpaceOverlay;
-        _canvas.sortingOrder = -100;
+        _canvas.sortingOrder = -100; // behind main UI (sortingOrder 100)
 
         var rawGo = new GameObject("CameraRaw");
         rawGo.transform.SetParent(canvasGo.transform, false);
 
         _displayImage       = rawGo.AddComponent<RawImage>();
-        _displayImage.color = Color.clear;
+        _displayImage.color = Color.clear; // transparent until first frame decoded
 
         var rect = rawGo.GetComponent<RectTransform>();
         rect.anchorMin = Vector2.zero;
@@ -82,8 +86,7 @@ public class ARCameraDisplay : MonoBehaviour
 
     private void Update()
     {
-        // ── 1. Maintain ARCameraManager subscription (cached) ─────────────
-        // FindAnyObjectByType only runs until the manager is found once.
+        // ── 1. Maintain ARCameraManager subscription (cached after first find) ──
         if (_cameraManager == null)
         {
             var mgr = FindAnyObjectByType<ARCameraManager>();
@@ -94,12 +97,14 @@ public class ARCameraDisplay : MonoBehaviour
             }
         }
 
-        // ── 2. Switch canvas mode at the Initializing→Tracking boundary ───
+        // ── 2. Switch canvas mode at the Initializing → Tracking boundary ───
         //
-        // ScreenSpaceOverlay  → always works, no Camera ref needed
-        // ScreenSpaceCamera   → depth-tested; GPS artifacts at ~1 m appear
-        //                       in front of this 15 m background canvas.
-        //                       Only matters when CPU feed is showing (Color.white).
+        // ScreenSpaceOverlay: in front of 3D scene, no Camera ref needed.
+        //   Correct at Initializing — no GPS artifacts yet to depth-sort against.
+        //
+        // ScreenSpaceCamera at 15 m: depth-tested in 3D scene.
+        //   GPS artifacts at ~1 m are closer → depth-test puts them IN FRONT.
+        //   Covers the white GPU-OES texture from ARCameraBackground.
         bool shouldBeSceneMode = ARSession.state >= ARSessionState.SessionTracking;
 
         if (shouldBeSceneMode && !_inSceneMode)
@@ -131,37 +136,33 @@ public class ARCameraDisplay : MonoBehaviour
 
             if (_isShowing)
             {
-                if (!_hasCheckedGpu)
-                    TryDecodeCpuImage();
+                if (!_hasTexture) TryDecodeCpuImage();
             }
             else
             {
-                _hasCheckedGpu      = false;
-                _gpuPathActive      = false;
+                _hasTexture         = false;
                 _displayImage.color = Color.clear;
             }
 
             Debug.Log(_isShowing
-                ? "[ARCameraDisplay] Showing (may be transparent if GPU path active)."
+                ? "[ARCameraDisplay] Showing CPU camera display."
                 : "[ARCameraDisplay] Hidden — session pre-initialising.");
         }
 
         // ── 4. Decode CPU camera frames ────────────────────────────────────
-        // Aggressive decode every frame until we know whether GPU path is active.
-        // After that, only keep decoding if GPU path is NOT active (CPU fallback needed).
+        // Aggressive every frame until first texture; throttled every other frame after.
         if (_isShowing && _cameraManager != null)
         {
-            if (!_hasCheckedGpu)
+            if (!_hasTexture)
             {
                 TryDecodeCpuImage();
             }
-            else if (!_gpuPathActive)
+            else
             {
                 _frameSkip++;
                 if (_frameSkip % 2 == 0)
                     TryDecodeCpuImage();
             }
-            // If _gpuPathActive: no decoding needed — GPU path handles the display.
         }
     }
 
@@ -170,7 +171,7 @@ public class ARCameraDisplay : MonoBehaviour
     private void OnCameraFrameReceived(ARCameraFrameEventArgs args)
     {
         if (!_isShowing || _cameraManager == null) return;
-        if (!_hasCheckedGpu) TryDecodeCpuImage();
+        TryDecodeCpuImage();
     }
 
     private void TryDecodeCpuImage()
@@ -182,6 +183,7 @@ public class ARCameraDisplay : MonoBehaviour
         {
             try
             {
+                // Downsample to 1/4 resolution for performance.
                 int w = Mathf.Max(1, image.width  / 4);
                 int h = Mathf.Max(1, image.height / 4);
 
@@ -207,26 +209,11 @@ public class ARCameraDisplay : MonoBehaviour
                 image.Convert(convParams, rawData);
                 _cameraTexture.Apply();
 
-                if (!_hasCheckedGpu && _displayImage != null)
+                if (!_hasTexture && _displayImage != null)
                 {
-                    _hasCheckedGpu = true;
-
-                    // With IntermediateTextureMode=Auto (correct URP setting),
-                    // ARCameraBackground handles the GPU OES feed. Stay transparent
-                    // so the GPU feed shows through — no need for the CPU path.
-                    // Only activate CPU feed when GPU path is confirmed inactive.
-                    var bg = Camera.main?.GetComponent<ARCameraBackground>();
-                    _gpuPathActive = bg != null && bg.enabled;
-
-                    if (_gpuPathActive)
-                    {
-                        Debug.Log("[ARCameraDisplay] GPU path active (ARCameraBackground enabled) — CPU canvas stays transparent.");
-                    }
-                    else
-                    {
-                        _displayImage.color = Color.white;
-                        Debug.Log("[ARCameraDisplay] GPU path inactive — CPU fallback activated.");
-                    }
+                    _hasTexture          = true;
+                    _displayImage.color  = Color.white; // reveal the real camera feed
+                    Debug.Log("[ARCameraDisplay] Real environment visible — CPU feed active.");
                 }
             }
             catch (Exception e)
