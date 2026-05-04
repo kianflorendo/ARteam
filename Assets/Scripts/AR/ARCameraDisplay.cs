@@ -109,10 +109,15 @@ public class ARCameraDisplay : MonoBehaviour
             }
         }
 
-        // ── 2. Suppress ARCameraBackground while CPU feed is active ───────
-        // Without this, ARCameraBackground's URP blit overwrites the CPU
-        // canvas with white OES on every frame that has a 3D artifact.
-        if (_isShowing) SuppressARCameraBackground();
+        // ── 2. Suppress ARCameraBackground once the CPU feed is active ────
+        // Only suppress AFTER the first CPU frame is decoded (_hasTexture).
+        // Before that, ARCameraBackground must stay enabled — on this device
+        // its OnEnable() is what triggers ARCameraManager to open the camera
+        // hardware and start delivering frames. Suppressing too early means
+        // TryAcquireLatestCpuImage() never gets a frame → black screen.
+        // Once _hasTexture is true the camera is definitely open and we can
+        // safely disable ARCameraBackground to stop the white OES blit.
+        if (_isShowing && _hasTexture) SuppressARCameraBackground();
 
         // ── 3. Canvas mode: ScreenSpaceOverlay → ScreenSpaceCamera ────────
         bool shouldBeSceneMode = ARSession.state >= ARSessionState.SessionTracking;
@@ -260,6 +265,22 @@ public class ARCameraDisplay : MonoBehaviour
                 Debug.LogWarning($"[ARCameraDisplay] Frame decode failed: {e.Message}");
             }
         }
+    }
+
+    // ── App lifecycle ────────────────────────────────────────────────────
+
+    private void OnApplicationPause(bool paused)
+    {
+        if (paused) return;
+
+        // On resume the camera pipeline restarts from scratch.
+        // Reset _hasTexture so SuppressARCameraBackground() stays inactive
+        // until the first decoded frame confirms the camera is open again.
+        // Reset _arBackground ref so we re-acquire it from the (potentially
+        // reconstructed) camera object.
+        _hasTexture   = false;
+        _arBackground = null;
+        Debug.Log("[ARCameraDisplay] App resumed — camera pipeline reset.");
     }
 
     // ── Cleanup ──────────────────────────────────────────────────────────
