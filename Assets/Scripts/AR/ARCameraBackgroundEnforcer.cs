@@ -22,7 +22,8 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
 
     private bool _applied;
     private float _stuckTimer;
-    private bool _resetAttempted;
+    private int  _resetCount;        // number of stuck-resets attempted this session
+    private const int MAX_RESETS = 3; // give up after 3 × 30 s = 90 s of stuck time
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void EnsureExists()
@@ -37,9 +38,9 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
         // On Android, coming back from background resets the camera pipeline.
         if (!paused)
         {
-            _applied = false;
-            _stuckTimer = 0f;
-            _resetAttempted = false;
+            _applied     = false;
+            _stuckTimer  = 0f;
+            _resetCount  = 0;
         }
     }
 
@@ -60,18 +61,24 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
         {
             _stuckTimer += Time.unscaledDeltaTime;
 
-            if (!_resetAttempted && _stuckTimer > 15f)
+            // Allow up to MAX_RESETS attempts, one every 30 s.
+            // 15 s was too aggressive — ARCore on Xiaomi/Redmi devices needs up to
+            // 20-25 s to scan enough feature points to reach SessionTracking outdoors.
+            // Resetting at 15 s created an infinite Initializing → reset → Initializing
+            // loop that permanently prevented SessionTracking.
+            if (_stuckTimer > 30f && _resetCount < MAX_RESETS)
             {
-                _resetAttempted = true;
-                Debug.Log("[ARCameraBackgroundEnforcer] Session stuck at Initializing for 15s — forcing reset.");
+                _stuckTimer = 0f;
+                _resetCount++;
                 _applied = false;
+                Debug.Log($"[ARCameraBackgroundEnforcer] Session stuck — reset #{_resetCount}/{MAX_RESETS}.");
                 StartCoroutine(ResetARSession());
             }
         }
         else if (ARSession.state == ARSessionState.SessionTracking)
         {
-            _stuckTimer = 0f;
-            _resetAttempted = false;
+            _stuckTimer  = 0f;
+            _resetCount  = 0;
         }
     }
 
@@ -130,8 +137,13 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
             _applied = false;
         }
 
-        // Step 6 — force re-subscription once per setup.
-        // Wait until ARCore is at least initializing before toggling.
+        // Step 6 — force re-subscription once per setup cycle.
+        // The disable→enable cycle on ARCameraBackground does two things:
+        //   1. Restores the frameReceived subscription lost after ARSession cycles.
+        //   2. Triggers ARCameraBackground.OnEnable() at SessionInitializing, which
+        //      on certain Android devices is what causes ARCameraManager to actually
+        //      open the camera hardware. Skipping this toggle prevents the camera
+        //      from ever starting on those devices.
         if (!_applied)
         {
             if (ARSession.state < ARSessionState.SessionInitializing)
@@ -140,8 +152,7 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
             _applied = true;
             _background.enabled = false;
             _background.enabled = true;
-            Debug.Log($"[ARCameraBackgroundEnforcer] Applied. " +
-                      $"Camera={_arCamera.name} Session={ARSession.state}");
+            Debug.Log($"[ARCameraBackgroundEnforcer] Applied. Camera={_arCamera.name}");
             return;
         }
 
