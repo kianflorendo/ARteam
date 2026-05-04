@@ -156,11 +156,9 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
             return;
         }
 
-        // Step 7 — keep-alive: re-enable if silently disabled.
-        if (!_background.enabled)
-        {
-            _background.enabled = true;
-            Debug.Log("[ARCameraBackgroundEnforcer] Keep-alive: re-enabled background.");
-        }
+        // Step 7 removed — ARCameraDisplay owns the background enabled state.
+        // When the CPU feed is active, ARCameraDisplay disables ARCameraBackground
+        // every frame to prevent the white OES blit from overriding the CPU feed.
+        // A keep-alive here would fight that and re-introduce the white background.
     }
 }

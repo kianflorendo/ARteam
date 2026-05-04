@@ -3,27 +3,35 @@
 // Location: Assets/Scripts/AR/ARCameraDisplay.cs
 // Mt. Samat AR Scavenger Hunt — Terra App
 //
-// CPU-path camera display that shows the real environment on ALL
-// Android devices, including those where ARCameraBackground's GPU
-// OES blit renders a white/grey rectangle (known AR Foundation + URP
-// issue on certain Xiaomi/Redmi GPU drivers — ARCameraBackground
-// can be enabled AND rendering while still outputting white garbage;
-// "enabled == true" does NOT mean "outputting real camera feed").
+// CPU camera display for all Android devices.
 //
-// This class always shows the CPU-decoded camera image. It replaces
-// whatever ARCameraBackground draws with real camera pixels.
+// Why CPU instead of GPU (ARCameraBackground)?
+//   On this device's GPU driver, ARCameraBackground.enabled = true
+//   but it renders a solid white OES texture instead of the real
+//   camera feed. Its blit also conflicts with the ScreenSpaceCamera
+//   canvas in Unity 6 URP — even when the canvas is at 15 m depth,
+//   ARCameraBackground's late-pipeline blit overwrites background
+//   pixels with white whenever a 3D artifact is in the scene.
+//   Fix: disable ARCameraBackground entirely when CPU feed is active.
+//   ARCameraManager.frameReceived fires independently — AR tracking
+//   is unaffected by ARCameraBackground.enabled state.
 //
-// Canvas mode transitions:
+// Orientation:
+//   Android delivers CPU images in landscape orientation regardless
+//   of how the phone is held. The RawImage is rotated -90° (CW) so
+//   the landscape texture fills the portrait screen correctly.
+//   XRCpuImage.Transformation.MirrorY corrects the OpenGL bottom-up
+//   vertical flip before the rotation is applied.
+//
+// Canvas modes:
 //   ScreenSpaceOverlay  (SessionInitializing)
-//     — renders on top of everything; no Camera reference needed.
-//     — covers the black AR-init clear color while ARCore starts up.
-//     — no GPS artifacts exist yet, so depth-sorting is irrelevant.
+//     No Camera ref needed. Renders on top of the black clear color.
+//     No GPS artifacts exist yet — no depth ordering needed.
 //
-//   ScreenSpaceCamera at planeDistance=15 m  (SessionTracking)
-//     — depth-tested inside the 3D scene.
-//     — GPS artifacts spawned at ~1 m are CLOSER → appear IN FRONT
-//       of this 15 m canvas (correct depth ordering).
-//     — covers the white GPU-OES texture from ARCameraBackground.
+//   ScreenSpaceCamera at 15 m  (SessionTracking)
+//     Depth-tested in the 3D scene. GPS artifacts at ~1 m are closer
+//     → depth test puts them IN FRONT of this 15 m canvas.
+//     ARCameraBackground is disabled so no competing OES blit exists.
 // ============================================================
 
 using System;
@@ -35,19 +43,17 @@ using UnityEngine.XR.ARSubsystems;
 [DefaultExecutionOrder(-110)]
 public class ARCameraDisplay : MonoBehaviour
 {
-    // Canvas depth in ScreenSpaceCamera mode. Must be inside the AR
-    // camera frustum [nearClip≈0.1, farClip=20]. GPS artifacts spawn
-    // at ~1 m, so any value >1 m keeps them depth-sorted in front.
     private const float PLANE_DISTANCE = 15f;
 
-    private ARCameraManager _cameraManager;
-    private Canvas          _canvas;
-    private RawImage        _displayImage;
-    private Texture2D       _cameraTexture;
-    private bool            _isShowing;
-    private bool            _hasTexture;   // true once first CPU frame decoded and shown
-    private int             _frameSkip;
-    private bool            _inSceneMode;
+    private ARCameraManager    _cameraManager;
+    private ARCameraBackground _arBackground;
+    private Canvas             _canvas;
+    private RawImage           _displayImage;
+    private Texture2D          _cameraTexture;
+    private bool               _isShowing;
+    private bool               _hasTexture;
+    private int                _frameSkip;
+    private bool               _inSceneMode;
 
     // ── Singleton bootstrap ──────────────────────────────────────────────
 
@@ -67,26 +73,32 @@ public class ARCameraDisplay : MonoBehaviour
 
         _canvas              = canvasGo.AddComponent<Canvas>();
         _canvas.renderMode   = RenderMode.ScreenSpaceOverlay;
-        _canvas.sortingOrder = -100; // behind main UI (sortingOrder 100)
+        _canvas.sortingOrder = -100;
 
         var rawGo = new GameObject("CameraRaw");
         rawGo.transform.SetParent(canvasGo.transform, false);
 
         _displayImage       = rawGo.AddComponent<RawImage>();
-        _displayImage.color = Color.clear; // transparent until first frame decoded
+        _displayImage.color = Color.clear;
 
-        var rect = rawGo.GetComponent<RectTransform>();
-        rect.anchorMin = Vector2.zero;
-        rect.anchorMax = Vector2.one;
-        rect.offsetMin = Vector2.zero;
-        rect.offsetMax = Vector2.zero;
+        // ── Rotation correction for Android portrait ──────────────────────
+        // Camera delivers landscape images on Android. Rotate the RawImage
+        // -90° (CW) so the landscape texture fills the portrait screen.
+        // sizeDelta is (Screen.height, Screen.width) — swapped — so that
+        // after the -90° rotation the image visually spans (width, height).
+        var rt = rawGo.GetComponent<RectTransform>();
+        rt.localRotation  = Quaternion.Euler(0f, 0f, -90f);
+        rt.anchorMin      = new Vector2(0.5f, 0.5f);
+        rt.anchorMax      = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = Vector2.zero;
+        rt.sizeDelta      = new Vector2(Screen.height, Screen.width);
 
         _displayImage.gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        // ── 1. Maintain ARCameraManager subscription (cached after first find) ──
+        // ── 1. Cache ARCameraManager (find once) ──────────────────────────
         if (_cameraManager == null)
         {
             var mgr = FindAnyObjectByType<ARCameraManager>();
@@ -97,14 +109,12 @@ public class ARCameraDisplay : MonoBehaviour
             }
         }
 
-        // ── 2. Switch canvas mode at the Initializing → Tracking boundary ───
-        //
-        // ScreenSpaceOverlay: in front of 3D scene, no Camera ref needed.
-        //   Correct at Initializing — no GPS artifacts yet to depth-sort against.
-        //
-        // ScreenSpaceCamera at 15 m: depth-tested in 3D scene.
-        //   GPS artifacts at ~1 m are closer → depth-test puts them IN FRONT.
-        //   Covers the white GPU-OES texture from ARCameraBackground.
+        // ── 2. Suppress ARCameraBackground while CPU feed is active ───────
+        // Without this, ARCameraBackground's URP blit overwrites the CPU
+        // canvas with white OES on every frame that has a 3D artifact.
+        if (_isShowing) SuppressARCameraBackground();
+
+        // ── 3. Canvas mode: ScreenSpaceOverlay → ScreenSpaceCamera ────────
         bool shouldBeSceneMode = ARSession.state >= ARSessionState.SessionTracking;
 
         if (shouldBeSceneMode && !_inSceneMode)
@@ -126,7 +136,7 @@ public class ARCameraDisplay : MonoBehaviour
             Debug.Log("[ARCameraDisplay] Reverted to ScreenSpaceOverlay (tracking lost).");
         }
 
-        // ── 3. Show / hide based on session state ─────────────────────────
+        // ── 4. Show / hide ────────────────────────────────────────────────
         bool needsShow = ARSession.state >= ARSessionState.SessionInitializing;
 
         if (_displayImage != null && needsShow != _isShowing)
@@ -140,6 +150,8 @@ public class ARCameraDisplay : MonoBehaviour
             }
             else
             {
+                // Session ended — let ARCameraBackground manage itself again.
+                RestoreARCameraBackground();
                 _hasTexture         = false;
                 _displayImage.color = Color.clear;
             }
@@ -149,8 +161,8 @@ public class ARCameraDisplay : MonoBehaviour
                 : "[ARCameraDisplay] Hidden — session pre-initialising.");
         }
 
-        // ── 4. Decode CPU camera frames ────────────────────────────────────
-        // Aggressive every frame until first texture; throttled every other frame after.
+        // ── 5. Decode CPU frames ──────────────────────────────────────────
+        // Aggressive every frame until first texture; every other frame after.
         if (_isShowing && _cameraManager != null)
         {
             if (!_hasTexture)
@@ -163,6 +175,29 @@ public class ARCameraDisplay : MonoBehaviour
                 if (_frameSkip % 2 == 0)
                     TryDecodeCpuImage();
             }
+        }
+    }
+
+    // ── ARCameraBackground suppression ───────────────────────────────────
+
+    private void SuppressARCameraBackground()
+    {
+        if (_arBackground == null)
+            _arBackground = Camera.main?.GetComponent<ARCameraBackground>();
+
+        if (_arBackground != null && _arBackground.enabled)
+        {
+            _arBackground.enabled = false;
+            // No log — this runs every frame.
+        }
+    }
+
+    private void RestoreARCameraBackground()
+    {
+        if (_arBackground != null && !_arBackground.enabled)
+        {
+            _arBackground.enabled = true;
+            Debug.Log("[ARCameraDisplay] Restored ARCameraBackground (session ended).");
         }
     }
 
@@ -183,9 +218,10 @@ public class ARCameraDisplay : MonoBehaviour
         {
             try
             {
-                // Downsample to 1/4 resolution for performance.
-                int w = Mathf.Max(1, image.width  / 4);
-                int h = Mathf.Max(1, image.height / 4);
+                // 1/2 resolution — good quality with acceptable CPU cost.
+                // (1/4 was fast but too blurry at 3× upscale on portrait screen)
+                int w = Mathf.Max(1, image.width  / 2);
+                int h = Mathf.Max(1, image.height / 2);
 
                 if (_cameraTexture == null
                     || _cameraTexture.width  != w
@@ -202,6 +238,9 @@ public class ARCameraDisplay : MonoBehaviour
                     inputRect        = new RectInt(0, 0, image.width, image.height),
                     outputDimensions = new Vector2Int(w, h),
                     outputFormat     = TextureFormat.RGBA32,
+                    // MirrorY: converts Android's OpenGL bottom-up convention to
+                    // Unity's top-down convention. The RawImage rotation (-90°)
+                    // handles the portrait/landscape orientation correction.
                     transformation   = XRCpuImage.Transformation.MirrorY,
                 };
 
@@ -212,13 +251,13 @@ public class ARCameraDisplay : MonoBehaviour
                 if (!_hasTexture && _displayImage != null)
                 {
                     _hasTexture          = true;
-                    _displayImage.color  = Color.white; // reveal the real camera feed
-                    Debug.Log("[ARCameraDisplay] Real environment visible — CPU feed active.");
+                    _displayImage.color  = Color.white;
+                    Debug.Log("[ARCameraDisplay] Real environment visible.");
                 }
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"[ARCameraDisplay] Frame conversion failed: {e.Message}");
+                Debug.LogWarning($"[ARCameraDisplay] Frame decode failed: {e.Message}");
             }
         }
     }
