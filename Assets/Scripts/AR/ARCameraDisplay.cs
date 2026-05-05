@@ -104,6 +104,8 @@ public class ARCameraDisplay : MonoBehaviour
             if (mgr != null)
             {
                 _cameraManager = mgr;
+                _cameraManager.requestedFacingDirection = CameraFacingDirection.World;
+                _cameraManager.requestedBackgroundRenderingMode = CameraBackgroundRenderingMode.BeforeOpaques;
                 _cameraManager.frameReceived += OnCameraFrameReceived;
             }
         }

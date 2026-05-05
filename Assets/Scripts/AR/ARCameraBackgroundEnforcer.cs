@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 /// <summary>
 /// Ensures the AR camera background renders the device camera feed.
@@ -106,6 +107,9 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
             _applied = false;
         }
 
+        _cameraManager.requestedFacingDirection = CameraFacingDirection.World;
+        _cameraManager.requestedBackgroundRenderingMode = CameraBackgroundRenderingMode.BeforeOpaques;
+
         if (_arCamera == null)
         {
             _arCamera = _cameraManager.GetComponent<Camera>();
@@ -133,6 +137,7 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
                 return;
 
             _applied = true;
+            _cameraManager.requestedBackgroundRenderingMode = CameraBackgroundRenderingMode.BeforeOpaques;
             _background.enabled = false;
             _background.enabled = true;
             Debug.Log($"[ARCameraBackgroundEnforcer] Applied. Camera={_arCamera.name}");
