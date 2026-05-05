@@ -46,10 +46,11 @@ public class ARCameraDisplay : MonoBehaviour
     private const float PLANE_DISTANCE = 15f;
 
     // ── Static diagnostics (read by ARDebugPanel and ARCameraBackgroundEnforcer) ─
-    public static bool IsShowingFeed     { get; private set; }
-    public static bool IsCameraManFound  { get; private set; }
-    public static bool IsBgEnabled       { get; private set; }
-    public static int  DecodeFrameCount  { get; private set; }
+    public static bool IsShowingFeed        { get; private set; }
+    public static bool IsCameraManFound     { get; private set; }
+    public static bool IsBgEnabled          { get; private set; }
+    public static int  DecodeFrameCount     { get; private set; }
+    public static bool IsSubsystemRunning   { get; private set; }
 
     private ARCameraManager    _cameraManager;
     private ARCameraBackground _arBackground;
@@ -132,12 +133,31 @@ public class ARCameraDisplay : MonoBehaviour
             EnsureARCameraBackgroundEnabled();
         }
 
-        // ── Diagnostics ───────────────────────────────────────────────────
+        // ── Diagnostics + subsystem guard ────────────────────────────────
         IsCameraManFound = (_cameraManager != null);
         IsBgEnabled      = (_arBackground != null && _arBackground.enabled)
                            || (_arBackground == null && Camera.main != null
                                && Camera.main.GetComponent<ARCameraBackground>() is { } bg
                                && bg.enabled);
+
+        if (_cameraManager != null)
+        {
+            var sub = _cameraManager.subsystem;
+            IsSubsystemRunning = sub != null && sub.running;
+
+            // If subsystem exists but isn't running, start it explicitly.
+            // On some Xiaomi/Redmi devices the subsystem is created but not
+            // started, which causes TryAcquireLatestCpuImage to always fail.
+            if (sub != null && !sub.running && _isShowing)
+            {
+                sub.Start();
+                Debug.Log("[ARCameraDisplay] Explicitly started camera subsystem.");
+            }
+        }
+        else
+        {
+            IsSubsystemRunning = false;
+        }
 
         // ── 3. Canvas mode: ScreenSpaceOverlay → ScreenSpaceCamera ────────
         bool shouldBeSceneMode = ARSession.state >= ARSessionState.SessionTracking;

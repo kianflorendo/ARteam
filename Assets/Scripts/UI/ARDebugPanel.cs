@@ -129,6 +129,7 @@ public class ARDebugPanel : MonoBehaviour
         sb.AppendLine($"CamFeed: {(ARCameraDisplay.IsShowingFeed ? "LIVE" : "WAITING")} | " +
                       $"CamMgr: {(ARCameraDisplay.IsCameraManFound ? "OK" : "NULL")} | " +
                       $"BgOn: {ARCameraDisplay.IsBgEnabled} | " +
+                      $"Sub: {(ARCameraDisplay.IsSubsystemRunning ? "RUN" : "STOP")} | " +
                       $"Frames: {ARCameraDisplay.DecodeFrameCount}");
 
         debugText.text = sb.ToString();
