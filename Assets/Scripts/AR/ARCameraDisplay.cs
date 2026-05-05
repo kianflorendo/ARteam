@@ -1,37 +1,22 @@
 // ============================================================
 // ARCameraDisplay.cs
 // Location: Assets/Scripts/AR/ARCameraDisplay.cs
-// Mt. Samat AR Scavenger Hunt — Terra App
+// Mt. Samat AR Scavenger Hunt - Terra App
 //
-// CPU camera display for all Android devices.
+// GPU-first camera display.
 //
-// Why CPU instead of GPU (ARCameraBackground)?
-//   On this device's GPU driver, ARCameraBackground.enabled = true
-//   but it renders a solid white OES texture instead of the real
-//   camera feed. Its blit also conflicts with the ScreenSpaceCamera
-//   canvas in Unity 6 URP — even when the canvas is at 15 m depth,
-//   ARCameraBackground's late-pipeline blit overwrites background
-//   pixels with white whenever a 3D artifact is in the scene.
-//   Fix: disable ARCameraBackground entirely when CPU feed is active.
-//   ARCameraManager.frameReceived fires independently — AR tracking
-//   is unaffected by ARCameraBackground.enabled state.
-//
-// Orientation:
-//   Android delivers CPU images in landscape orientation regardless
-//   of how the phone is held. The RawImage is rotated -90° (CW) so
-//   the landscape texture fills the portrait screen correctly.
-//   XRCpuImage.Transformation.MirrorY corrects the OpenGL bottom-up
-//   vertical flip before the rotation is applied.
+// The real AR camera background is the primary background layer.
+// The CPU RawImage is only a fallback if the AR camera background
+// is actually unavailable on a device.
 //
 // Canvas modes:
 //   ScreenSpaceOverlay  (SessionInitializing)
-//     No Camera ref needed. Renders on top of the black clear color.
-//     No GPS artifacts exist yet — no depth ordering needed.
+//     No camera reference needed. The fallback stays hidden unless
+//     the AR camera background is unavailable.
 //
 //   ScreenSpaceCamera at 15 m  (SessionTracking)
-//     Depth-tested in the 3D scene. GPS artifacts at ~1 m are closer
-//     -> depth test puts them IN FRONT of this 15 m canvas.
-//     ARCameraBackground is disabled so no competing OES blit exists.
+//     Depth-tested in the 3D scene. GPS artifacts at ~1 m stay in
+//     front of the background canvas.
 // ============================================================
 
 using System;
@@ -83,8 +68,6 @@ public class ARCameraDisplay : MonoBehaviour
         _displayImage = rawGo.AddComponent<RawImage>();
         _displayImage.color = Color.clear;
 
-        // Camera delivers landscape images on Android. Rotate the RawImage
-        // -90° (CW) so the landscape texture fills the portrait screen.
         var rt = rawGo.GetComponent<RectTransform>();
         rt.localRotation = Quaternion.Euler(0f, 0f, -90f);
         rt.anchorMin = new Vector2(0.5f, 0.5f);
@@ -97,7 +80,6 @@ public class ARCameraDisplay : MonoBehaviour
 
     private void Update()
     {
-        // Cache ARCameraManager once.
         if (_cameraManager == null)
         {
             var mgr = FindAnyObjectByType<ARCameraManager>();
@@ -110,23 +92,11 @@ public class ARCameraDisplay : MonoBehaviour
             }
         }
 
-        // Keep ARCameraBackground alive until the first CPU frame arrives.
-        // After that, suppress it so the white OES path cannot overwrite
-        // the real CPU camera feed behind spawned artifacts.
-        if (_isShowing && _hasTexture)
-        {
-            SuppressARCameraBackground();
-        }
-        else if (_isShowing && !_hasTexture)
-        {
-            EnsureARCameraBackgroundEnabled();
-        }
+        if (_arBackground == null && Camera.main != null)
+            _arBackground = Camera.main.GetComponent<ARCameraBackground>();
 
         IsCameraManFound = _cameraManager != null;
-        IsBgEnabled = (_arBackground != null && _arBackground.enabled)
-            || (_arBackground == null && Camera.main != null
-                && Camera.main.GetComponent<ARCameraBackground>() is { } bg
-                && bg.enabled);
+        IsBgEnabled = _arBackground != null && _arBackground.enabled;
         IsSubsystemRunning = _cameraManager != null
             && _cameraManager.subsystem != null
             && _cameraManager.subsystem.running;
@@ -152,33 +122,37 @@ public class ARCameraDisplay : MonoBehaviour
             Debug.Log("[ARCameraDisplay] Reverted to ScreenSpaceOverlay (tracking lost).");
         }
 
-        bool needsShow = ARSession.state >= ARSessionState.SessionInitializing;
+        bool shouldShow = ARSession.state >= ARSessionState.SessionInitializing;
+        bool useCpuFallback = shouldShow && !IsBgEnabled;
 
-        if (_displayImage != null && needsShow != _isShowing)
+        if (_displayImage != null && shouldShow != _isShowing)
         {
-            _isShowing = needsShow;
-            _displayImage.gameObject.SetActive(_isShowing);
+            _isShowing = shouldShow;
+            _displayImage.gameObject.SetActive(useCpuFallback);
 
-            if (_isShowing)
+            if (useCpuFallback && !_hasTexture)
+                TryDecodeCpuImage();
+
+            if (!useCpuFallback)
             {
-                if (!_hasTexture)
-                    TryDecodeCpuImage();
-            }
-            else
-            {
-                RestoreARCameraBackground();
                 _hasTexture = false;
-                IsShowingFeed = false;
                 _displayImage.color = Color.clear;
             }
 
             Debug.Log(_isShowing
-                ? "[ARCameraDisplay] Showing CPU camera display."
+                ? (useCpuFallback
+                    ? "[ARCameraDisplay] Showing CPU fallback display."
+                    : "[ARCameraDisplay] Showing AR camera background.")
                 : "[ARCameraDisplay] Hidden - session pre-initialising.");
         }
 
-        // Decode every frame until the first texture, then every other frame.
-        if (_isShowing && _cameraManager != null)
+        useCpuFallback = _isShowing && !IsBgEnabled;
+        if (_displayImage != null && _displayImage.gameObject.activeSelf != useCpuFallback)
+            _displayImage.gameObject.SetActive(useCpuFallback);
+
+        IsShowingFeed = _isShowing && (IsBgEnabled || (_hasTexture && useCpuFallback));
+
+        if (_isShowing && _cameraManager != null && useCpuFallback)
         {
             if (!_hasTexture)
             {
@@ -195,13 +169,14 @@ public class ARCameraDisplay : MonoBehaviour
 
     private void OnCameraFrameReceived(ARCameraFrameEventArgs args)
     {
-        if (!_isShowing || _cameraManager == null) return;
+        if (!_isShowing || _cameraManager == null || IsBgEnabled) return;
         TryDecodeCpuImage();
     }
 
     private void TryDecodeCpuImage()
     {
         if (_cameraManager == null) return;
+        if (IsBgEnabled) return;
         if (!_cameraManager.TryAcquireLatestCpuImage(out var image)) return;
 
         using (image)
@@ -237,47 +212,14 @@ public class ARCameraDisplay : MonoBehaviour
                 if (!_hasTexture && _displayImage != null)
                 {
                     _hasTexture = true;
-                    IsShowingFeed = true;
                     _displayImage.color = Color.white;
-                    Debug.Log("[ARCameraDisplay] Real environment visible.");
+                    Debug.Log("[ARCameraDisplay] CPU fallback visible.");
                 }
             }
             catch (Exception e)
             {
                 Debug.LogWarning($"[ARCameraDisplay] Frame decode failed: {e.Message}");
             }
-        }
-    }
-
-    private void SuppressARCameraBackground()
-    {
-        if (_arBackground == null)
-            _arBackground = Camera.main?.GetComponent<ARCameraBackground>();
-
-        if (_arBackground != null && _arBackground.enabled)
-        {
-            _arBackground.enabled = false;
-        }
-    }
-
-    private void EnsureARCameraBackgroundEnabled()
-    {
-        if (_arBackground == null)
-            _arBackground = Camera.main?.GetComponent<ARCameraBackground>();
-
-        if (_arBackground != null && !_arBackground.enabled)
-        {
-            _arBackground.enabled = true;
-            Debug.Log("[ARCameraDisplay] Keep-alive: re-enabled ARCameraBackground (was off while awaiting first frame).");
-        }
-    }
-
-    private void RestoreARCameraBackground()
-    {
-        if (_arBackground != null && !_arBackground.enabled)
-        {
-            _arBackground.enabled = true;
-            Debug.Log("[ARCameraDisplay] Restored ARCameraBackground (session ended).");
         }
     }
 
