@@ -45,8 +45,6 @@ public class ARCameraDisplay : MonoBehaviour
 {
     private const float PLANE_DISTANCE = 15f;
 
-    private const float NO_FRAME_RETRY_SECONDS = 5f;
-
     private ARCameraManager    _cameraManager;
     private ARCameraBackground _arBackground;
     private Canvas             _canvas;
@@ -57,7 +55,6 @@ public class ARCameraDisplay : MonoBehaviour
     private int                _frameSkip;
     private bool               _inSceneMode;
     private bool               _hasAppEverPaused;
-    private float              _noFrameTimer;
 
     // ── Singleton bootstrap ──────────────────────────────────────────────
 
@@ -186,34 +183,6 @@ public class ARCameraDisplay : MonoBehaviour
             }
         }
 
-        // ── 6. No-frame timeout self-heal ─────────────────────────────────
-        // If we have been showing for NO_FRAME_RETRY_SECONDS without a decoded
-        // frame, the camera hardware may be stuck. Force a disable→enable cycle
-        // on ARCameraBackground to reopen it (same mechanism as initial setup).
-        if (_isShowing && !_hasTexture)
-        {
-            _noFrameTimer += Time.unscaledDeltaTime;
-            if (_noFrameTimer >= NO_FRAME_RETRY_SECONDS)
-            {
-                _noFrameTimer = 0f;
-                RetryOpenCamera();
-            }
-        }
-        else
-        {
-            _noFrameTimer = 0f;
-        }
-    }
-
-    private void RetryOpenCamera()
-    {
-        if (_arBackground == null)
-            _arBackground = Camera.main?.GetComponent<ARCameraBackground>();
-        if (_arBackground == null) return;
-
-        _arBackground.enabled = false;
-        _arBackground.enabled = true;
-        Debug.Log("[ARCameraDisplay] No frame after timeout — re-triggered camera background toggle.");
     }
 
     // ── ARCameraBackground suppression ───────────────────────────────────
@@ -319,7 +288,6 @@ public class ARCameraDisplay : MonoBehaviour
 
         _hasTexture   = false;
         _arBackground = null;
-        _noFrameTimer = 0f;
         Debug.Log("[ARCameraDisplay] App resumed — camera pipeline reset.");
     }
 
