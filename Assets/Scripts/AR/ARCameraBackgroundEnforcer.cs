@@ -68,6 +68,15 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
     {
         if (ARSession.state == ARSessionState.SessionInitializing)
         {
+            // If the CPU camera feed is already showing the real environment,
+            // the session is not truly stuck — ARCore is running and scanning.
+            // Skip the reset so we don't interrupt an actively working camera.
+            if (ARCameraDisplay.IsShowingFeed)
+            {
+                _stuckTimer = 0f;
+                return;
+            }
+
             _stuckTimer += Time.unscaledDeltaTime;
 
             // Allow up to MAX_RESETS attempts, one every 30 s.
@@ -80,7 +89,7 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
                 _stuckTimer = 0f;
                 _resetCount++;
                 _applied = false;
-                Debug.Log($"[ARCameraBackgroundEnforcer] Session stuck — reset #{_resetCount}/{MAX_RESETS}.");
+                Debug.Log($"[ARCameraBackgroundEnforcer] Session stuck (no feed) — reset #{_resetCount}/{MAX_RESETS}.");
                 StartCoroutine(ResetARSession());
             }
         }

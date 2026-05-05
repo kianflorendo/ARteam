@@ -45,6 +45,12 @@ public class ARCameraDisplay : MonoBehaviour
 {
     private const float PLANE_DISTANCE = 15f;
 
+    // ── Static diagnostics (read by ARDebugPanel and ARCameraBackgroundEnforcer) ─
+    public static bool IsShowingFeed     { get; private set; }
+    public static bool IsCameraManFound  { get; private set; }
+    public static bool IsBgEnabled       { get; private set; }
+    public static int  DecodeFrameCount  { get; private set; }
+
     private ARCameraManager    _cameraManager;
     private ARCameraBackground _arBackground;
     private Canvas             _canvas;
@@ -110,15 +116,29 @@ public class ARCameraDisplay : MonoBehaviour
             }
         }
 
-        // ── 2. Suppress ARCameraBackground once the CPU feed is active ────
-        // Only suppress AFTER the first CPU frame is decoded (_hasTexture).
+        // ── 2. ARCameraBackground: keep alive until first frame; suppress after ─
+        // Gate: only suppress AFTER the first CPU frame is decoded (_hasTexture).
         // Before that, ARCameraBackground must stay enabled — on this device
         // its OnEnable() is what triggers ARCameraManager to open the camera
         // hardware and start delivering frames. Suppressing too early means
         // TryAcquireLatestCpuImage() never gets a frame → black screen.
-        // Once _hasTexture is true the camera is definitely open and we can
-        // safely disable ARCameraBackground to stop the white OES blit.
-        if (_isShowing && _hasTexture) SuppressARCameraBackground();
+        // Keep-alive: while waiting for first frame, actively re-enable if
+        // something external disabled it (defensive — prevents rogue disable).
+        if (_isShowing && _hasTexture)
+        {
+            SuppressARCameraBackground();
+        }
+        else if (_isShowing && !_hasTexture)
+        {
+            EnsureARCameraBackgroundEnabled();
+        }
+
+        // ── Diagnostics ───────────────────────────────────────────────────
+        IsCameraManFound = (_cameraManager != null);
+        IsBgEnabled      = (_arBackground != null && _arBackground.enabled)
+                           || (_arBackground == null && Camera.main != null
+                               && Camera.main.GetComponent<ARCameraBackground>() is { } bg
+                               && bg.enabled);
 
         // ── 3. Canvas mode: ScreenSpaceOverlay → ScreenSpaceCamera ────────
         bool shouldBeSceneMode = ARSession.state >= ARSessionState.SessionTracking;
@@ -158,7 +178,8 @@ public class ARCameraDisplay : MonoBehaviour
             {
                 // Session ended — let ARCameraBackground manage itself again.
                 RestoreARCameraBackground();
-                _hasTexture         = false;
+                _hasTexture   = false;
+                IsShowingFeed = false;
                 _displayImage.color = Color.clear;
             }
 
@@ -185,7 +206,7 @@ public class ARCameraDisplay : MonoBehaviour
 
     }
 
-    // ── ARCameraBackground suppression ───────────────────────────────────
+    // ── ARCameraBackground suppression / keep-alive ──────────────────────
 
     private void SuppressARCameraBackground()
     {
@@ -196,6 +217,18 @@ public class ARCameraDisplay : MonoBehaviour
         {
             _arBackground.enabled = false;
             // No log — this runs every frame.
+        }
+    }
+
+    private void EnsureARCameraBackgroundEnabled()
+    {
+        if (_arBackground == null)
+            _arBackground = Camera.main?.GetComponent<ARCameraBackground>();
+
+        if (_arBackground != null && !_arBackground.enabled)
+        {
+            _arBackground.enabled = true;
+            Debug.Log("[ARCameraDisplay] Keep-alive: re-enabled ARCameraBackground (was off while awaiting first frame).");
         }
     }
 
@@ -255,9 +288,11 @@ public class ARCameraDisplay : MonoBehaviour
                 image.Convert(convParams, rawData);
                 _cameraTexture.Apply();
 
+                DecodeFrameCount++;
                 if (!_hasTexture && _displayImage != null)
                 {
                     _hasTexture          = true;
+                    IsShowingFeed        = true;
                     _displayImage.color  = Color.white;
                     Debug.Log("[ARCameraDisplay] Real environment visible.");
                 }
@@ -287,6 +322,7 @@ public class ARCameraDisplay : MonoBehaviour
         if (!_hasAppEverPaused) return;
 
         _hasTexture   = false;
+        IsShowingFeed = false;
         _arBackground = null;
         Debug.Log("[ARCameraDisplay] App resumed — camera pipeline reset.");
     }

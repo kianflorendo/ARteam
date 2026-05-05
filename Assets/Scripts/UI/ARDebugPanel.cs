@@ -125,6 +125,12 @@ public class ARDebugPanel : MonoBehaviour
         bool manifestOk = ManifestLoader.Instance != null && ManifestLoader.Instance.IsLoaded;
         sb.AppendLine($"Manifest: {(manifestOk ? "Loaded" : "Loading...")}");
 
+        // ── Camera feed diagnostics ──────────────────────────────────────
+        sb.AppendLine($"CamFeed: {(ARCameraDisplay.IsShowingFeed ? "LIVE" : "WAITING")} | " +
+                      $"CamMgr: {(ARCameraDisplay.IsCameraManFound ? "OK" : "NULL")} | " +
+                      $"BgOn: {ARCameraDisplay.IsBgEnabled} | " +
+                      $"Frames: {ARCameraDisplay.DecodeFrameCount}");
+
         debugText.text = sb.ToString();
     }
 
