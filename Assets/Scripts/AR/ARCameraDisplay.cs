@@ -35,14 +35,15 @@ public class ARCameraDisplay : MonoBehaviour
     public static int DecodeFrameCount { get; private set; }
     public static bool IsSubsystemRunning { get; private set; }
 
-    private ARCameraManager _cameraManager;
-    private Canvas _canvas;
-    private RawImage _displayImage;
-    private Texture2D _cameraTexture;
-    private bool _isShowing;
-    private bool _hasTexture;
-    private int _frameSkip;
-    private bool _inSceneMode;
+    private ARCameraManager    _cameraManager;
+    private ARCameraBackground _arBackground;
+    private Canvas             _canvas;
+    private RawImage           _displayImage;
+    private Texture2D          _cameraTexture;
+    private bool               _isShowing;
+    private bool               _hasTexture;
+    private int                _frameSkip;
+    private bool               _inSceneMode;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void EnsureExists()
@@ -90,11 +91,23 @@ public class ARCameraDisplay : MonoBehaviour
             }
         }
 
-        IsCameraManFound = _cameraManager != null;
-        IsBgEnabled = false;
+        IsCameraManFound   = _cameraManager != null;
         IsSubsystemRunning = _cameraManager != null
             && _cameraManager.subsystem != null
             && _cameraManager.subsystem.running;
+
+        // Cache ARCameraBackground reference once.
+        if (_arBackground == null && Camera.main != null)
+            _arBackground = Camera.main.GetComponent<ARCameraBackground>();
+
+        // Suppress ARCameraBackground while the CPU feed is live.
+        // ARCameraBackground's URP blit overwrites the CPU canvas with the
+        // white OES texture on every frame that contains a 3D artifact.
+        // Disable it as soon as the first real CPU frame is decoded.
+        if (_hasTexture && _arBackground != null && _arBackground.enabled)
+            _arBackground.enabled = false;
+
+        IsBgEnabled = _arBackground != null && _arBackground.enabled;
 
         bool shouldBeSceneMode = ARSession.state >= ARSessionState.SessionTracking;
 
@@ -130,7 +143,11 @@ public class ARCameraDisplay : MonoBehaviour
             if (!_isShowing)
             {
                 _hasTexture = false;
+                IsShowingFeed = false;
                 _displayImage.color = Color.clear;
+                // Restore background so the Enforcer can re-setup on next session.
+                if (_arBackground != null && !_arBackground.enabled)
+                    _arBackground.enabled = true;
             }
 
             Debug.Log(_isShowing

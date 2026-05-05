@@ -105,15 +105,20 @@ public class ArtifactSpawner : MonoBehaviour
                     // model finishes loading and scaling in the background.
                     TryShowScroll(artifact, anchorTransform);
 
-                    // Auto-scale: wait up to 3 seconds for Renderer.bounds to initialize.
-                    // GLTFast uploads mesh data to the GPU asynchronously. Simple models
-                    // (e.g. Bolo Knife) are ready within 1-2 frames; complex models
-                    // (e.g. M2 Mortar) can take up to 90+ frames on low-end devices.
-                    // Using (true) in GetComponentsInChildren finds disabled renderers.
+                    // Auto-scale: measure the world-space bounding box and normalise
+                    // so the largest dimension equals targetModelSize.
+                    //
+                    // WHY MeshFilter.sharedMesh.bounds instead of Renderer.bounds:
+                    //   Renderer.bounds for a DISABLED renderer can return zero or stale
+                    //   data in Unity/GLTFast — the GPU hasn't rendered it yet so the
+                    //   cached AABB is wrong. sharedMesh.bounds is CPU mesh data that
+                    //   is always valid the moment GLTFast writes it, regardless of the
+                    //   renderer's enabled state. We scale it by lossyScale to get world
+                    //   size, which correctly handles nested transform hierarchies.
                     {
                         float maxDim = 0f;
                         float _elapsed = 0f;
-                        const float _maxWait = 3f;
+                        const float _maxWait = 5f;
 
                         while (_elapsed < _maxWait && spawnedObject != null)
                         {
@@ -121,14 +126,30 @@ public class ArtifactSpawner : MonoBehaviour
                             _elapsed += Time.deltaTime;
 
                             var _renderers = spawnedObject.GetComponentsInChildren<Renderer>(true);
-                            if (_renderers.Length > 0)
+                            foreach (var _r in _renderers)
                             {
-                                Bounds _b = _renderers[0].bounds;
-                                for (int _i = 1; _i < _renderers.Length; _i++)
-                                    _b.Encapsulate(_renderers[_i].bounds);
-                                maxDim = Mathf.Max(_b.size.x, _b.size.y, _b.size.z);
-                                if (maxDim > 0.001f) break;
+                                // Prefer CPU mesh bounds (works even when renderer disabled).
+                                var _mf = _r.GetComponent<MeshFilter>();
+                                if (_mf?.sharedMesh != null)
+                                {
+                                    Vector3 _ext = _mf.sharedMesh.bounds.extents;
+                                    Vector3 _ls  = _r.transform.lossyScale;
+                                    float   _d   = Mathf.Max(
+                                        Mathf.Abs(_ext.x * _ls.x),
+                                        Mathf.Abs(_ext.y * _ls.y),
+                                        Mathf.Abs(_ext.z * _ls.z)) * 2f;
+                                    if (_d > maxDim) maxDim = _d;
+                                }
+                                else if (_r.enabled)
+                                {
+                                    // Fallback: Renderer.bounds (only valid when enabled).
+                                    float _d = Mathf.Max(_r.bounds.size.x,
+                                                         _r.bounds.size.y,
+                                                         _r.bounds.size.z);
+                                    if (_d > maxDim) maxDim = _d;
+                                }
                             }
+                            if (maxDim > 0.001f) break;
                         }
 
                         if (spawnedObject != null)
