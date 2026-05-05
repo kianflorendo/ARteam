@@ -24,9 +24,12 @@
 //   vertical flip before the rotation is applied.
 //
 // Canvas modes:
-//   ScreenSpaceOverlay  (SessionInitializing)
-//     No Camera ref needed. Renders on top of the black clear color.
-//     No GPS artifacts exist yet — no depth ordering needed.
+//   Hidden  (SessionInitializing)
+//     On this device, ARCore does not expose camera frames to the application
+//     layer (frameReceived never fires, TryAcquireLatestCpuImage always returns
+//     false) until SessionTracking is reached. Activating the canvas early
+//     produces Frames=0 and a permanent black screen. The CPU canvas therefore
+//     remains hidden during initialisation; ARCameraBackground manages display.
 //
 //   ScreenSpaceCamera at 15 m  (SessionTracking)
 //     Depth-tested in the 3D scene. GPS artifacts at ~1 m are closer
@@ -163,7 +166,11 @@ public class ARCameraDisplay : MonoBehaviour
         }
 
         // ── 4. Show / hide ────────────────────────────────────────────────
-        bool needsShow = ARSession.state >= ARSessionState.SessionInitializing;
+        // Only activate at SessionTracking. On this device, ARCore does not
+        // deliver camera frames (frameReceived never fires) until tracking is
+        // established. Activating at SessionInitializing produces Frames=0
+        // and a black screen because TryAcquireLatestCpuImage always fails.
+        bool needsShow = ARSession.state >= ARSessionState.SessionTracking;
 
         if (_displayImage != null && needsShow != _isShowing)
         {
