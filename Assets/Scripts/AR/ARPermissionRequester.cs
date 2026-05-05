@@ -172,7 +172,7 @@ public class ARPermissionRequester : MonoBehaviour
         _label.alignment = TextAlignmentOptions.Center;
         _label.fontSize = 30;
         _label.color = Color.white;
-        _label.enableWordWrapping = true;
+        _label.textWrappingMode = TMPro.TextWrappingModes.Normal;
 
         var rect = _label.GetComponent<RectTransform>();
         rect.anchorMin = new Vector2(0.08f, 0.3f);

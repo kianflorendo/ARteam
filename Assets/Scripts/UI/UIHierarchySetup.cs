@@ -553,12 +553,12 @@ public class UIHierarchySetup : MonoBehaviour
         hlg.childForceExpandHeight = true;
 
         // Create 6 tab buttons
-        CreateNavTab(navBar.transform, "About", "📖");
-        CreateNavTab(navBar.transform, "Soldier", "⚔️");
-        CreateNavTab(navBar.transform, "Home", "🏠");
-        CreateNavTab(navBar.transform, "Camera", "📷"); // Center, main tab
-        CreateNavTab(navBar.transform, "Emblem", "🛡️");
-        CreateNavTab(navBar.transform, "Profile", "👤");
+        CreateNavTab(navBar.transform, "About",   "");
+        CreateNavTab(navBar.transform, "Soldier", "");
+        CreateNavTab(navBar.transform, "Home",    "");
+        CreateNavTab(navBar.transform, "Camera",  "");
+        CreateNavTab(navBar.transform, "Emblem",  "");
+        CreateNavTab(navBar.transform, "Profile", "");
 
         Debug.Log("[UIHierarchySetup] Created bottom nav bar with 6 tabs");
         return navBar;
