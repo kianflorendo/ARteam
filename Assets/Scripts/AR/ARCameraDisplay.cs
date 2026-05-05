@@ -30,7 +30,7 @@
 //
 //   ScreenSpaceCamera at 15 m  (SessionTracking)
 //     Depth-tested in the 3D scene. GPS artifacts at ~1 m are closer
-//     → depth test puts them IN FRONT of this 15 m canvas.
+//     -> depth test puts them IN FRONT of this 15 m canvas.
 //     ARCameraBackground is disabled so no competing OES blit exists.
 // ============================================================
 
@@ -45,24 +45,21 @@ public class ARCameraDisplay : MonoBehaviour
 {
     private const float PLANE_DISTANCE = 15f;
 
-    // ── Static diagnostics (read by ARDebugPanel and ARCameraBackgroundEnforcer) ─
-    public static bool IsShowingFeed        { get; private set; }
-    public static bool IsCameraManFound     { get; private set; }
-    public static bool IsBgEnabled          { get; private set; }
-    public static int  DecodeFrameCount     { get; private set; }
-    public static bool IsSubsystemRunning   { get; private set; }
+    public static bool IsShowingFeed { get; private set; }
+    public static bool IsCameraManFound { get; private set; }
+    public static bool IsBgEnabled { get; private set; }
+    public static int DecodeFrameCount { get; private set; }
+    public static bool IsSubsystemRunning { get; private set; }
 
-    private ARCameraManager    _cameraManager;
+    private ARCameraManager _cameraManager;
     private ARCameraBackground _arBackground;
-    private Canvas             _canvas;
-    private RawImage           _displayImage;
-    private Texture2D          _cameraTexture;
-    private bool               _isShowing;
-    private bool               _hasTexture;
-    private int                _frameSkip;
-    private bool               _inSceneMode;
-
-    // ── Singleton bootstrap ──────────────────────────────────────────────
+    private Canvas _canvas;
+    private RawImage _displayImage;
+    private Texture2D _cameraTexture;
+    private bool _isShowing;
+    private bool _hasTexture;
+    private int _frameSkip;
+    private bool _inSceneMode;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void EnsureExists()
@@ -71,41 +68,36 @@ public class ARCameraDisplay : MonoBehaviour
         DontDestroyOnLoad(new GameObject("[AUTO] ARCameraDisplay", typeof(ARCameraDisplay)));
     }
 
-    // ── Lifecycle ────────────────────────────────────────────────────────
-
     private void Start()
     {
         var canvasGo = new GameObject("[AR Camera Fallback Canvas]");
         DontDestroyOnLoad(canvasGo);
 
-        _canvas              = canvasGo.AddComponent<Canvas>();
-        _canvas.renderMode   = RenderMode.ScreenSpaceOverlay;
+        _canvas = canvasGo.AddComponent<Canvas>();
+        _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         _canvas.sortingOrder = -100;
 
         var rawGo = new GameObject("CameraRaw");
         rawGo.transform.SetParent(canvasGo.transform, false);
 
-        _displayImage       = rawGo.AddComponent<RawImage>();
+        _displayImage = rawGo.AddComponent<RawImage>();
         _displayImage.color = Color.clear;
 
-        // ── Rotation correction for Android portrait ──────────────────────
         // Camera delivers landscape images on Android. Rotate the RawImage
         // -90° (CW) so the landscape texture fills the portrait screen.
-        // sizeDelta is (Screen.height, Screen.width) — swapped — so that
-        // after the -90° rotation the image visually spans (width, height).
         var rt = rawGo.GetComponent<RectTransform>();
-        rt.localRotation  = Quaternion.Euler(0f, 0f, -90f);
-        rt.anchorMin      = new Vector2(0.5f, 0.5f);
-        rt.anchorMax      = new Vector2(0.5f, 0.5f);
+        rt.localRotation = Quaternion.Euler(0f, 0f, -90f);
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
         rt.anchoredPosition = Vector2.zero;
-        rt.sizeDelta      = new Vector2(Screen.height, Screen.width);
+        rt.sizeDelta = new Vector2(Screen.height, Screen.width);
 
         _displayImage.gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        // ── 1. Cache ARCameraManager (find once) ──────────────────────────
+        // Cache ARCameraManager once.
         if (_cameraManager == null)
         {
             var mgr = FindAnyObjectByType<ARCameraManager>();
@@ -116,14 +108,9 @@ public class ARCameraDisplay : MonoBehaviour
             }
         }
 
-        // ── 2. ARCameraBackground: keep alive until first frame; suppress after ─
-        // Gate: only suppress AFTER the first CPU frame is decoded (_hasTexture).
-        // Before that, ARCameraBackground must stay enabled — on this device
-        // its OnEnable() is what triggers ARCameraManager to open the camera
-        // hardware and start delivering frames. Suppressing too early means
-        // TryAcquireLatestCpuImage() never gets a frame → black screen.
-        // Keep-alive: while waiting for first frame, actively re-enable if
-        // something external disabled it (defensive — prevents rogue disable).
+        // Keep ARCameraBackground alive until the first CPU frame arrives.
+        // After that, suppress it so the white OES path cannot overwrite
+        // the real CPU camera feed behind spawned artifacts.
         if (_isShowing && _hasTexture)
         {
             SuppressARCameraBackground();
@@ -133,33 +120,15 @@ public class ARCameraDisplay : MonoBehaviour
             EnsureARCameraBackgroundEnabled();
         }
 
-        // ── Diagnostics + subsystem guard ────────────────────────────────
-        IsCameraManFound = (_cameraManager != null);
-        IsBgEnabled      = (_arBackground != null && _arBackground.enabled)
-                           || (_arBackground == null && Camera.main != null
-                               && Camera.main.GetComponent<ARCameraBackground>() is { } bg
-                               && bg.enabled);
+        IsCameraManFound = _cameraManager != null;
+        IsBgEnabled = (_arBackground != null && _arBackground.enabled)
+            || (_arBackground == null && Camera.main != null
+                && Camera.main.GetComponent<ARCameraBackground>() is { } bg
+                && bg.enabled);
+        IsSubsystemRunning = _cameraManager != null
+            && _cameraManager.subsystem != null
+            && _cameraManager.subsystem.running;
 
-        if (_cameraManager != null)
-        {
-            var sub = _cameraManager.subsystem;
-            IsSubsystemRunning = sub != null && sub.running;
-
-            // If subsystem exists but isn't running, start it explicitly.
-            // On some Xiaomi/Redmi devices the subsystem is created but not
-            // started, which causes TryAcquireLatestCpuImage to always fail.
-            if (sub != null && !sub.running && _isShowing)
-            {
-                sub.Start();
-                Debug.Log("[ARCameraDisplay] Explicitly started camera subsystem.");
-            }
-        }
-        else
-        {
-            IsSubsystemRunning = false;
-        }
-
-        // ── 3. Canvas mode: ScreenSpaceOverlay → ScreenSpaceCamera ────────
         bool shouldBeSceneMode = ARSession.state >= ARSessionState.SessionTracking;
 
         if (shouldBeSceneMode && !_inSceneMode)
@@ -167,21 +136,20 @@ public class ARCameraDisplay : MonoBehaviour
             var main = Camera.main;
             if (main != null)
             {
-                _canvas.worldCamera   = main;
-                _canvas.renderMode    = RenderMode.ScreenSpaceCamera;
+                _canvas.worldCamera = main;
+                _canvas.renderMode = RenderMode.ScreenSpaceCamera;
                 _canvas.planeDistance = PLANE_DISTANCE;
-                _inSceneMode          = true;
+                _inSceneMode = true;
                 Debug.Log("[ARCameraDisplay] Switched to ScreenSpaceCamera (tracking).");
             }
         }
         else if (!shouldBeSceneMode && _inSceneMode)
         {
             _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            _inSceneMode       = false;
+            _inSceneMode = false;
             Debug.Log("[ARCameraDisplay] Reverted to ScreenSpaceOverlay (tracking lost).");
         }
 
-        // ── 4. Show / hide ────────────────────────────────────────────────
         bool needsShow = ARSession.state >= ARSessionState.SessionInitializing;
 
         if (_displayImage != null && needsShow != _isShowing)
@@ -191,24 +159,23 @@ public class ARCameraDisplay : MonoBehaviour
 
             if (_isShowing)
             {
-                if (!_hasTexture) TryDecodeCpuImage();
+                if (!_hasTexture)
+                    TryDecodeCpuImage();
             }
             else
             {
-                // Session ended — let ARCameraBackground manage itself again.
                 RestoreARCameraBackground();
-                _hasTexture   = false;
+                _hasTexture = false;
                 IsShowingFeed = false;
                 _displayImage.color = Color.clear;
             }
 
             Debug.Log(_isShowing
                 ? "[ARCameraDisplay] Showing CPU camera display."
-                : "[ARCameraDisplay] Hidden — session pre-initialising.");
+                : "[ARCameraDisplay] Hidden - session pre-initialising.");
         }
 
-        // ── 5. Decode CPU frames ──────────────────────────────────────────
-        // Aggressive every frame until first texture; every other frame after.
+        // Decode every frame until the first texture, then every other frame.
         if (_isShowing && _cameraManager != null)
         {
             if (!_hasTexture)
@@ -222,10 +189,63 @@ public class ARCameraDisplay : MonoBehaviour
                     TryDecodeCpuImage();
             }
         }
-
     }
 
-    // ── ARCameraBackground suppression / keep-alive ──────────────────────
+    private void OnCameraFrameReceived(ARCameraFrameEventArgs args)
+    {
+        if (!_isShowing || _cameraManager == null) return;
+        TryDecodeCpuImage();
+    }
+
+    private void TryDecodeCpuImage()
+    {
+        if (_cameraManager == null) return;
+        if (!_cameraManager.TryAcquireLatestCpuImage(out var image)) return;
+
+        using (image)
+        {
+            try
+            {
+                int w = Mathf.Max(1, image.width / 2);
+                int h = Mathf.Max(1, image.height / 2);
+
+                if (_cameraTexture == null
+                    || _cameraTexture.width != w
+                    || _cameraTexture.height != h)
+                {
+                    if (_cameraTexture != null) Destroy(_cameraTexture);
+                    _cameraTexture = new Texture2D(w, h, TextureFormat.RGBA32, false);
+                    if (_displayImage != null)
+                        _displayImage.texture = _cameraTexture;
+                }
+
+                var convParams = new XRCpuImage.ConversionParams
+                {
+                    inputRect = new RectInt(0, 0, image.width, image.height),
+                    outputDimensions = new Vector2Int(w, h),
+                    outputFormat = TextureFormat.RGBA32,
+                    transformation = XRCpuImage.Transformation.MirrorY,
+                };
+
+                var rawData = _cameraTexture.GetRawTextureData<byte>();
+                image.Convert(convParams, rawData);
+                _cameraTexture.Apply();
+                DecodeFrameCount++;
+
+                if (!_hasTexture && _displayImage != null)
+                {
+                    _hasTexture = true;
+                    IsShowingFeed = true;
+                    _displayImage.color = Color.white;
+                    Debug.Log("[ARCameraDisplay] Real environment visible.");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[ARCameraDisplay] Frame decode failed: {e.Message}");
+            }
+        }
+    }
 
     private void SuppressARCameraBackground()
     {
@@ -235,7 +255,6 @@ public class ARCameraDisplay : MonoBehaviour
         if (_arBackground != null && _arBackground.enabled)
         {
             _arBackground.enabled = false;
-            // No log — this runs every frame.
         }
     }
 
@@ -259,71 +278,6 @@ public class ARCameraDisplay : MonoBehaviour
             Debug.Log("[ARCameraDisplay] Restored ARCameraBackground (session ended).");
         }
     }
-
-    // ── Camera frame handling ────────────────────────────────────────────
-
-    private void OnCameraFrameReceived(ARCameraFrameEventArgs args)
-    {
-        if (!_isShowing || _cameraManager == null) return;
-        TryDecodeCpuImage();
-    }
-
-    private void TryDecodeCpuImage()
-    {
-        if (_cameraManager == null) return;
-        if (!_cameraManager.TryAcquireLatestCpuImage(out var image)) return;
-
-        using (image)
-        {
-            try
-            {
-                // 1/2 resolution — good quality with acceptable CPU cost.
-                // (1/4 was fast but too blurry at 3× upscale on portrait screen)
-                int w = Mathf.Max(1, image.width  / 2);
-                int h = Mathf.Max(1, image.height / 2);
-
-                if (_cameraTexture == null
-                    || _cameraTexture.width  != w
-                    || _cameraTexture.height != h)
-                {
-                    if (_cameraTexture != null) Destroy(_cameraTexture);
-                    _cameraTexture = new Texture2D(w, h, TextureFormat.RGBA32, false);
-                    if (_displayImage != null)
-                        _displayImage.texture = _cameraTexture;
-                }
-
-                var convParams = new XRCpuImage.ConversionParams
-                {
-                    inputRect        = new RectInt(0, 0, image.width, image.height),
-                    outputDimensions = new Vector2Int(w, h),
-                    outputFormat     = TextureFormat.RGBA32,
-                    // MirrorY: converts Android's OpenGL bottom-up convention to
-                    // Unity's top-down convention. The RawImage rotation (-90°)
-                    // handles the portrait/landscape orientation correction.
-                    transformation   = XRCpuImage.Transformation.MirrorY,
-                };
-
-                var rawData = _cameraTexture.GetRawTextureData<byte>();
-                image.Convert(convParams, rawData);
-                _cameraTexture.Apply();
-
-                DecodeFrameCount++;
-                if (!_hasTexture && _displayImage != null)
-                {
-                    _hasTexture          = true;
-                    IsShowingFeed        = true;
-                    _displayImage.color  = Color.white;
-                    Debug.Log("[ARCameraDisplay] Real environment visible.");
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogWarning($"[ARCameraDisplay] Frame decode failed: {e.Message}");
-            }
-        }
-    }
-
-    // ── Cleanup ──────────────────────────────────────────────────────────
 
     private void OnDestroy()
     {

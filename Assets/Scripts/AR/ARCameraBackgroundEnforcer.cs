@@ -6,12 +6,12 @@ using UnityEngine.XR.ARFoundation;
 /// Ensures the AR camera background renders the device camera feed.
 ///
 /// Root causes addressed:
-/// 1. alpha=0 backgroundColor composites as white on Android — use Color.black.
+/// 1. alpha=0 backgroundColor composites as white on Android - use Color.black.
 /// 2. ARCameraBackground loses frameReceived subscription after ARSession
-///    disable/enable cycles — force a disable→enable cycle to re-subscribe.
-/// 3. ARSession can get stuck at SessionInitializing outdoors — auto-reset
+///    disable/enable cycles - force a disable->enable cycle to re-subscribe.
+/// 3. ARSession can get stuck at SessionInitializing outdoors - auto-reset
 ///    after 15 seconds to restart the AR initialization sequence.
-/// 4. ARCameraManager can be unexpectedly disabled — ensure it stays enabled.
+/// 4. ARCameraManager can be unexpectedly disabled - ensure it stays enabled.
 /// </summary>
 [DefaultExecutionOrder(-120)]
 public class ARCameraBackgroundEnforcer : MonoBehaviour
@@ -22,8 +22,8 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
 
     private bool _applied;
     private float _stuckTimer;
-    private int  _resetCount;        // number of stuck-resets attempted this session
-    private const int MAX_RESETS = 3; // give up after 3 × 30 s = 90 s of stuck time
+    private int _resetCount;        // number of stuck-resets attempted this session
+    private const int MAX_RESETS = 3; // give up after 3 x 30 s = 90 s of stuck time
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void EnsureExists()
@@ -38,7 +38,7 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
         // On Android, coming back from background resets the camera pipeline.
         if (!paused)
         {
-            _applied    = false;
+            _applied = false;
             _stuckTimer = 0f;
             _resetCount = 0;
         }
@@ -50,18 +50,10 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
         EnsureBackground();
     }
 
-    // ── Session stuck detection ───────────────────────────────────────────
-    // If the AR session stays at SessionInitializing for more than 15 seconds,
-    // force a disable/enable cycle on ARSession. This restarts ARCore's
-    // initialization sequence and often resolves the stuck state outdoors.
-
     private void MonitorSessionStuck()
     {
         if (ARSession.state == ARSessionState.SessionInitializing)
         {
-            // If the CPU camera feed is already showing the real environment,
-            // the session is not truly stuck — ARCore is running and scanning.
-            // Skip the reset so we don't interrupt an actively working camera.
             if (ARCameraDisplay.IsShowingFeed)
             {
                 _stuckTimer = 0f;
@@ -71,23 +63,19 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
             _stuckTimer += Time.unscaledDeltaTime;
 
             // Allow up to MAX_RESETS attempts, one every 30 s.
-            // 15 s was too aggressive — ARCore on Xiaomi/Redmi devices needs up to
-            // 20-25 s to scan enough feature points to reach SessionTracking outdoors.
-            // Resetting at 15 s created an infinite Initializing → reset → Initializing
-            // loop that permanently prevented SessionTracking.
             if (_stuckTimer > 30f && _resetCount < MAX_RESETS)
             {
                 _stuckTimer = 0f;
                 _resetCount++;
                 _applied = false;
-                Debug.Log($"[ARCameraBackgroundEnforcer] Session stuck (no feed) — reset #{_resetCount}/{MAX_RESETS}.");
+                Debug.Log($"[ARCameraBackgroundEnforcer] Session stuck (no feed) - reset #{_resetCount}/{MAX_RESETS}.");
                 StartCoroutine(ResetARSession());
             }
         }
         else if (ARSession.state == ARSessionState.SessionTracking)
         {
-            _stuckTimer  = 0f;
-            _resetCount  = 0;
+            _stuckTimer = 0f;
+            _resetCount = 0;
         }
     }
 
@@ -102,11 +90,8 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
         Debug.Log("[ARCameraBackgroundEnforcer] ARSession re-enabled after stuck-state reset.");
     }
 
-    // ── Camera background setup ───────────────────────────────────────────
-
     private void EnsureBackground()
     {
-        // Step 1 — find ARCameraManager.
         if (_cameraManager == null)
         {
             _cameraManager = FindAnyObjectByType<ARCameraManager>(FindObjectsInactive.Include);
@@ -114,7 +99,6 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
             _applied = false;
         }
 
-        // Step 2 — ensure ARCameraManager is enabled.
         if (!_cameraManager.enabled)
         {
             _cameraManager.enabled = true;
@@ -122,7 +106,6 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
             _applied = false;
         }
 
-        // Step 3 — get the AR camera.
         if (_arCamera == null)
         {
             _arCamera = _cameraManager.GetComponent<Camera>();
@@ -133,11 +116,9 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
             _applied = false;
         }
 
-        // Step 4 — always use opaque black clear color.
         _arCamera.clearFlags = CameraClearFlags.SolidColor;
         _arCamera.backgroundColor = Color.black;
 
-        // Step 5 — ensure ARCameraBackground exists on the AR camera.
         if (_background == null)
         {
             _background = _arCamera.GetComponent<ARCameraBackground>();
@@ -146,13 +127,6 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
             _applied = false;
         }
 
-        // Step 6 — force re-subscription once per setup cycle.
-        // The disable→enable cycle on ARCameraBackground does two things:
-        //   1. Restores the frameReceived subscription lost after ARSession cycles.
-        //   2. Triggers ARCameraBackground.OnEnable() at SessionInitializing, which
-        //      on certain Android devices is what causes ARCameraManager to actually
-        //      open the camera hardware. Skipping this toggle prevents the camera
-        //      from ever starting on those devices.
         if (!_applied)
         {
             if (ARSession.state < ARSessionState.SessionInitializing)
@@ -165,9 +139,7 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
             return;
         }
 
-        // Step 7 removed — ARCameraDisplay owns the background enabled state.
-        // When the CPU feed is active, ARCameraDisplay disables ARCameraBackground
-        // every frame to prevent the white OES blit from overriding the CPU feed.
-        // A keep-alive here would fight that and re-introduce the white background.
+        // ARCameraDisplay owns the background enabled state after the first
+        // CPU frame. Keeping it alive here would re-introduce the white OES bug.
     }
 }
