@@ -24,7 +24,6 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
     private float _stuckTimer;
     private int  _resetCount;        // number of stuck-resets attempted this session
     private const int MAX_RESETS = 3; // give up after 3 × 30 s = 90 s of stuck time
-    private bool _hasAppEverPaused;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void EnsureExists()
@@ -36,21 +35,13 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
 
     private void OnApplicationPause(bool paused)
     {
-        if (paused)
+        // On Android, coming back from background resets the camera pipeline.
+        if (!paused)
         {
-            _hasAppEverPaused = true;
-            return;
+            _applied    = false;
+            _stuckTimer = 0f;
+            _resetCount = 0;
         }
-
-        // Guard: OnApplicationPause(false) fires on initial Android launch (first
-        // Activity focus gain). Resetting _applied then causes a double-toggle of
-        // ARCameraBackground which can stall camera hardware on certain devices.
-        // Only process genuine app resumes (preceded by a real pause).
-        if (!_hasAppEverPaused) return;
-
-        _applied    = false;
-        _stuckTimer = 0f;
-        _resetCount = 0;
     }
 
     private void Update()
