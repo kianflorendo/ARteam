@@ -21,7 +21,7 @@ public class ArtifactSpawner : MonoBehaviour
     [Header("Spawn Settings")]
     [Tooltip("Auto-scale normalizes every prefab so its largest dimension equals this (meters). " +
              "Works regardless of the model's export units (cm, mm, etc.).")]
-    public float targetModelSize = 1.2f;
+    public float targetModelSize = 1.6f;
 
     private Vector3 SPAWN_OFFSET = new Vector3(0f, 0.05f, 0f);
 

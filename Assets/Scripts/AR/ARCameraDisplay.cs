@@ -3,20 +3,19 @@
 // Location: Assets/Scripts/AR/ARCameraDisplay.cs
 // Mt. Samat AR Scavenger Hunt - Terra App
 //
-// GPU-first camera display.
-//
-// The real AR camera background is the primary background layer.
-// The CPU RawImage is only a fallback if the AR camera background
-// is actually unavailable on a device.
+// CPU-path camera display that shows the real environment on Android
+// devices where ARCameraBackground's GPU OES blit renders white garbage.
+// This class replaces whatever ARCameraBackground draws with real camera
+// pixels from the CPU image path.
 //
 // Canvas modes:
 //   ScreenSpaceOverlay  (SessionInitializing)
-//     No camera reference needed. The fallback stays hidden unless
-//     the AR camera background is unavailable.
+//     Renders on top of everything; no Camera reference needed.
+//     Covers the black AR-init clear color while ARCore starts up.
 //
 //   ScreenSpaceCamera at 15 m  (SessionTracking)
 //     Depth-tested in the 3D scene. GPS artifacts at ~1 m stay in
-//     front of the background canvas.
+//     front of this 15 m canvas.
 // ============================================================
 
 using System;
@@ -37,7 +36,6 @@ public class ARCameraDisplay : MonoBehaviour
     public static bool IsSubsystemRunning { get; private set; }
 
     private ARCameraManager _cameraManager;
-    private ARCameraBackground _arBackground;
     private Canvas _canvas;
     private RawImage _displayImage;
     private Texture2D _cameraTexture;
@@ -92,11 +90,8 @@ public class ARCameraDisplay : MonoBehaviour
             }
         }
 
-        if (_arBackground == null && Camera.main != null)
-            _arBackground = Camera.main.GetComponent<ARCameraBackground>();
-
         IsCameraManFound = _cameraManager != null;
-        IsBgEnabled = _arBackground != null && _arBackground.enabled;
+        IsBgEnabled = false;
         IsSubsystemRunning = _cameraManager != null
             && _cameraManager.subsystem != null
             && _cameraManager.subsystem.running;
@@ -123,36 +118,29 @@ public class ARCameraDisplay : MonoBehaviour
         }
 
         bool shouldShow = ARSession.state >= ARSessionState.SessionInitializing;
-        bool useCpuFallback = shouldShow && !IsBgEnabled;
 
         if (_displayImage != null && shouldShow != _isShowing)
         {
             _isShowing = shouldShow;
-            _displayImage.gameObject.SetActive(useCpuFallback);
+            _displayImage.gameObject.SetActive(_isShowing);
 
-            if (useCpuFallback && !_hasTexture)
+            if (_isShowing && !_hasTexture)
                 TryDecodeCpuImage();
 
-            if (!useCpuFallback)
+            if (!_isShowing)
             {
                 _hasTexture = false;
                 _displayImage.color = Color.clear;
             }
 
             Debug.Log(_isShowing
-                ? (useCpuFallback
-                    ? "[ARCameraDisplay] Showing CPU fallback display."
-                    : "[ARCameraDisplay] Showing AR camera background.")
+                ? "[ARCameraDisplay] Showing CPU camera display."
                 : "[ARCameraDisplay] Hidden - session pre-initialising.");
         }
 
-        useCpuFallback = _isShowing && !IsBgEnabled;
-        if (_displayImage != null && _displayImage.gameObject.activeSelf != useCpuFallback)
-            _displayImage.gameObject.SetActive(useCpuFallback);
+        IsShowingFeed = _hasTexture;
 
-        IsShowingFeed = _isShowing && (IsBgEnabled || (_hasTexture && useCpuFallback));
-
-        if (_isShowing && _cameraManager != null && useCpuFallback)
+        if (_isShowing && _cameraManager != null)
         {
             if (!_hasTexture)
             {
@@ -169,14 +157,13 @@ public class ARCameraDisplay : MonoBehaviour
 
     private void OnCameraFrameReceived(ARCameraFrameEventArgs args)
     {
-        if (!_isShowing || _cameraManager == null || IsBgEnabled) return;
+        if (!_isShowing || _cameraManager == null) return;
         TryDecodeCpuImage();
     }
 
     private void TryDecodeCpuImage()
     {
         if (_cameraManager == null) return;
-        if (IsBgEnabled) return;
         if (!_cameraManager.TryAcquireLatestCpuImage(out var image)) return;
 
         using (image)
@@ -213,7 +200,7 @@ public class ARCameraDisplay : MonoBehaviour
                 {
                     _hasTexture = true;
                     _displayImage.color = Color.white;
-                    Debug.Log("[ARCameraDisplay] CPU fallback visible.");
+                    Debug.Log("[ARCameraDisplay] Real environment visible — CPU feed active.");
                 }
             }
             catch (Exception e)
