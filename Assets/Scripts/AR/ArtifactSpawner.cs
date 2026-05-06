@@ -206,7 +206,11 @@ public class ArtifactSpawner : MonoBehaviour
 
     private void TryShowScroll(ArtifactData artifact, Transform anchorTransform)
     {
-        ScrollUIManager.Instance?.ShowScroll(artifact, anchorTransform);
+        // Scroll UI disabled — only 3D models appear in AR.
+        // The info card was rendering as a large 3D world-space panel that
+        // blocked the camera view. Re-enable when the scroll is redesigned
+        // as a 2D screen-space HUD instead of a world-anchored object.
+        // ScrollUIManager.Instance?.ShowScroll(artifact, anchorTransform);
     }
     
     // ============================================================
