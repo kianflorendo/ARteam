@@ -115,6 +115,39 @@ public class OfflineGPSRouteManager : MonoBehaviour
         if (!string.IsNullOrEmpty(ActiveArtifactId))
         {
             EnsureActiveArtifactPresented();
+
+            // Even while an artifact is active (not yet collected), keep tracking
+            // distance so the next artifact can unlock automatically. This prevents
+            // the route from getting stuck when the player walks past without tapping
+            // the scroll's Collect button.
+            var activeArt = ManifestLoader.Instance?.GetArtifact(ActiveArtifactId);
+            if (activeArt != null)
+            {
+                int nextSeq = activeArt.sequence_index + 1;
+                var nextAfterActive = _routeArtifacts.Find(
+                    a => a.sequence_index == nextSeq
+                      && !InventoryManager.Instance.IsCollected(a.id));
+
+                if (nextAfterActive != null)
+                {
+                    if (EnsureSegmentStart())
+                    {
+                        _currentSegmentDistance = GetDistanceFromSegmentStart();
+                        if (_currentSegmentDistance >= nextAfterActive.distance_from_previous_meters)
+                        {
+                            // Player walked far enough — auto-advance past the uncollected artifact.
+                            ArtifactSpawner.Instance?.Despawn(ActiveArtifactId);
+                            DestroyPresentationAnchor(ActiveArtifactId);
+                            var st = GPSRouteStateStore.Instance.State;
+                            st.active_artifact_id = "";
+                            st.next_sequence_index = nextSeq;
+                            GPSRouteStateStore.Instance.Save();
+                            Debug.Log($"[OfflineGPSRouteManager] Auto-advanced past {activeArt.id} — unlocking {nextAfterActive.id}.");
+                            UnlockArtifact(nextAfterActive);
+                        }
+                    }
+                }
+            }
             return;
         }
 
