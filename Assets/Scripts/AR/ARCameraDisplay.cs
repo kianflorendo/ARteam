@@ -68,7 +68,7 @@ public class ARCameraDisplay : MonoBehaviour
         _displayImage.color = Color.clear;
 
         var rt = rawGo.GetComponent<RectTransform>();
-        rt.localRotation = Quaternion.Euler(0f, 0f, -90f);
+        rt.localRotation = Quaternion.Euler(0f, 0f, 90f);
         rt.anchorMin = new Vector2(0.5f, 0.5f);
         rt.anchorMax = new Vector2(0.5f, 0.5f);
         rt.anchoredPosition = Vector2.zero;
@@ -187,8 +187,8 @@ public class ARCameraDisplay : MonoBehaviour
         {
             try
             {
-                int w = Mathf.Max(1, image.width / 2);
-                int h = Mathf.Max(1, image.height / 2);
+                int w = image.width;
+                int h = image.height;
 
                 if (_cameraTexture == null
                     || _cameraTexture.width != w

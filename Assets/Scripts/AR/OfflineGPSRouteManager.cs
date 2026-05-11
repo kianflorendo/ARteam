@@ -43,6 +43,19 @@ public class OfflineGPSRouteManager : MonoBehaviour
     {
         get
         {
+            // While an artifact is active, the real walking target is the NEXT artifact after it.
+            if (!string.IsNullOrEmpty(ActiveArtifactId))
+            {
+                var active = ManifestLoader.Instance?.GetArtifact(ActiveArtifactId);
+                if (active != null)
+                {
+                    var nextAfter = _routeArtifacts?.Find(a =>
+                        a.sequence_index == active.sequence_index + 1
+                        && !InventoryManager.Instance.IsCollected(a.id));
+                    if (nextAfter != null)
+                        return $"({active.name} active) → {nextAfter.name}";
+                }
+            }
             var next = GetNextRouteArtifact();
             return next != null ? next.name : "None";
         }
@@ -52,6 +65,19 @@ public class OfflineGPSRouteManager : MonoBehaviour
     {
         get
         {
+            // While an artifact is active, return the distance of the NEXT artifact after it.
+            if (!string.IsNullOrEmpty(ActiveArtifactId))
+            {
+                var active = ManifestLoader.Instance?.GetArtifact(ActiveArtifactId);
+                if (active != null)
+                {
+                    var nextAfter = _routeArtifacts?.Find(a =>
+                        a.sequence_index == active.sequence_index + 1
+                        && !InventoryManager.Instance.IsCollected(a.id));
+                    if (nextAfter != null)
+                        return nextAfter.distance_from_previous_meters;
+                }
+            }
             var next = GetNextRouteArtifact();
             return next != null ? next.distance_from_previous_meters : 0f;
         }
@@ -273,6 +299,30 @@ public class OfflineGPSRouteManager : MonoBehaviour
             GPSRouteStateStore.Instance.State.active_artifact_id = "";
             GPSRouteStateStore.Instance.Save();
             return;
+        }
+
+        // Guard against corrupted persisted state: if a predecessor is BOTH uncollected
+        // AND has not been passed yet (seq >= next_sequence_index), this artifact was
+        // promoted prematurely. Reset to that predecessor.
+        //
+        // IMPORTANT: an auto-advanced predecessor has seq < next_sequence_index and must
+        // NOT block the current artifact — only truly un-reached predecessors are blocked.
+        int currentNextSeq = GPSRouteStateStore.Instance.State.next_sequence_index;
+        foreach (var a in _routeArtifacts)
+        {
+            if (a.sequence_index < activeArtifact.sequence_index
+                && !InventoryManager.Instance.IsCollected(a.id)
+                && a.sequence_index >= currentNextSeq)
+            {
+                var st = GPSRouteStateStore.Instance.State;
+                st.active_artifact_id = "";
+                st.next_sequence_index = a.sequence_index;
+                GPSRouteStateStore.Instance.Save();
+                Debug.Log($"[OfflineGPSRouteManager] Stale state: prerequisite {a.id} " +
+                          $"(seq={a.sequence_index}) not yet reached (next_seq={currentNextSeq}). " +
+                          $"Resetting from {activeArtifact.id}.");
+                return;
+            }
         }
 
         if (!ArtifactSpawner.Instance.IsSpawned(activeArtifact.id))
