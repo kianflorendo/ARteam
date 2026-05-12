@@ -78,23 +78,22 @@ public class NavigationManager : MonoBehaviour
             return;
         }
 
-        // Play UI tap sound
-        if (AudioManager.Instance != null)
+        // Hide every screen in the Screens container — not just the tracked 6.
+        // DivisionDetailScreen and any future screens must also be hidden so their
+        // opaque backgrounds don't block the AR camera feed on CameraScreen.
+        var container = targetScreen.transform.parent;
+        if (container != null)
         {
-            AudioManager.Instance.PlayUITapSFX();
+            foreach (Transform child in container)
+                child.gameObject.SetActive(false);
         }
-
-        // Hide all screens
-        if (aboutScreen != null) aboutScreen.SetActive(false);
-        if (soldierScreen != null) soldierScreen.SetActive(false);
-        if (homeScreen != null) homeScreen.SetActive(false);
-        if (cameraScreen != null) cameraScreen.SetActive(false);
-        if (emblemScreen != null) emblemScreen.SetActive(false);
-        if (profileScreen != null) profileScreen.SetActive(false);
 
         // Show target screen
         targetScreen.SetActive(true);
         currentScreen = targetScreen;
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayUITapSFX();
 
         Debug.Log($"[NavigationManager] Switched to {targetScreen.name}");
     }

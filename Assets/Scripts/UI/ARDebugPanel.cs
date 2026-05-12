@@ -94,7 +94,23 @@ public class ARDebugPanel : MonoBehaviour
         if (OfflineGPSRouteManager.Instance != null)
         {
             sb.AppendLine($"Route Origin: {(OfflineGPSRouteManager.Instance.HasOrigin ? "SET" : "WAITING")}");
-            sb.AppendLine($"Next Seq: {OfflineGPSRouteManager.Instance.NextSequenceIndex}");
+
+            // Show active seq / next seq in a readable way so the numbers make sense.
+            // state.next_sequence_index equals the ACTIVE artifact's seq while one is
+            // presented, which looks confusing ("Next Seq: 2" while seq-2 is already
+            // showing). Show the true next-to-unlock value instead.
+            var activeId = OfflineGPSRouteManager.Instance.ActiveArtifactId;
+            if (!string.IsNullOrEmpty(activeId))
+            {
+                var activeArt = ManifestLoader.Instance?.GetArtifact(activeId);
+                int activeSeq = activeArt?.sequence_index ?? OfflineGPSRouteManager.Instance.NextSequenceIndex;
+                sb.AppendLine($"Active Seq: {activeSeq} | Unlock Next: {activeSeq + 1}");
+            }
+            else
+            {
+                sb.AppendLine($"Next Seq: {OfflineGPSRouteManager.Instance.NextSequenceIndex}");
+            }
+
             sb.AppendLine($"Target: {OfflineGPSRouteManager.Instance.CurrentTargetName}");
             sb.AppendLine($"Segment: {OfflineGPSRouteManager.Instance.CurrentSegmentDistance:F2} / {OfflineGPSRouteManager.Instance.CurrentTargetDistance:F2}m");
             sb.AppendLine($"Active GPS Artifact: {OfflineGPSRouteManager.Instance.ActiveArtifactId}");
@@ -165,7 +181,10 @@ public class ARDebugPanel : MonoBehaviour
             {
                 "GPS-TEST-001",
                 "GPS-TEST-002",
-                "GPS-TEST-003"
+                "GPS-TEST-003",
+                "GPS-TEST-004",
+                "GPS-TEST-005",
+                "GPS-TEST-006"
             });
 
         // Reset route state and in-memory tracking

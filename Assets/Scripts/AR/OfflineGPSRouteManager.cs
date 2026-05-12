@@ -252,7 +252,10 @@ public class OfflineGPSRouteManager : MonoBehaviour
             dirty = true;
         }
 
-        // Forward pass: skip sequences already collected.
+        // Forward pass: advance past any sequences that were explicitly collected.
+        // Auto-advanced sequences (walked past without collecting) are NOT in inventory
+        // and must not be re-visited — next_sequence_index is the authoritative watermark
+        // of how far the player has progressed regardless of collection status.
         while (true)
         {
             var next = _routeArtifacts.Find(a => a.sequence_index == state.next_sequence_index);
@@ -260,30 +263,6 @@ public class OfflineGPSRouteManager : MonoBehaviour
                 break;
 
             state.next_sequence_index++;
-            dirty = true;
-        }
-
-        // Backward pass: if the saved next_sequence_index is AHEAD of artifacts
-        // that haven't actually been collected yet (can happen when gps_route_state.json
-        // and inventory.json are out of sync — e.g. app reinstall clears inventory but
-        // not route state, or vice versa), reset to the lowest uncollected sequence
-        // so the player always starts from the correct first artifact.
-        int lowestUncollected = int.MaxValue;
-        foreach (var artifact in _routeArtifacts)
-        {
-            if (!InventoryManager.Instance.IsCollected(artifact.id))
-                lowestUncollected = Mathf.Min(lowestUncollected, artifact.sequence_index);
-        }
-
-        if (lowestUncollected != int.MaxValue && lowestUncollected < state.next_sequence_index)
-        {
-            Debug.Log($"[OfflineGPSRouteManager] Sequence out of sync — resetting next_sequence_index " +
-                      $"from {state.next_sequence_index} to {lowestUncollected}.");
-            state.next_sequence_index = lowestUncollected;
-            if (!string.IsNullOrEmpty(state.active_artifact_id))
-            {
-                state.active_artifact_id = "";
-            }
             dirty = true;
         }
 
@@ -314,6 +293,9 @@ public class OfflineGPSRouteManager : MonoBehaviour
                 && !InventoryManager.Instance.IsCollected(a.id)
                 && a.sequence_index >= currentNextSeq)
             {
+                // Despawn the prematurely promoted artifact before resetting state.
+                ArtifactSpawner.Instance?.Despawn(activeArtifact.id);
+                DestroyPresentationAnchor(activeArtifact.id);
                 var st = GPSRouteStateStore.Instance.State;
                 st.active_artifact_id = "";
                 st.next_sequence_index = a.sequence_index;
