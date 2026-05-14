@@ -108,12 +108,14 @@ public class OfflineGPSRouteManager : MonoBehaviour
     {
         InventoryManager.OnArtifactCollected += HandleArtifactCollected;
         ManifestLoader.OnManifestLoaded += ReloadRouteArtifacts;
+        ArtifactSpawner.OnArtifactModelVisible += HandleArtifactModelVisible;
     }
 
     private void OnDisable()
     {
         InventoryManager.OnArtifactCollected -= HandleArtifactCollected;
         ManifestLoader.OnManifestLoaded -= ReloadRouteArtifacts;
+        ArtifactSpawner.OnArtifactModelVisible -= HandleArtifactModelVisible;
     }
 
     private void Update()
@@ -137,6 +139,29 @@ public class OfflineGPSRouteManager : MonoBehaviour
             return;
 
         ReconcileProgressWithInventory();
+
+        // If every route artifact has been seen (next_seq past the last one and no
+        // active artifact), auto-reset so the tester loops back to Bolo automatically
+        // without pressing the RESET button. has_origin is preserved so the GPS wait
+        // is NOT triggered again — the route restarts immediately.
+        if (string.IsNullOrEmpty(ActiveArtifactId) && IsRouteComplete())
+        {
+            Debug.Log("[OfflineGPSRouteManager] All route artifacts done — auto-resetting for next loop.");
+            var ids = new System.Collections.Generic.List<string>();
+            foreach (var a in _routeArtifacts) ids.Add(a.id);
+            InventoryManager.Instance?.RemoveCollectedArtifacts(ids);
+
+            var st = GPSRouteStateStore.Instance.State;
+            st.active_artifact_id  = "";
+            st.next_sequence_index = 1;
+            // has_origin preserved so route starts immediately without GPS wait.
+            GPSRouteStateStore.Instance.Save();
+
+            _hasSegmentStart       = false;
+            _currentSegmentDistance = 0f;
+            _routeLoaded           = false;
+            return;
+        }
 
         if (!string.IsNullOrEmpty(ActiveArtifactId))
         {
@@ -173,6 +198,29 @@ public class OfflineGPSRouteManager : MonoBehaviour
                         }
                     }
                 }
+                else
+                {
+                    // Active artifact is the LAST in the route (no seq+1 artifact exists).
+                    // Without this block the route gets permanently stuck: nextAfterActive is
+                    // always null, so auto-advance never fires, next_sequence_index never
+                    // advances past maxSeq, and IsRouteComplete() never returns true.
+                    // Once the player walks the standard distance, mark the route complete
+                    // so the auto-reset loop fires on the next tick.
+                    if (EnsureSegmentStart())
+                    {
+                        _currentSegmentDistance = GetDistanceFromSegmentStart();
+                        if (_currentSegmentDistance >= activeArt.distance_from_previous_meters)
+                        {
+                            ArtifactSpawner.Instance?.Despawn(ActiveArtifactId);
+                            DestroyPresentationAnchor(ActiveArtifactId);
+                            var st = GPSRouteStateStore.Instance.State;
+                            st.active_artifact_id  = "";
+                            st.next_sequence_index = activeArt.sequence_index + 1; // exceeds maxSeq → triggers IsRouteComplete
+                            GPSRouteStateStore.Instance.Save();
+                            Debug.Log($"[OfflineGPSRouteManager] Last artifact {activeArt.id} passed — route complete, resetting for next loop.");
+                        }
+                    }
+                }
             }
             return;
         }
@@ -189,6 +237,15 @@ public class OfflineGPSRouteManager : MonoBehaviour
             return;
 
         UnlockArtifact(nextArtifact);
+    }
+
+    private bool IsRouteComplete()
+    {
+        if (_routeArtifacts == null || _routeArtifacts.Count == 0) return false;
+        int maxSeq = 0;
+        foreach (var a in _routeArtifacts)
+            maxSeq = Mathf.Max(maxSeq, a.sequence_index);
+        return maxSeq > 0 && GPSRouteStateStore.Instance.State.next_sequence_index > maxSeq;
     }
 
     private bool DependenciesReady()
@@ -208,6 +265,21 @@ public class OfflineGPSRouteManager : MonoBehaviour
             ? ManifestLoader.Instance.GetGPSRouteArtifacts()
             : new List<ArtifactData>();
         _routeLoaded = true;
+
+        // Always clear GPS route artifact progress from inventory on every route load.
+        // Reasons:
+        //   1. Ensures the route always starts from seq=1 (Bolo Knife) regardless of
+        //      what was collected in previous sessions.
+        //   2. Prevents cross-version inventory contamination when artifact IDs are
+        //      reassigned between manifest versions (e.g. Helmet/Automata sequence swap).
+        //   3. The auto-reset loop already clears inventory — this mirrors that on launch.
+        if (InventoryManager.Instance != null && _routeArtifacts.Count > 0)
+        {
+            var ids = new System.Collections.Generic.List<string>();
+            foreach (var a in _routeArtifacts) ids.Add(a.id);
+            InventoryManager.Instance.RemoveCollectedArtifacts(ids);
+            Debug.Log($"[OfflineGPSRouteManager] Route reload — cleared {ids.Count} GPS artifact entries from inventory. Route starts from seq=1.");
+        }
     }
 
     private bool EnsureOriginCaptured()
@@ -424,6 +496,20 @@ public class OfflineGPSRouteManager : MonoBehaviour
             0f);
 
         ArtifactSpawner.Instance.Spawn(artifact, anchorObject.transform);
+    }
+
+    private void HandleArtifactModelVisible(string artifactId)
+    {
+        // Only reset the segment start for the currently active artifact.
+        // The model was hidden during loading/auto-scale (up to 5s). Without this reset,
+        // auto-advance fires WHILE the model is still invisible because _currentSegmentDistance
+        // accumulated during that hidden window. Resetting here guarantees the player always
+        // gets a full distance_from_previous_meters of walking WITH the model visible.
+        if (artifactId != ActiveArtifactId) return;
+
+        _hasSegmentStart = false;
+        _currentSegmentDistance = 0f;
+        Debug.Log($"[OfflineGPSRouteManager] Model visible for {artifactId} — segment start reset.");
     }
 
     private void HandleArtifactCollected(string artifactId)

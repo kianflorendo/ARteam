@@ -45,11 +45,22 @@ public class UIHierarchySetup : MonoBehaviour
 
     private void Update()
     {
-        if (generateHierarchy)
+        if (!generateHierarchy) return;
+        generateHierarchy = false;
+
+        // Guard: if UI_Canvas already exists as a child, refuse to regenerate.
+        // The UI is now saved as Assets/Prefabs/UI/UI_Canvas.prefab — that Prefab
+        // is the source of truth. Re-running this script would create duplicate
+        // objects on top of the Prefab instance and corrupt the scene.
+        if (transform.Find("UI_Canvas") != null)
         {
-            generateHierarchy = false;
-            GenerateCompleteHierarchy();
+            Debug.LogWarning("[UIHierarchySetup] UI_Canvas already exists in the scene. " +
+                             "Edit the Prefab directly at Assets/Prefabs/UI/UI_Canvas.prefab. " +
+                             "Generation skipped to prevent duplicates.");
+            return;
         }
+
+        GenerateCompleteHierarchy();
     }
 
     // ───────────────────────────────────────────────────────────────────

@@ -12,6 +12,10 @@ public class ArtifactSpawner : MonoBehaviour
     // -- Events --
     public static event System.Action<ArtifactInstance> OnArtifactSpawned;
     public static event System.Action<string> OnArtifactHidden;
+    // Fired the moment a GPS artifact's 3D model becomes visible after auto-scale.
+    // OfflineGPSRouteManager resets the auto-advance segment start on this event so
+    // the player always gets the full walk distance to interact with the visible model.
+    public static event System.Action<string> OnArtifactModelVisible;
 
     // -- Spawned artifact tracking --
     private Dictionary<string, GameObject> _spawnedArtifacts
@@ -174,6 +178,12 @@ public class ArtifactSpawner : MonoBehaviour
                             // Reveal the model now that it is correctly scaled.
                             var _finalRenderers = spawnedObject.GetComponentsInChildren<Renderer>(true);
                             foreach (var r in _finalRenderers) r.enabled = true;
+
+                            // Notify route manager the model is now visible so it can
+                            // reset the auto-advance segment start. This guarantees the
+                            // player gets a full walk distance WITH the model visible,
+                            // not during the hidden loading/scaling window.
+                            OnArtifactModelVisible?.Invoke(artifact.id);
                         }
                     }
 

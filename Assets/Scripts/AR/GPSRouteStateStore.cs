@@ -74,17 +74,17 @@ public class GPSRouteStateStore : MonoBehaviour
             if (State == null)
                 State = CreateDefaultState();
 
-            // Reset session-specific spatial state on every launch.
-            // ARCore resets its world-space coordinate system each session, so the saved
-            // GPS origin and any active artifact anchor from a prior session are stale.
-            // next_sequence_index resets to 1; ReconcileProgressWithInventory() in
-            // OfflineGPSRouteManager will advance it past already-collected artifacts
-            // on the first Update tick, preserving legitimate progress.
-            State.has_origin = false;
-            State.active_artifact_id = "";
+            // Reset session-specific state on every launch.
+            // active_artifact_id: the spawned anchor is gone after restart; re-spawn on first tick.
+            // next_sequence_index: reset to 1; ReconcileProgressWithInventory() will advance
+            //   it past already-collected artifacts, preserving legitimate progress.
+            // has_origin is NOT reset: preserving it bypasses the GPS stabilisation wait on
+            //   relaunch. Indoors the GPS accuracy fluctuates above the stableFixAccuracyMeters
+            //   threshold, so resetting has_origin blocks the entire route indefinitely.
+            State.active_artifact_id  = "";
             State.next_sequence_index = 1;
             Save();
-            Debug.Log("[GPSRouteStateStore] Session reset: route starts from seq=1.");
+            Debug.Log("[GPSRouteStateStore] Session reset: active cleared, seq reset to 1.");
         }
         catch (Exception e)
         {

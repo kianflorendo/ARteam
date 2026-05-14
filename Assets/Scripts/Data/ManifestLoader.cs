@@ -58,52 +58,73 @@ public class ManifestLoader : MonoBehaviour
 
     private IEnumerator LoadManifestAsync()
     {
-        string json = null;
-        string source = "";
-
-        // Path 1: persistentDataPath — downloaded via LFS update.
-        // Regular filesystem path — synchronous read is fine.
-        string lfsPath = Path.Combine(Application.persistentDataPath, MANIFEST_FILENAME);
-        if (File.Exists(lfsPath))
-        {
-            json = File.ReadAllText(lfsPath);
-            source = "LFS (persistentDataPath)";
-        }
-        else
-        {
-            // Path 2: StreamingAssets — bundled inside APK.
-            // On Android, Application.streamingAssetsPath returns the jar:file:// URI
-            // that UnityWebRequest understands. Direct File.ReadAllText does NOT
-            // work inside an APK — this was the original bug that broke all Android builds.
+        // Always load the bundled StreamingAssets manifest so we can compare versions.
+        // On Android, StreamingAssets lives inside the APK and must be read via
+        // UnityWebRequest (direct File.ReadAllText doesn't work in jar:file:// paths).
 #if UNITY_EDITOR
-            string streamingUri = "file://" + Path.Combine(
-                Application.streamingAssetsPath, MANIFEST_FILENAME).Replace("\\", "/");
+        string streamingUri = "file://" + Path.Combine(
+            Application.streamingAssetsPath, MANIFEST_FILENAME).Replace("\\", "/");
 #else
-            string streamingUri = Path.Combine(
-                Application.streamingAssetsPath, MANIFEST_FILENAME);
+        string streamingUri = Path.Combine(Application.streamingAssetsPath, MANIFEST_FILENAME);
 #endif
-            using (var request = UnityWebRequest.Get(streamingUri))
-            {
-                yield return request.SendWebRequest();
+        string streamingJson = null;
+        using (var req = UnityWebRequest.Get(streamingUri))
+        {
+            yield return req.SendWebRequest();
+            if (req.result == UnityWebRequest.Result.Success)
+                streamingJson = req.downloadHandler.text;
+            else
+                Debug.LogError($"[ManifestLoader] Failed to read StreamingAssets: {req.error}");
+        }
 
-                if (request.result == UnityWebRequest.Result.Success)
+        // Check whether a cached (LFS-downloaded) manifest exists and compare versions.
+        // Use whichever has the HIGHER version number.
+        // This ensures a new APK build (with a bumped version) always replaces a stale
+        // device-side cache, while still allowing live LFS updates to override the APK.
+        string lfsPath = Path.Combine(Application.persistentDataPath, MANIFEST_FILENAME);
+        string json   = streamingJson;
+        string source = "StreamingAssets";
+
+        if (File.Exists(lfsPath) && !string.IsNullOrEmpty(streamingJson))
+        {
+            try
+            {
+                string lfsJson     = File.ReadAllText(lfsPath);
+                var    lfsMeta     = JsonUtility.FromJson<ManifestData>(lfsJson);
+                var    streamMeta  = JsonUtility.FromJson<ManifestData>(streamingJson);
+                string lfsVer      = lfsMeta?.version    ?? "0.0.0";
+                string streamVer   = streamMeta?.version ?? "0.0.0";
+
+                if (CompareVersions(lfsVer, streamVer) > 0)
                 {
-                    json = request.downloadHandler.text;
-                    source = "StreamingAssets";
+                    // LFS copy is strictly newer — use it (live update scenario).
+                    json   = lfsJson;
+                    source = $"LFS/persistentDataPath (v{lfsVer} > bundled v{streamVer})";
                 }
                 else
                 {
-                    Debug.LogError($"[ManifestLoader] Failed to read StreamingAssets: " +
-                                   $"{request.error}. Make sure manifest.json is in " +
-                                   "Assets/StreamingAssets/.");
+                    // Bundled version is same or newer — use StreamingAssets.
+                    // Delete the stale cached file so it doesn't win on the next launch.
+                    File.Delete(lfsPath);
+                    source = $"StreamingAssets (v{streamVer} >= cached v{lfsVer}; cache cleared)";
                 }
             }
+            catch
+            {
+                // Corrupt cache — fall back to bundled.
+                File.Delete(lfsPath);
+            }
+        }
+        else if (File.Exists(lfsPath))
+        {
+            // StreamingAssets failed to load — use cached as last resort.
+            json   = File.ReadAllText(lfsPath);
+            source = "LFS/persistentDataPath (StreamingAssets unavailable)";
         }
 
         if (string.IsNullOrEmpty(json))
         {
-            Debug.LogError("[ManifestLoader] manifest.json not found in either path. " +
-                           "Make sure Assets/StreamingAssets/manifest.json exists.");
+            Debug.LogError("[ManifestLoader] manifest.json not found in any path.");
             yield break;
         }
 
@@ -121,6 +142,29 @@ public class ManifestLoader : MonoBehaviour
         {
             Debug.LogError($"[ManifestLoader] Failed to parse manifest.json: {e.Message}");
         }
+    }
+
+    // Compares semantic version strings ("1.2.3"). Returns >0 if a > b, 0 if equal, <0 if a < b.
+    private static int CompareVersions(string a, string b)
+    {
+        int[] Pa = ParseVersion(a);
+        int[] Pb = ParseVersion(b);
+        for (int i = 0; i < 3; i++)
+        {
+            int diff = Pa[i] - Pb[i];
+            if (diff != 0) return diff;
+        }
+        return 0;
+    }
+
+    private static int[] ParseVersion(string v)
+    {
+        int[] result = { 0, 0, 0 };
+        if (string.IsNullOrEmpty(v)) return result;
+        string[] parts = v.Split('.');
+        for (int i = 0; i < Mathf.Min(parts.Length, 3); i++)
+            int.TryParse(parts[i], out result[i]);
+        return result;
     }
 
     // ─────────────────────────────────────────────────────────
