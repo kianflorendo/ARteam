@@ -21,7 +21,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2c2b442292c12794cb4e8cb534b67e6b
-    m_Address: 'artifacts/thompson '
+    m_Address: artifacts/thompson
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

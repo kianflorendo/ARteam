@@ -25,6 +25,7 @@ public class OfflineGPSRouteManager : MonoBehaviour
     private List<ArtifactData> _routeArtifacts = new List<ArtifactData>();
     private float _routeCheckTimer;
     private bool _routeLoaded;
+    private bool _inventoryCleared;   // tracks whether GPS artifact inventory was cleared this route cycle
     private bool _hasSegmentStart;
     private Vector3 _segmentStartPosition;
     private float _currentSegmentDistance;
@@ -135,6 +136,21 @@ public class OfflineGPSRouteManager : MonoBehaviour
         if (_routeArtifacts.Count == 0)
             return;
 
+        // Deferred inventory clear: runs once per route-load cycle as soon as
+        // InventoryManager is confirmed ready. Keeping this separate from
+        // ReloadRouteArtifacts() avoids the race where OnManifestLoaded fires
+        // before InventoryManager.Awake() completes, which would skip the clear
+        // and leave stale collected-artifact entries from previous sessions,
+        // causing the route to start from a mid-sequence artifact instead of Bolo.
+        if (!_inventoryCleared)
+        {
+            var ids = new System.Collections.Generic.List<string>();
+            foreach (var a in _routeArtifacts) ids.Add(a.id);
+            InventoryManager.Instance.RemoveCollectedArtifacts(ids);
+            _inventoryCleared = true;
+            Debug.Log($"[OfflineGPSRouteManager] Inventory cleared ({ids.Count} GPS artifacts) — route starts from seq=1.");
+        }
+
         if (!EnsureOriginCaptured())
             return;
 
@@ -160,6 +176,7 @@ public class OfflineGPSRouteManager : MonoBehaviour
             _hasSegmentStart       = false;
             _currentSegmentDistance = 0f;
             _routeLoaded           = false;
+            _inventoryCleared      = false;
             return;
         }
 
@@ -265,21 +282,9 @@ public class OfflineGPSRouteManager : MonoBehaviour
             ? ManifestLoader.Instance.GetGPSRouteArtifacts()
             : new List<ArtifactData>();
         _routeLoaded = true;
-
-        // Always clear GPS route artifact progress from inventory on every route load.
-        // Reasons:
-        //   1. Ensures the route always starts from seq=1 (Bolo Knife) regardless of
-        //      what was collected in previous sessions.
-        //   2. Prevents cross-version inventory contamination when artifact IDs are
-        //      reassigned between manifest versions (e.g. Helmet/Automata sequence swap).
-        //   3. The auto-reset loop already clears inventory — this mirrors that on launch.
-        if (InventoryManager.Instance != null && _routeArtifacts.Count > 0)
-        {
-            var ids = new System.Collections.Generic.List<string>();
-            foreach (var a in _routeArtifacts) ids.Add(a.id);
-            InventoryManager.Instance.RemoveCollectedArtifacts(ids);
-            Debug.Log($"[OfflineGPSRouteManager] Route reload — cleared {ids.Count} GPS artifact entries from inventory. Route starts from seq=1.");
-        }
+        // _inventoryCleared stays false — the deferred clear in Update() will handle it
+        // once InventoryManager is confirmed ready. This avoids a timing issue where
+        // ManifestLoader.OnManifestLoaded fires before InventoryManager.Awake() completes.
     }
 
     private bool EnsureOriginCaptured()
@@ -584,9 +589,10 @@ public class OfflineGPSRouteManager : MonoBehaviour
             if (anchor != null) Destroy(anchor);
         _presentationAnchors.Clear();
 
-        _hasSegmentStart = false;
+        _hasSegmentStart       = false;
         _currentSegmentDistance = 0f;
-        _routeLoaded = false;
+        _routeLoaded           = false;
+        _inventoryCleared      = false;
 
         Debug.Log("[OfflineGPSRouteManager] Reset for testing — route starts from seq=1.");
     }
