@@ -358,6 +358,29 @@ public class InventoryManager : MonoBehaviour
     }
 
     // ─────────────────────────────────────────────────────────
+    //  Soldier unlock tracking
+    //  Filipino (S-001) is always unlocked.
+    //  Japanese (S-002) unlocks when Filipino mission is complete.
+    //  American (S-003) unlocks when Japanese mission is complete.
+    // ─────────────────────────────────────────────────────────
+
+    public bool IsSoldierUnlocked(string soldierId)
+    {
+        switch (soldierId)
+        {
+            case "S-001": return true;
+            case "S-002": return GetSoldierProgress("S-001").completed;
+            case "S-003": return GetSoldierProgress("S-002").completed;
+            default:      return false;
+        }
+    }
+
+    public List<string> GetCollectedArtifactIds()
+    {
+        return _inventory.collected_artifact_ids ?? new List<string>();
+    }
+
+    // ─────────────────────────────────────────────────────────
     //  Debug helper — call from TestData.cs to verify
     // ─────────────────────────────────────────────────────────
 

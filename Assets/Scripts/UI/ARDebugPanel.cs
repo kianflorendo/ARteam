@@ -1,195 +1,146 @@
+// ============================================================
+// ARDebugPanel.cs
+// Location: Assets/Scripts/UI/ARDebugPanel.cs
+// Mt. Samat AR — Artifact Info Panel.
+//
+// Replaces the old debug-info display with a clean artifact
+// description card that appears the moment a GPS or image-tracked
+// artifact becomes visible in AR, and disappears when hidden.
+//
+// The same [SerializeField] debugText reference is kept so
+// existing prefab wiring does not need to change.
+// ============================================================
+
 using System.Text;
 using TMPro;
 using UnityEngine;
-using UnityEngine.XR.ARFoundation;
+using UnityEngine.UI;
 
 public class ARDebugPanel : MonoBehaviour
 {
     [Header("References")]
-    public TextMeshProUGUI debugText;
-    public ARTrackedImageManager imageManager;
-    private ARSession _arSession;
+    public TextMeshProUGUI debugText;   // existing wired TMP — repurposed for artifact info
 
-    private float _updateInterval = 0.5f;
-    private float _timer;
-    private int _spawnedCount;
+    private Image        _bg;
+    private ArtifactData _current;
+
+    // ── Colours ──────────────────────────────────────────────
+    private static readonly Color BG_VISIBLE = new Color(0.06f, 0.06f, 0.06f, 0.88f);
+    private static readonly Color BG_HIDDEN  = Color.clear;
+
+    // ─────────────────────────────────────────────────────────
+    //  Unity lifecycle
+    // ─────────────────────────────────────────────────────────
 
     private void Start()
     {
-        if (debugText == null)
+        // Grab or create the background Image on this GameObject
+        _bg = GetComponent<Image>();
+        if (_bg == null) _bg = gameObject.AddComponent<Image>();
+
+        // Configure text for wrapping and overflow
+        if (debugText != null)
         {
-            var textTransform = transform.Find("DebugInfo");
-            if (textTransform != null)
-                debugText = textTransform.GetComponent<TextMeshProUGUI>();
+            debugText.enableWordWrapping = true;
+            debugText.overflowMode       = TextOverflowModes.Ellipsis;
+            debugText.color              = Color.white;
         }
 
-        if (imageManager == null)
-            imageManager = FindAnyObjectByType<ARTrackedImageManager>();
+        SetVisible(false);
 
-        _arSession = FindAnyObjectByType<ARSession>(FindObjectsInactive.Include);
-        UpdateDebugText();
+        ArtifactSpawner.OnArtifactSpawned      += HandleSpawned;
+        ArtifactSpawner.OnArtifactModelVisible  += HandleModelVisible;
+        ArtifactSpawner.OnArtifactHidden        += HandleHidden;
     }
 
-    private void Update()
+    private void OnDestroy()
     {
-        _timer += Time.deltaTime;
-        if (_timer < _updateInterval)
-            return;
-
-        _timer = 0f;
-        UpdateDebugText();
+        ArtifactSpawner.OnArtifactSpawned      -= HandleSpawned;
+        ArtifactSpawner.OnArtifactModelVisible  -= HandleModelVisible;
+        ArtifactSpawner.OnArtifactHidden        -= HandleHidden;
     }
 
-    public void SetSpawnedCount(int count)
+    // ─────────────────────────────────────────────────────────
+    //  Event handlers
+    // ─────────────────────────────────────────────────────────
+
+    private void HandleSpawned(ArtifactInstance instance)
     {
-        _spawnedCount = count;
+        // Show info immediately — user can read while 3D model finishes loading
+        if (instance != null)
+            ShowInfo(instance.ArtifactData);
     }
 
-    private void UpdateDebugText()
+    private void HandleModelVisible(string artifactId)
     {
-        if (debugText == null)
-            return;
+        // If we already have this artifact's info showing, nothing to do.
+        // If not yet shown (edge case), pull data from manifest.
+        if (_current != null && _current.id == artifactId) return;
 
-        var sb = new StringBuilder();
-        sb.AppendLine("=== AR DEBUG INFO ===");
-
-        if (_arSession == null)
-            _arSession = FindAnyObjectByType<ARSession>(FindObjectsInactive.Include);
-
-        if (_arSession != null)
-            sb.AppendLine($"Session: {ARSession.state} | Enabled:{_arSession.enabled}");
-        else
-            sb.AppendLine("Session: NOT FOUND");
-
-#if UNITY_ANDROID
-        bool camPerm = UnityEngine.Android.Permission.HasUserAuthorizedPermission(
-            UnityEngine.Android.Permission.Camera);
-        bool gpsPerm = UnityEngine.Android.Permission.HasUserAuthorizedPermission(
-            UnityEngine.Android.Permission.FineLocation);
-        sb.AppendLine($"CamPerm: {(camPerm ? "GRANTED" : "DENIED")}");
-        sb.AppendLine($"GpsPerm: {(gpsPerm ? "GRANTED" : "DENIED")}");
-#endif
-
-        // Show AR guidance when session is stuck initializing
-        if (ARSession.state == ARSessionState.SessionInitializing)
-            sb.AppendLine(">> Point camera at ground + move slowly <<");
-
-        if (LocationServiceManager.Instance != null)
-        {
-            sb.AppendLine($"GPS: {LocationServiceManager.Instance.GetStatusString()}");
-
-            if (LocationServiceManager.Instance.TryGetFilteredLocation(
-                    out double lat,
-                    out double lng,
-                    out float acc))
-            {
-                sb.AppendLine($"Fix: {lat:F6}, {lng:F6} (+/-{acc:F1}m)");
-            }
-        }
-        else
-        {
-            sb.AppendLine("GPS: manager not found");
-        }
-
-        if (OfflineGPSRouteManager.Instance != null)
-        {
-            sb.AppendLine($"Route Origin: {(OfflineGPSRouteManager.Instance.HasOrigin ? "SET" : "WAITING")}");
-
-            // Show active seq / next seq in a readable way so the numbers make sense.
-            // state.next_sequence_index equals the ACTIVE artifact's seq while one is
-            // presented, which looks confusing ("Next Seq: 2" while seq-2 is already
-            // showing). Show the true next-to-unlock value instead.
-            var activeId = OfflineGPSRouteManager.Instance.ActiveArtifactId;
-            if (!string.IsNullOrEmpty(activeId))
-            {
-                var activeArt = ManifestLoader.Instance?.GetArtifact(activeId);
-                int activeSeq = activeArt?.sequence_index ?? OfflineGPSRouteManager.Instance.NextSequenceIndex;
-                sb.AppendLine($"Active Seq: {activeSeq} | Unlock Next: {activeSeq + 1}");
-            }
-            else
-            {
-                sb.AppendLine($"Next Seq: {OfflineGPSRouteManager.Instance.NextSequenceIndex}");
-            }
-
-            sb.AppendLine($"Target: {OfflineGPSRouteManager.Instance.CurrentTargetName}");
-            sb.AppendLine($"Segment: {OfflineGPSRouteManager.Instance.CurrentSegmentDistance:F2} / {OfflineGPSRouteManager.Instance.CurrentTargetDistance:F2}m");
-            sb.AppendLine($"Active GPS Artifact: {OfflineGPSRouteManager.Instance.ActiveArtifactId}");
-        }
-        else
-        {
-            sb.AppendLine("Route: manager not found");
-        }
-
-        if (imageManager != null)
-        {
-            int tracked = 0;
-            foreach (var trackedImage in imageManager.trackables)
-            {
-                if (trackedImage.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Tracking)
-                    tracked++;
-            }
-            sb.AppendLine($"Images Tracked: {tracked}");
-        }
-        else
-        {
-            sb.AppendLine("ImageManager: not found");
-        }
-
-        int spawned = ArtifactSpawner.Instance?.GetSpawnedCount() ?? _spawnedCount;
-        sb.AppendLine($"Spawned Objects: {spawned}");
-
-        bool manifestOk = ManifestLoader.Instance != null && ManifestLoader.Instance.IsLoaded;
-        sb.AppendLine($"Manifest: {(manifestOk ? "Loaded" : "Loading...")}");
-
-        // ── Camera feed diagnostics ──────────────────────────────────────
-        sb.AppendLine($"CamFeed: {(ARCameraDisplay.IsShowingFeed ? "LIVE" : "WAITING")} | " +
-                      $"CamMgr: {(ARCameraDisplay.IsCameraManFound ? "OK" : "NULL")} | " +
-                      $"BgOn: {ARCameraDisplay.IsBgEnabled} | " +
-                      $"Sub: {(ARCameraDisplay.IsSubsystemRunning ? "RUN" : "STOP")} | " +
-                      $"Frames: {ARCameraDisplay.DecodeFrameCount}");
-
-        debugText.text = sb.ToString();
+        var data = ManifestLoader.Instance?.GetArtifact(artifactId);
+        if (data != null) ShowInfo(data);
     }
 
-    // ── Debug reset button ────────────────────────────────────
-    // Renders a one-tap button that resets GPS route state and
-    // un-collects GPS test artifacts so the sequence starts from
-    // Bolo Knife again. Useful when old save data persists after
-    // a reinstall over an existing build.
-    private void OnGUI()
+    private void HandleHidden(string artifactId)
     {
-        float btnW = 220f;
-        float btnH = 70f;
-        float x = Screen.width - btnW - 10f;
-        float y = Screen.height - btnH - 10f;
-
-        GUI.color = new Color(1f, 0.3f, 0.3f, 0.9f);
-        if (GUI.Button(new Rect(x, y, btnW, btnH), "RESET GPS\nTEST DATA"))
+        if (_current != null && _current.id == artifactId)
         {
-            ResetGPSTestData();
+            _current = null;
+            SetVisible(false);
         }
-        GUI.color = Color.white;
     }
 
-    private void ResetGPSTestData()
+    // ─────────────────────────────────────────────────────────
+    //  Display
+    // ─────────────────────────────────────────────────────────
+
+    private void ShowInfo(ArtifactData artifact)
     {
-        Debug.Log("[ARDebugPanel] RESETTING GPS TEST DATA — route will restart from Bolo Knife.");
+        if (artifact == null) return;
+        _current = artifact;
 
-        // Remove GPS test artifact collected status from inventory
-        InventoryManager.Instance?.RemoveCollectedArtifacts(
-            new System.Collections.Generic.List<string>
-            {
-                "GPS-TEST-001",
-                "GPS-TEST-002",
-                "GPS-TEST-003",
-                "GPS-TEST-004",
-                "GPS-TEST-005",
-                "GPS-TEST-006"
-            });
+        var scroll = artifact.scroll;
+        var sb     = new StringBuilder();
 
-        // Reset route state and in-memory tracking
-        OfflineGPSRouteManager.Instance?.ResetForTesting();
+        // ── Title ────────────────────────────────────────────
+        string title = !string.IsNullOrEmpty(scroll?.title)
+            ? scroll.title
+            : artifact.name;
+        sb.AppendLine($"<b><size=15>{title.ToUpper()}</size></b>");
 
-        Debug.Log("[ARDebugPanel] Reset complete. Next: walk 1m to see Bolo Knife.");
+        // ── Meta row (category / location) ───────────────────
+        if (!string.IsNullOrEmpty(scroll?.category))
+            sb.AppendLine($"<size=11><color=#aaaaaa>{scroll.category}</color></size>");
+
+        if (!string.IsNullOrEmpty(scroll?.location))
+            sb.AppendLine($"<size=11><color=#aaaaaa>Location: {scroll.location}</color></size>");
+
+        sb.AppendLine();
+
+        // ── Description ───────────────────────────────────────
+        if (!string.IsNullOrEmpty(scroll?.description))
+            sb.AppendLine($"<size=12>{scroll.description}</size>");
+
+        // ── Specs ─────────────────────────────────────────────
+        var specs = scroll?.specs?.Items;
+        if (specs != null && specs.Count > 0)
+        {
+            sb.AppendLine();
+            foreach (var spec in specs)
+                sb.AppendLine(
+                    $"<size=11><color=#aaaaaa>{spec.key}:</color>  " +
+                    $"<color=#dddddd>{spec.value}</color></size>");
+        }
+
+        if (debugText != null)
+            debugText.text = sb.ToString();
+
+        SetVisible(true);
+    }
+
+    private void SetVisible(bool visible)
+    {
+        if (_bg      != null) _bg.color                            = visible ? BG_VISIBLE : BG_HIDDEN;
+        if (debugText != null) debugText.gameObject.SetActive(visible);
     }
 }

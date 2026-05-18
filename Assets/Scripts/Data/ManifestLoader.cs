@@ -196,17 +196,20 @@ public class ManifestLoader : MonoBehaviour
     }
 
     /// Returns GPS artifacts that participate in the offline distance-chain route,
-    /// sorted by sequence_index ascending.
+    /// filtered by the currently active soldier, sorted by sequence_index ascending.
     public List<ArtifactData> GetGPSRouteArtifacts()
     {
         if (!_isLoaded) { LogNotLoaded(); return new List<ArtifactData>(); }
+
+        string activeSoldier = ActiveSoldierManager.Instance?.ActiveSoldierId ?? "S-001";
 
         return (_manifest.artifacts ?? new List<ArtifactData>())
             .Where(a =>
                 a.anchor_mode == AnchorMode.GPS
                 && a.sequence_index > 0
                 && (string.IsNullOrEmpty(a.gps_progression_mode)
-                    || a.gps_progression_mode == GPSProgressionMode.DistanceChain))
+                    || a.gps_progression_mode == GPSProgressionMode.DistanceChain)
+                && (string.IsNullOrEmpty(a.soldier_id) || a.soldier_id == activeSoldier))
             .OrderBy(a => a.sequence_index)
             .ToList();
     }

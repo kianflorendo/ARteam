@@ -1,146 +1,181 @@
-﻿using UnityEngine;
+// ============================================================
+// NavigationManager.cs
+// Location: Assets/Scripts/UI/NavigationManager.cs
+// Mt. Samat AR — manages all screen switching.
+//
+// Pre-login flow:  MainMenuScreen → RegisterScreen / HowToPlayScreen
+// Main app flow:   5-tab nav (Home / Soldier / AR Scan / Awards / Profile)
+//
+// All references are [SerializeField] — wire once in the Prefab
+// Editor by dragging GameObjects / components to each field.
+// Coworkers can rename or restructure the hierarchy freely without
+// breaking any code paths.
+// ============================================================
+
+using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Manages bottom navigation bar and screen switching.
-/// Phase 10 - Navigation + Profile
-/// </summary>
 public class NavigationManager : MonoBehaviour
 {
-    [Header("Screen References")]
-    [SerializeField] private GameObject aboutScreen;
-    [SerializeField] private GameObject soldierScreen;
-    [SerializeField] private GameObject homeScreen;
-    [SerializeField] private GameObject cameraScreen;
-    [SerializeField] private GameObject emblemScreen; // DivisionsListScreen
-    [SerializeField] private GameObject profileScreen;
+    public static NavigationManager Instance { get; private set; }
 
-    [Header("Tab Button References")]
-    [SerializeField] private Button aboutTabButton;
-    [SerializeField] private Button soldierTabButton;
-    [SerializeField] private Button homeTabButton;
-    [SerializeField] private Button cameraTabButton;
-    [SerializeField] private Button emblemTabButton;
-    [SerializeField] private Button profileTabButton;
+    // ── Groups ───────────────────────────────────────────────
+    [Header("Groups")]
+    [SerializeField] private GameObject _preLoginGroup;
+    [SerializeField] private GameObject _mainAppGroup;
 
-    [Header("Settings")]
-    [SerializeField] private bool startWithCameraView = true;
+    // ── Pre-login screens ────────────────────────────────────
+    [Header("Pre-Login Screens")]
+    [SerializeField] private GameObject _mainMenuScreen;
+    [SerializeField] private GameObject _registerScreen;
+    [SerializeField] private GameObject _howToPlayScreen;
 
-    private GameObject currentScreen;
+    // ── Main app screens ─────────────────────────────────────
+    [Header("Main App Screens")]
+    [SerializeField] private GameObject _topBar;
+    [SerializeField] private GameObject _homeScreen;
+    [SerializeField] private GameObject _soldierScreen;
+    [SerializeField] private GameObject _arScanScreen;
+    [SerializeField] private GameObject _awardsScreen;
+    [SerializeField] private GameObject _profileScreen;
+    [SerializeField] private GameObject _settingsScreen;
 
-    // ────────────────────────────────────────────────────────────────────────
-    // Initialization
-    // ────────────────────────────────────────────────────────────────────────
+    // ── Debug overlay (only active on ARScan) ───────────────
+    [Header("Debug Panel")]
+    [SerializeField] private GameObject _arDebugPanel;
+
+    // ── Bottom nav bar (hidden on ARScan for full-screen AR) ─
+    [Header("Bottom Nav Bar")]
+    [SerializeField] private GameObject _bottomNavBar;
+
+    // ── Bottom nav buttons ───────────────────────────────────
+    [Header("Nav Tab Buttons")]
+    [SerializeField] private Button _homeTabBtn;
+    [SerializeField] private Button _soldierTabBtn;
+    [SerializeField] private Button _arScanTabBtn;
+    [SerializeField] private Button _awardsTabBtn;
+    [SerializeField] private Button _profileTabBtn;
+
+    // ── Bottom nav tab labels (for active-state colouring) ───
+    [Header("Nav Tab Labels")]
+    [SerializeField] private TextMeshProUGUI _homeTabLabel;
+    [SerializeField] private TextMeshProUGUI _soldierTabLabel;
+    [SerializeField] private TextMeshProUGUI _arScanTabLabel;
+    [SerializeField] private TextMeshProUGUI _awardsTabLabel;
+    [SerializeField] private TextMeshProUGUI _profileTabLabel;
+
+    private static readonly Color TAB_ACTIVE   = new Color(0.102f, 0.102f, 0.102f);
+    private static readonly Color TAB_INACTIVE = new Color(0.471f, 0.443f, 0.424f);
+
+    // ─────────────────────────────────────────────────────────
+    //  Unity lifecycle
+    // ─────────────────────────────────────────────────────────
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this) { Destroy(this); return; }
+        Instance = this;
+    }
 
     private void Start()
     {
-        // Wire up button listeners
-        if (aboutTabButton != null)
-            aboutTabButton.onClick.AddListener(() => ShowScreen(aboutScreen));
+        WireNavButtons();
 
-        if (soldierTabButton != null)
-            soldierTabButton.onClick.AddListener(() => ShowScreen(soldierScreen));
+        bool registered = PlayerProfileManager.Instance != null
+                          && PlayerProfileManager.Instance.IsRegistered;
 
-        if (homeTabButton != null)
-            homeTabButton.onClick.AddListener(() => ShowScreen(homeScreen));
-
-        if (cameraTabButton != null)
-            cameraTabButton.onClick.AddListener(() => ShowScreen(cameraScreen));
-
-        if (emblemTabButton != null)
-            emblemTabButton.onClick.AddListener(() => ShowScreen(emblemScreen));
-
-        if (profileTabButton != null)
-            profileTabButton.onClick.AddListener(() => ShowScreen(profileScreen));
-
-        // Show default screen
-        if (startWithCameraView && cameraScreen != null)
-        {
-            ShowScreen(cameraScreen);
-        }
-        else if (homeScreen != null)
-        {
-            ShowScreen(homeScreen);
-        }
-
-        Debug.Log("[NavigationManager] Initialized with " + GetActiveTabCount() + " tabs");
+        if (registered)
+            SwitchToMainApp();
+        else
+            ShowPreLoginScreen("MainMenu");
     }
 
-    // ────────────────────────────────────────────────────────────────────────
-    // Screen Switching
-    // ────────────────────────────────────────────────────────────────────────
-
-    private void ShowScreen(GameObject targetScreen)
+    private void WireNavButtons()
     {
-        if (targetScreen == null)
-        {
-            Debug.LogWarning("[NavigationManager] Target screen is null!");
-            return;
-        }
+        _homeTabBtn?.onClick.AddListener(() => ShowScreen("Home"));
+        _soldierTabBtn?.onClick.AddListener(() => ShowScreen("Soldier"));
+        _arScanTabBtn?.onClick.AddListener(() => ShowScreen("ARScan"));
+        _awardsTabBtn?.onClick.AddListener(() => ShowScreen("Awards"));
+        _profileTabBtn?.onClick.AddListener(() => ShowScreen("Profile"));
+    }
 
-        // Hide every screen in the Screens container — not just the tracked 6.
-        // DivisionDetailScreen and any future screens must also be hidden so their
-        // opaque backgrounds don't block the AR camera feed on CameraScreen.
-        var container = targetScreen.transform.parent;
-        if (container != null)
-        {
-            foreach (Transform child in container)
-                child.gameObject.SetActive(false);
-        }
+    // ─────────────────────────────────────────────────────────
+    //  Public API
+    // ─────────────────────────────────────────────────────────
 
-        // Show target screen
-        targetScreen.SetActive(true);
-        currentScreen = targetScreen;
+    public void ShowPreLoginScreen(string screenName)
+    {
+        _preLoginGroup?.SetActive(true);
+        _mainAppGroup?.SetActive(false);
+
+        // Camera feed must never show on pre-login screens
+        ARCameraDisplay.SetSuppressed(true);
+
+        Show(_mainMenuScreen,  screenName == "MainMenu");
+        Show(_registerScreen,  screenName == "Register");
+        Show(_howToPlayScreen, screenName == "HowToPlay");
+
+        Debug.Log($"[NavigationManager] PreLogin → {screenName}");
+    }
+
+    public void SwitchToMainApp()
+    {
+        _preLoginGroup?.SetActive(false);
+        _mainAppGroup?.SetActive(true);
+        ShowScreen("Home");
+    }
+
+    public void ShowScreen(string screenName)
+    {
+        Show(_homeScreen,     screenName == "Home");
+        Show(_soldierScreen,  screenName == "Soldier");
+        Show(_arScanScreen,   screenName == "ARScan");
+        Show(_awardsScreen,   screenName == "Awards");
+        Show(_profileScreen,  screenName == "Profile");
+        Show(_settingsScreen, screenName == "Settings");
+
+        // Camera feed: only show on ARScan, suppressed on all other screens
+        ARCameraDisplay.SetSuppressed(screenName != "ARScan");
+
+        // Debug panel only visible on ARScan
+        if (_arDebugPanel != null) _arDebugPanel.SetActive(screenName == "ARScan");
+
+        // TopBar hidden on screens that have their own custom header
+        if (_topBar != null) _topBar.SetActive(
+            screenName != "ARScan" &&
+            screenName != "Soldier" &&
+            screenName != "Settings" &&
+            screenName != "Profile");
+
+        SetActiveTab(screenName);
 
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayUITapSFX();
 
-        Debug.Log($"[NavigationManager] Switched to {targetScreen.name}");
+        Debug.Log($"[NavigationManager] MainApp → {screenName}");
     }
 
-    // ────────────────────────────────────────────────────────────────────────
-    // Public Methods
-    // ────────────────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────
+    //  Helpers
+    // ─────────────────────────────────────────────────────────
 
-    public void ShowAboutScreen() => ShowScreen(aboutScreen);
-    public void ShowSoldierScreen() => ShowScreen(soldierScreen);
-    public void ShowHomeScreen() => ShowScreen(homeScreen);
-    public void ShowCameraScreen() => ShowScreen(cameraScreen);
-    public void ShowEmblemScreen() => ShowScreen(emblemScreen);
-    public void ShowProfileScreen() => ShowScreen(profileScreen);
-
-    // ────────────────────────────────────────────────────────────────────────
-    // Utility
-    // ────────────────────────────────────────────────────────────────────────
-
-    private int GetActiveTabCount()
+    private void SetActiveTab(string screenName)
     {
-        int count = 0;
-        if (aboutTabButton != null) count++;
-        if (soldierTabButton != null) count++;
-        if (homeTabButton != null) count++;
-        if (cameraTabButton != null) count++;
-        if (emblemTabButton != null) count++;
-        if (profileTabButton != null) count++;
-        return count;
+        SetTabColor(_homeTabLabel,    screenName == "Home");
+        SetTabColor(_soldierTabLabel, screenName == "Soldier");
+        SetTabColor(_arScanTabLabel,  screenName == "ARScan");
+        SetTabColor(_awardsTabLabel,  screenName == "Awards");
+        SetTabColor(_profileTabLabel, screenName == "Profile");
     }
 
-#if UNITY_EDITOR
-    private void OnValidate()
+    private static void SetTabColor(TextMeshProUGUI label, bool active)
     {
-        // Auto-find screens if not assigned
-        if (aboutScreen == null)
-            aboutScreen = GameObject.Find("AboutScreen");
-        if (soldierScreen == null)
-            soldierScreen = GameObject.Find("SoldierInventoryScreen");
-        if (homeScreen == null)
-            homeScreen = GameObject.Find("HomeScreen");
-        if (cameraScreen == null)
-            cameraScreen = GameObject.Find("CameraScreen");
-        if (emblemScreen == null)
-            emblemScreen = GameObject.Find("DivisionsListScreen");
-        if (profileScreen == null)
-            profileScreen = GameObject.Find("ProfileScreen");
+        if (label != null) label.color = active ? TAB_ACTIVE : TAB_INACTIVE;
     }
-#endif
+
+    private static void Show(GameObject go, bool visible)
+    {
+        if (go != null) go.SetActive(visible);
+    }
 }

@@ -137,9 +137,7 @@ public class CollectionController : MonoBehaviour
         if (AutoMatcher.Instance != null)
             AutoMatcher.Instance.Match(artifact);
 
-        // Step 5 -- Hide the scroll
-        if (ScrollUIManager.Instance != null)
-            ScrollUIManager.Instance.HideScroll(artifact.id);
+        // Step 5 -- Hide the scroll (ScrollUIManager removed; scroll hides via GPSArtifactInteraction)
 
         // Step 6 -- Show toast notification
         ShowToast($"{artifact.name} collected!");

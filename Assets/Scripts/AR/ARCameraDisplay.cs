@@ -35,6 +35,15 @@ public class ARCameraDisplay : MonoBehaviour
     public static int DecodeFrameCount { get; private set; }
     public static bool IsSubsystemRunning { get; private set; }
 
+    // Suppressed = true means the camera feed canvas is force-hidden regardless of
+    // AR session state. NavigationManager sets this to false only on ARScan screen.
+    private static bool _isSuppressed = true;
+
+    public static void SetSuppressed(bool suppressed)
+    {
+        _isSuppressed = suppressed;
+    }
+
     private ARCameraManager    _cameraManager;
     private ARCameraBackground _arBackground;
     private Canvas             _canvas;
@@ -130,7 +139,7 @@ public class ARCameraDisplay : MonoBehaviour
             Debug.Log("[ARCameraDisplay] Reverted to ScreenSpaceOverlay (tracking lost).");
         }
 
-        bool shouldShow = ARSession.state >= ARSessionState.SessionInitializing;
+        bool shouldShow = !_isSuppressed && ARSession.state >= ARSessionState.SessionInitializing;
 
         if (_displayImage != null && shouldShow != _isShowing)
         {

@@ -1,6 +1,6 @@
 {
-    "version": "1.1.0",
-    "build_date": "2026-05-14",
+    "version": "1.2.0",
+    "build_date": "2026-05-16",
     "artifacts": [
         {
             "id": "INFO-TEST-001",
@@ -215,7 +215,7 @@
             "gps_lng": 121.011665,
             "gps_altitude": 0.0,
             "gps_geofence_radius_meters": 15.0,
-            "soldier_id": "S-003",
+            "soldier_id": "S-001",
             "division_id": "D-21",
             "bundle_key": "artifacts/thompson",
             "tracking_lost_behavior": "freeze",
@@ -254,10 +254,10 @@
             "bundle_key": "artifacts/helmet",
             "tracking_lost_behavior": "freeze",
             "scroll": {
-                "title": "Helmet",
-                "category": "WWII Artifact",
-                "description": "Description here.",
-                "location": "Mt. Samat Shrine",
+                "title": "M1 Steel Helmet",
+                "category": "USAFFE Protective Equipment",
+                "description": "The M1 steel helmet was standard headgear for American and Filipino USAFFE soldiers throughout the Battle of Bataan (January–April 1942). Adopted just months before the Pacific War began, it offered far superior shrapnel protection over earlier designs. During the grueling four-month siege, soldiers repurposed their helmets as cooking pots and water vessels when supplies ran critically low. Many helmets were abandoned along the Bataan Death March route in April 1942, left behind as silent witnesses to one of history's darkest forced marches.",
+                "location": "Weapons & Equipment Hall — Mt. Samat Shrine",
                 "specs": {}
             }
         },
@@ -282,10 +282,10 @@
             "bundle_key": "artifacts/automata",
             "tracking_lost_behavior": "freeze",
             "scroll": {
-                "title": "Automata",
-                "category": "WWII Artifact",
-                "description": "Description here.",
-                "location": "Mt. Samat Shrine",
+                "title": "M1911A1 Automatic Pistol",
+                "category": "USAFFE Sidearm",
+                "description": "The Colt M1911A1 .45 caliber automatic pistol was the standard sidearm of American officers and senior non-commissioned officers defending Bataan. Its powerful .45 ACP cartridge and dependable operation in the punishing jungle heat made it a trusted last-resort weapon. Filipino Army officers were also issued this pistol through USAFFE supply lines. When ammunition ran out in the final days of Bataan's fall, many officers destroyed their M1911s rather than allow them to fall into Japanese hands.",
+                "location": "Officers' Armory Display — Mt. Samat Shrine",
                 "specs": {}
             }
         },
@@ -310,10 +310,10 @@
             "bundle_key": "artifacts/browning",
             "tracking_lost_behavior": "freeze",
             "scroll": {
-                "title": "Browning",
-                "category": "WWII Artifact",
-                "description": "Description here.",
-                "location": "Mt. Samat Shrine",
+                "title": "Browning Automatic Rifle (BAR)",
+                "category": "USAFFE Squad Automatic Weapon",
+                "description": "The Browning Automatic Rifle M1918A2 was the backbone of automatic firepower for USAFFE rifle squads during the Battle of Bataan. Capable of delivering sustained fire at up to 650 rounds per minute, each squad's BAR team was tasked with suppressing Japanese infantry assaults through the dense Bataan jungle. Filipino and American defenders used the BAR to devastating effect in the defensive lines of the Abucay Hacienda and Orion-Bagac road. Its reliability under tropical conditions made it one of the most valued weapons of the Bataan campaign.",
+                "location": "Heavy Weapons Gallery — Mt. Samat Shrine",
                 "specs": {}
             }
         },
