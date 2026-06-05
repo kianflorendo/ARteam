@@ -20,8 +20,38 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1358d17d261bc2346a6c698f92f12179
+    m_Address: artifacts/haversack
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 14dcb28d39b049943af2b2bf311c90f8
+    m_Address: artifacts/lensatic_compass
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2c2b442292c12794cb4e8cb534b67e6b
     m_Address: artifacts/thompson
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 350833639cd97644cb8a9d7e12b360f2
+    m_Address: artifacts/type_89_knee_mortar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3843989fd8001874d82af9532f379574
+    m_Address: artifacts/springfield_bol
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 390c833f4edb7b34d9f40f47d2a1fc23
+    m_Address: artifacts/enfield
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3b6e00bdb167c7345b40fd25b11e3bd6
+    m_Address: artifacts/pineapple_grenade
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -30,8 +60,53 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6ce8f9141941a514abcc0f940c4f6d95
+    m_Address: artifacts/field_telephone
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6d9923c4b265bf340bb6054b5ca09740
     m_Address: artifacts/helmet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 710037703aa3ab94bbeb939429f8408e
+    m_Address: artifacts/canteen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 71ac033c43f91b342a1568ab044f6d8e
+    m_Address: artifacts/type_38_arisaka
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8acd05a007e2bdd479919a3729834f71
+    m_Address: artifacts/canvas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8c9ae231e805bf04ca63c4bf82cc46e9
+    m_Address: artifacts/cartridge_belt
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e7e35f4d7f37954ba703c4f7f673b4a
+    m_Address: artifacts/machine_gun
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8f67d26d952d18541bcb8be685afca7d
+    m_Address: artifacts/herringbone
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9772d713abe07d84d845220d76bd886c
+    m_Address: artifacts/rice_ration_sack
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a40ae591d2c019547b5047bf7ee605d1
+    m_Address: artifacts/web_pistol_belt
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -40,8 +115,78 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a8ff5adeef6c9a0429e387350956de9b
+    m_Address: artifacts/gas_mask
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ab38ae5e85279d248b45e63f55ea906c
+    m_Address: artifacts/japanese_propaganda
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b29496b0ed0edca4a94a4948a010b915
+    m_Address: artifacts/type_96_light_machine_gun
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b97488cd95a91f34a9bbb10846cbba16
+    m_Address: artifacts/bamboo_stretcher
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c61b6c3b27a561747a76e1f123bbf0a2
+    m_Address: artifacts/map_case
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c68a163803560e047b9c102745bbc5e1
+    m_Address: artifacts/service_shoe
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c7b199622ce4a424eac8b164e5bcecf9
+    m_Address: artifacts/colt_45_pist
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cabd6b8c3bed00c4fada5c0785cf0624
+    m_Address: artifacts/60mm_mortar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d40f003b84f942340bb1b994c9946920
+    m_Address: artifacts/atabrine_medicine
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d5e012212dcee4f4cadd6f63bb91e49d
+    m_Address: artifacts/t_handle_entren
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: daa39e8ed2f98dd459b21e96f232a502
+    m_Address: artifacts/suspenders
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e8dd079c2b53fae46a69720aa23b662e
     m_Address: artifacts/browning
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ec961966ae2d7f748be8a10d664595e8
+    m_Address: artifacts/rifle_sling
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: efb70ab318cc2b04b8f68063047b4ed6
+    m_Address: artifacts/bayonet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f0e4a2ecc44bd60489cae0d9eccc73bd
+    m_Address: artifacts/aidpouch
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

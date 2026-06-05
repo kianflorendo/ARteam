@@ -59,7 +59,7 @@ public class AutoMatcher : MonoBehaviour
             return;
         }
 
-        // -- Update soldier progress --
+        // -- Update primary soldier progress --
         if (!string.IsNullOrEmpty(artifact.soldier_id))
         {
             InventoryManager.Instance.AddToSoldierProgress(
@@ -67,6 +67,20 @@ public class AutoMatcher : MonoBehaviour
             OnSoldierProgressUpdated?.Invoke(artifact.soldier_id);
             Debug.Log($"[AutoMatcher] Soldier {artifact.soldier_id} updated " +
                       $"with artifact {artifact.id}");
+        }
+
+        // -- Update shared soldier progress --
+        // Shared artifacts count towards multiple soldier collections simultaneously.
+        if (artifact.shared_soldier_ids != null)
+        {
+            foreach (var sharedId in artifact.shared_soldier_ids)
+            {
+                if (string.IsNullOrEmpty(sharedId)) continue;
+                InventoryManager.Instance.AddToSoldierProgress(sharedId, artifact.id);
+                OnSoldierProgressUpdated?.Invoke(sharedId);
+                Debug.Log($"[AutoMatcher] Shared soldier {sharedId} updated " +
+                          $"with artifact {artifact.id}");
+            }
         }
 
         // -- Update division progress --
@@ -79,13 +93,20 @@ public class AutoMatcher : MonoBehaviour
                       $"with artifact {artifact.id}");
         }
 
-        // -- Check for completion --
+        // -- Check completion for primary soldier + division --
         if (CompletionDetector.Instance != null)
         {
-            CompletionDetector.Instance.Check(
-                artifact.soldier_id,
-                artifact.division_id
-            );
+            CompletionDetector.Instance.Check(artifact.soldier_id, artifact.division_id);
+
+            // Check completion for each shared soldier too
+            if (artifact.shared_soldier_ids != null)
+            {
+                foreach (var sharedId in artifact.shared_soldier_ids)
+                {
+                    if (!string.IsNullOrEmpty(sharedId))
+                        CompletionDetector.Instance.Check(sharedId, "");
+                }
+            }
         }
     }
 }

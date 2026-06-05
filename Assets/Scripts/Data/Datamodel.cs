@@ -43,6 +43,7 @@ public class ArtifactData
     public double gps_altitude;
     public float gps_geofence_radius_meters;
     public string soldier_id;                  // "" if info_only
+    public List<string> shared_soldier_ids;    // additional soldiers this also counts towards (null if none)
     public string division_id;                 // "" if info_only
     public string bundle_key;                  // Addressables key, "" if info_only
     public string tracking_lost_behavior;      // "freeze" or "hide"

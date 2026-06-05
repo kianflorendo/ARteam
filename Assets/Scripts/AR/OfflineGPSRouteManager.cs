@@ -50,9 +50,13 @@ public class OfflineGPSRouteManager : MonoBehaviour
                 var active = ManifestLoader.Instance?.GetArtifact(ActiveArtifactId);
                 if (active != null)
                 {
-                    var nextAfter = _routeArtifacts?.Find(a =>
-                        a.sequence_index == active.sequence_index + 1
-                        && !InventoryManager.Instance.IsCollected(a.id));
+                    ArtifactData nextAfter = null;
+                    if (_routeArtifacts != null)
+                        foreach (var _a in _routeArtifacts)
+                            if (_a.sequence_index > active.sequence_index
+                                && !InventoryManager.Instance.IsCollected(_a.id)
+                                && (nextAfter == null || _a.sequence_index < nextAfter.sequence_index))
+                                nextAfter = _a;
                     if (nextAfter != null)
                         return $"({active.name} active) → {nextAfter.name}";
                 }
@@ -72,9 +76,13 @@ public class OfflineGPSRouteManager : MonoBehaviour
                 var active = ManifestLoader.Instance?.GetArtifact(ActiveArtifactId);
                 if (active != null)
                 {
-                    var nextAfter = _routeArtifacts?.Find(a =>
-                        a.sequence_index == active.sequence_index + 1
-                        && !InventoryManager.Instance.IsCollected(a.id));
+                    ArtifactData nextAfter = null;
+                    if (_routeArtifacts != null)
+                        foreach (var _a in _routeArtifacts)
+                            if (_a.sequence_index > active.sequence_index
+                                && !InventoryManager.Instance.IsCollected(_a.id)
+                                && (nextAfter == null || _a.sequence_index < nextAfter.sequence_index))
+                                nextAfter = _a;
                     if (nextAfter != null)
                         return nextAfter.distance_from_previous_meters;
                 }
@@ -191,10 +199,16 @@ public class OfflineGPSRouteManager : MonoBehaviour
             var activeArt = ManifestLoader.Instance?.GetArtifact(ActiveArtifactId);
             if (activeArt != null)
             {
-                int nextSeq = activeArt.sequence_index + 1;
-                var nextAfterActive = _routeArtifacts.Find(
-                    a => a.sequence_index == nextSeq
-                      && !InventoryManager.Instance.IsCollected(a.id));
+                // Find the next uncollected artifact after the active one.
+                // Uses min-sequence search so non-contiguous per-soldier routes work correctly.
+                ArtifactData nextAfterActive = null;
+                foreach (var _a in _routeArtifacts)
+                {
+                    if (_a.sequence_index > activeArt.sequence_index
+                        && !InventoryManager.Instance.IsCollected(_a.id)
+                        && (nextAfterActive == null || _a.sequence_index < nextAfterActive.sequence_index))
+                        nextAfterActive = _a;
+                }
 
                 if (nextAfterActive != null)
                 {
@@ -208,7 +222,7 @@ public class OfflineGPSRouteManager : MonoBehaviour
                             DestroyPresentationAnchor(ActiveArtifactId);
                             var st = GPSRouteStateStore.Instance.State;
                             st.active_artifact_id = "";
-                            st.next_sequence_index = nextSeq;
+                            st.next_sequence_index = activeArt.sequence_index + 1;
                             GPSRouteStateStore.Instance.Save();
                             Debug.Log($"[OfflineGPSRouteManager] Auto-advanced past {activeArt.id} — unlocking {nextAfterActive.id}.");
                             UnlockArtifact(nextAfterActive);
@@ -330,16 +344,20 @@ public class OfflineGPSRouteManager : MonoBehaviour
         }
 
         // Forward pass: advance past any sequences that were explicitly collected.
-        // Auto-advanced sequences (walked past without collecting) are NOT in inventory
-        // and must not be re-visited — next_sequence_index is the authoritative watermark
-        // of how far the player has progressed regardless of collection status.
+        // Uses min-sequence search so non-contiguous per-soldier routes (with gaps) work correctly.
         while (true)
         {
-            var next = _routeArtifacts.Find(a => a.sequence_index == state.next_sequence_index);
+            ArtifactData next = null;
+            foreach (var a in _routeArtifacts)
+            {
+                if (a.sequence_index >= state.next_sequence_index
+                    && (next == null || a.sequence_index < next.sequence_index))
+                    next = a;
+            }
             if (next == null || !InventoryManager.Instance.IsCollected(next.id))
                 break;
 
-            state.next_sequence_index++;
+            state.next_sequence_index = next.sequence_index + 1;
             dirty = true;
         }
 
@@ -393,10 +411,19 @@ public class OfflineGPSRouteManager : MonoBehaviour
         if (_routeArtifacts == null || _routeArtifacts.Count == 0)
             return null;
 
+        // Find the nearest uncollected artifact at or after next_sequence_index.
+        // Exact-match fails when the active soldier's route has non-contiguous sequences.
         int nextSequence = NextSequenceIndex;
-        return _routeArtifacts.Find(a =>
-            a.sequence_index == nextSequence
-            && !InventoryManager.Instance.IsCollected(a.id));
+        ArtifactData best = null;
+        foreach (var a in _routeArtifacts)
+        {
+            if (a.sequence_index >= nextSequence && !InventoryManager.Instance.IsCollected(a.id))
+            {
+                if (best == null || a.sequence_index < best.sequence_index)
+                    best = a;
+            }
+        }
+        return best;
     }
 
     private bool EnsureSegmentStart()
@@ -499,6 +526,17 @@ public class OfflineGPSRouteManager : MonoBehaviour
             0f,
             Camera.main.transform.eulerAngles.y + 180f,
             0f);
+
+        // Parent anchor to the AR scene root (XROrigin) via Camera.main's hierarchy root.
+        // When ARCore relocalization corrects the coordinate frame it moves XROrigin, so
+        // all children move with it — the anchor stays locked in physical space instead of
+        // drifting in random directions as tracking improves.
+        // worldPositionStays=true preserves the world position set above.
+        // Only parent if Camera.main is actually inside a hierarchy (has a parent); if it
+        // is a scene root itself, skip to avoid anchoring to the camera directly.
+        var arSceneRoot = Camera.main.transform.root;
+        if (arSceneRoot != Camera.main.transform)
+            anchorObject.transform.SetParent(arSceneRoot, worldPositionStays: true);
 
         ArtifactSpawner.Instance.Spawn(artifact, anchorObject.transform);
     }

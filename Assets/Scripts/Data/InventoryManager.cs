@@ -359,18 +359,16 @@ public class InventoryManager : MonoBehaviour
 
     // ─────────────────────────────────────────────────────────
     //  Soldier unlock tracking
-    //  Filipino (S-001) is always unlocked.
-    //  Japanese (S-002) unlocks when Filipino mission is complete.
-    //  American (S-003) unlocks when Japanese mission is complete.
+    //  All three soldiers are always unlocked — player can switch freely.
     // ─────────────────────────────────────────────────────────
 
     public bool IsSoldierUnlocked(string soldierId)
     {
         switch (soldierId)
         {
-            case "S-001": return true;
-            case "S-002": return GetSoldierProgress("S-001").completed;
-            case "S-003": return GetSoldierProgress("S-002").completed;
+            case "S-001":
+            case "S-002":
+            case "S-003": return true;
             default:      return false;
         }
     }

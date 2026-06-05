@@ -248,6 +248,7 @@ public class SoldierScreenController : MonoBehaviour
     {
         _currentIndex = (_currentIndex - 1 + SOLDIER_IDS.Length) % SOLDIER_IDS.Length;
         ActiveSoldierManager.Instance?.SetActiveSoldier(SOLDIER_IDS[_currentIndex]);
+        OfflineGPSRouteManager.Instance?.ResetForTesting();
         RefreshDisplay();
         AudioManager.Instance?.PlayUITapSFX();
     }
@@ -256,6 +257,7 @@ public class SoldierScreenController : MonoBehaviour
     {
         _currentIndex = (_currentIndex + 1) % SOLDIER_IDS.Length;
         ActiveSoldierManager.Instance?.SetActiveSoldier(SOLDIER_IDS[_currentIndex]);
+        OfflineGPSRouteManager.Instance?.ResetForTesting();
         RefreshDisplay();
         AudioManager.Instance?.PlayUITapSFX();
     }

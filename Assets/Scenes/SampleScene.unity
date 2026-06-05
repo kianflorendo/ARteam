@@ -708,11 +708,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &188148734 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2669732125567302338, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
-  m_PrefabInstance: {fileID: 4005828965890146558}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &212114235
 GameObject:
   m_ObjectHideFlags: 0
@@ -3951,6 +3946,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 875343105}
   m_CullTransparentMesh: 1
+--- !u!1 &877139179 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4824154482728665801, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+  m_PrefabInstance: {fileID: 4005828965890146558}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &877139180 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4772356660288801596, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+  m_PrefabInstance: {fileID: 4005828965890146558}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &877139181 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4695789967715943329, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+  m_PrefabInstance: {fileID: 4005828965890146558}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &920969223
 GameObject:
   m_ObjectHideFlags: 0
@@ -4349,6 +4359,7 @@ MonoBehaviour:
   rebuildAwardsScreen: 0
   rebuildARScanScreen: 0
   rebuildBottomNavBar: 0
+  rebuildAROverlayPanels: 0
 --- !u!4 &970391472
 Transform:
   m_ObjectHideFlags: 0
@@ -4413,7 +4424,9 @@ MonoBehaviour:
   _awardsScreen: {fileID: 1733678275}
   _profileScreen: {fileID: 1733678274}
   _settingsScreen: {fileID: 1733678273}
-  _arDebugPanel: {fileID: 188148734}
+  _arDebugPanel: {fileID: 877139181}
+  _artifactActionPanel: {fileID: 877139180}
+  _collectNotificationBanner: {fileID: 877139179}
   _bottomNavBar: {fileID: 2112619662}
   _homeTabBtn: {fileID: 4005828965890146569}
   _soldierTabBtn: {fileID: 4005828965890146568}

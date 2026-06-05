@@ -123,6 +123,9 @@ public class ArtifactSpawner : MonoBehaviour
                         float maxDim = 0f;
                         float _elapsed = 0f;
                         const float _maxWait = 5f;
+                        // If no renderers exist at all after 0.5s the prefab is empty/broken.
+                        // Stop waiting early so auto-advance can fire in time.
+                        const float _noRendererTimeout = 0.5f;
 
                         while (_elapsed < _maxWait && spawnedObject != null)
                         {
@@ -130,6 +133,12 @@ public class ArtifactSpawner : MonoBehaviour
                             _elapsed += Time.deltaTime;
 
                             var _renderers = spawnedObject.GetComponentsInChildren<Renderer>(true);
+
+                            // Early exit: if no renderers exist and we've waited long enough,
+                            // the prefab has no mesh — don't spin for the full 5 seconds.
+                            if (_renderers.Length == 0 && _elapsed >= _noRendererTimeout)
+                                break;
+
                             foreach (var _r in _renderers)
                             {
                                 // Prefer CPU mesh bounds (works even when renderer disabled).
@@ -168,11 +177,13 @@ public class ArtifactSpawner : MonoBehaviour
                             }
                             else
                             {
-                                // Bounds never became valid — apply a safe fallback scale.
-                                // 0.5f prevents a screen-filling giant while still showing something.
+                                // Bounds never became valid — prefab likely has no mesh.
+                                // Apply fallback scale; auto-advance will skip this artifact
+                                // after the player walks the required distance.
                                 spawnedObject.transform.localScale = Vector3.one * 0.5f;
                                 Debug.LogWarning($"[ArtifactSpawner] AutoScale {artifact.name}: " +
-                                                 $"bounds unavailable after {_maxWait:F1}s — fallback 0.5");
+                                                 $"no renderers/bounds after {_elapsed:F2}s — " +
+                                                 $"check prefab in Unity Editor. Fallback 0.5.");
                             }
 
                             // Reveal the model now that it is correctly scaled.

@@ -47,6 +47,9 @@ public class UIHierarchySetup : MonoBehaviour
     public bool rebuildARScanScreen     = false;
     [Tooltip("Tick to destroy and rebuild BottomNavBar in place.")]
     public bool rebuildBottomNavBar     = false;
+    [Tooltip("Tick to destroy and rebuild AR_DebugPanel, AR_ActionPanel, and AR_CollectBanner in place. " +
+             "After rebuild, wire the new GameObjects to NavigationManager in the Inspector.")]
+    public bool rebuildAROverlayPanels  = false;
 
     // ── Figma colours ────────────────────────────────────────
     private static readonly Color C_BLACK     = new Color(0.102f, 0.102f, 0.102f); // #1a1a1a
@@ -138,6 +141,21 @@ public class UIHierarchySetup : MonoBehaviour
             var existing = mainApp.Find("BottomNavBar");
             if (existing != null) DestroyImmediate(existing.gameObject);
             BuildBottomNavBar(mainApp);
+            return;
+        }
+
+        if (rebuildAROverlayPanels)
+        {
+            rebuildAROverlayPanels = false;
+            var canvas = transform.Find("UI_Canvas");
+            if (canvas == null) { Debug.LogError("[UIHierarchySetup] UI_Canvas not found."); return; }
+            var dp = canvas.Find("AR_DebugPanel");    if (dp != null) DestroyImmediate(dp.gameObject);
+            var ap = canvas.Find("AR_ActionPanel");   if (ap != null) DestroyImmediate(ap.gameObject);
+            var cb = canvas.Find("AR_CollectBanner"); if (cb != null) DestroyImmediate(cb.gameObject);
+            BuildDebugPanel(canvas);
+            BuildARActionPanel(canvas);
+            BuildARCollectBanner(canvas);
+            Debug.Log("[UIHierarchySetup] AR overlay panels rebuilt. Wire AR_ActionPanel and AR_CollectBanner to NavigationManager in the Inspector.");
             return;
         }
 
@@ -276,8 +294,10 @@ public class UIHierarchySetup : MonoBehaviour
         BuildTopBar(mainApp.transform);
         BuildBottomNavBar(mainApp.transform);
 
-        // ── Debug panel (sits above everything) ─────────────
+        // ── AR overlay panels (sit above everything) ─────────
         BuildDebugPanel(canvas.transform);
+        BuildARActionPanel(canvas.transform);
+        BuildARCollectBanner(canvas.transform);
 
         EnsureEventSystem();
 
@@ -1965,12 +1985,12 @@ public class UIHierarchySetup : MonoBehaviour
         Anchor(panel, 0, 0, 1, 0);
         SetPivot(panel, 0.5f, 0f);
         var rt = panel.GetComponent<RectTransform>();
-        rt.sizeDelta        = new Vector2(-20, 250); // 370px wide, 250px tall
-        rt.anchoredPosition = new Vector2(0, 75);    // 75px from bottom edge
+        rt.sizeDelta        = new Vector2(-20, 220); // 370px wide, 220px tall
+        rt.anchoredPosition = new Vector2(0, 145);   // 145px from bottom: above ActionPanel (70+60+15)
 
         // Background is now managed at runtime by ARDebugPanel.SetVisible()
         panel.AddComponent<Image>().color = Color.clear;
-        panel.AddComponent<ARDebugPanel>();
+        var arDebugPanel = panel.AddComponent<ARDebugPanel>();
 
         var debugTextGo = MakeRect("DebugInfo", panel.transform);
         SetFullScreen(debugTextGo);
@@ -1982,6 +2002,117 @@ public class UIHierarchySetup : MonoBehaviour
         tmp.overflowMode        = TextOverflowModes.Ellipsis;
         tmp.margin              = new Vector4(12, 12, 12, 12);
 
+        // Wire the reference so ARDebugPanel.ShowInfo() can write to this TMP.
+        arDebugPanel.debugText = tmp;
+
+        panel.SetActive(false);
+    }
+
+    private void BuildARActionPanel(Transform parent)
+    {
+        // Bottom-anchored panel with COLLECT and SHOW INFO buttons.
+        // ArtifactActionPanel.cs resolves children by name at runtime.
+        var panel = MakeRect("AR_ActionPanel", parent);
+        Anchor(panel, 0, 0, 1, 0);
+        SetPivot(panel, 0.5f, 0f);
+        var rt = panel.GetComponent<RectTransform>();
+        rt.sizeDelta        = new Vector2(-20, 60);  // 60px tall, 10px margin each side
+        rt.anchoredPosition = new Vector2(0f, 70f);  // 70px from bottom: 65px NavBar + 5px gap
+
+        panel.AddComponent<Image>().color = new Color(0.06f, 0.06f, 0.06f, 0.85f);
+        panel.AddComponent<ArtifactActionPanel>();
+
+        // ButtonRow — resolved by ArtifactActionPanel via transform.Find("ButtonRow")
+        var row = MakeRect("ButtonRow", panel.transform);
+        SetFullScreen(row);
+        var hlg = row.AddComponent<HorizontalLayoutGroup>();
+        hlg.spacing               = 10;
+        hlg.padding               = new RectOffset(12, 12, 8, 8);
+        hlg.childAlignment        = TextAnchor.MiddleCenter;
+        hlg.childControlWidth     = true;
+        hlg.childControlHeight    = true;
+        hlg.childForceExpandWidth = true;
+
+        // CollectButton — green, resolved via "ButtonRow/CollectButton"
+        var collectGo = MakeRect("CollectButton", row.transform);
+        collectGo.AddComponent<Image>().color = new Color(0.290f, 0.486f, 0.349f); // terra green
+        collectGo.AddComponent<Button>();
+        var collectText = MakeRect("Text", collectGo.transform);
+        SetFullScreen(collectText);
+        var cTmp = collectText.AddComponent<TextMeshProUGUI>();
+        cTmp.text      = "COLLECT";
+        cTmp.fontSize  = 13;
+        cTmp.fontStyle = FontStyles.Bold;
+        cTmp.color     = Color.white;
+        cTmp.alignment = TextAlignmentOptions.Center;
+        cTmp.enableWordWrapping = false;
+
+        // ShowInfoButton — cream, resolved via "ButtonRow/ShowInfoButton"
+        var infoGo = MakeRect("ShowInfoButton", row.transform);
+        infoGo.AddComponent<Image>().color = new Color(0.910f, 0.910f, 0.910f); // C_GRAY_E8
+        infoGo.AddComponent<Button>();
+        var infoText = MakeRect("Text", infoGo.transform);
+        SetFullScreen(infoText);
+        var iTmp = infoText.AddComponent<TextMeshProUGUI>();
+        iTmp.text      = "SHOW INFO";
+        iTmp.fontSize  = 13;
+        iTmp.fontStyle = FontStyles.Bold;
+        iTmp.color     = new Color(0.102f, 0.102f, 0.102f); // dark
+        iTmp.alignment = TextAlignmentOptions.Center;
+        iTmp.enableWordWrapping = false;
+
+        // Hidden by default; NavigationManager.ShowScreen controls SetActive
+        panel.SetActive(false);
+    }
+
+    private void BuildARCollectBanner(Transform parent)
+    {
+        // Top-anchored slide-in banner shown after artifact collection.
+        // CollectNotificationBanner.cs resolves children by name at runtime
+        // and animates anchoredPosition.y to slide in/out.
+        var panel = MakeRect("AR_CollectBanner", parent);
+        Anchor(panel, 0, 1, 1, 1);
+        SetPivot(panel, 0.5f, 1f);
+        var rt = panel.GetComponent<RectTransform>();
+        rt.sizeDelta        = new Vector2(0f, 60f);   // full width, 60px tall
+        rt.anchoredPosition = new Vector2(0f, 70f);   // starts off-screen above (script sets HIDDEN_Y=70)
+
+        panel.AddComponent<Image>().color = new Color(0.06f, 0.06f, 0.06f, 0.88f);
+        panel.AddComponent<CollectNotificationBanner>();
+
+        // BannerContent — resolved via "BannerContent"
+        var content = MakeRect("BannerContent", panel.transform);
+        SetFullScreen(content);
+        var vlg = content.AddComponent<VerticalLayoutGroup>();
+        vlg.childAlignment        = TextAnchor.MiddleCenter;
+        vlg.childControlWidth     = true;
+        vlg.childControlHeight    = false;
+        vlg.childForceExpandWidth = true;
+        vlg.padding               = new RectOffset(16, 16, 6, 6);
+        vlg.spacing               = 2;
+
+        // CollectedLabel — e.g. "Bolo Knife collected!"
+        var collectedGo = MakeRect("CollectedLabel", content.transform);
+        collectedGo.AddComponent<LayoutElement>().preferredHeight = 22;
+        var cLabel = collectedGo.AddComponent<TextMeshProUGUI>();
+        cLabel.text      = "Artifact collected!";
+        cLabel.fontSize  = 14;
+        cLabel.fontStyle = FontStyles.Bold;
+        cLabel.color     = Color.white;
+        cLabel.alignment = TextAlignmentOptions.Center;
+        cLabel.enableWordWrapping = false;
+
+        // RemainingLabel — e.g. "4 artifacts remaining"
+        var remainingGo = MakeRect("RemainingLabel", content.transform);
+        remainingGo.AddComponent<LayoutElement>().preferredHeight = 18;
+        var rLabel = remainingGo.AddComponent<TextMeshProUGUI>();
+        rLabel.text      = "artifacts remaining";
+        rLabel.fontSize  = 11;
+        rLabel.color     = new Color(0.800f, 0.800f, 0.800f); // C_GRAY_CC
+        rLabel.alignment = TextAlignmentOptions.Center;
+        rLabel.enableWordWrapping = false;
+
+        // Hidden by default; NavigationManager.ShowScreen controls SetActive
         panel.SetActive(false);
     }
 

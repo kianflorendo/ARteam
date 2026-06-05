@@ -45,6 +45,13 @@ public class NavigationManager : MonoBehaviour
     [Header("Debug Panel")]
     [SerializeField] private GameObject _arDebugPanel;
 
+    // ── AR action panels (only active on ARScan) ─────────────
+    // After rebuilding the UI hierarchy via UIHierarchySetup, drag
+    // AR_ActionPanel and AR_CollectBanner from the Hierarchy into these fields.
+    [Header("AR Action Panels")]
+    [SerializeField] private GameObject _artifactActionPanel;
+    [SerializeField] private GameObject _collectNotificationBanner;
+
     // ── Bottom nav bar (hidden on ARScan for full-screen AR) ─
     [Header("Bottom Nav Bar")]
     [SerializeField] private GameObject _bottomNavBar;
@@ -112,6 +119,11 @@ public class NavigationManager : MonoBehaviour
         // Camera feed must never show on pre-login screens
         ARCameraDisplay.SetSuppressed(true);
 
+        // Ensure AR overlay panels are hidden during pre-login
+        if (_arDebugPanel             != null) _arDebugPanel.SetActive(false);
+        if (_artifactActionPanel      != null) _artifactActionPanel.SetActive(false);
+        if (_collectNotificationBanner != null) _collectNotificationBanner.SetActive(false);
+
         Show(_mainMenuScreen,  screenName == "MainMenu");
         Show(_registerScreen,  screenName == "Register");
         Show(_howToPlayScreen, screenName == "HowToPlay");
@@ -138,8 +150,10 @@ public class NavigationManager : MonoBehaviour
         // Camera feed: only show on ARScan, suppressed on all other screens
         ARCameraDisplay.SetSuppressed(screenName != "ARScan");
 
-        // Debug panel only visible on ARScan
-        if (_arDebugPanel != null) _arDebugPanel.SetActive(screenName == "ARScan");
+        // Debug panel and AR action panels only visible on ARScan
+        if (_arDebugPanel             != null) _arDebugPanel.SetActive(screenName == "ARScan");
+        if (_artifactActionPanel      != null) _artifactActionPanel.SetActive(screenName == "ARScan");
+        if (_collectNotificationBanner != null) _collectNotificationBanner.SetActive(screenName == "ARScan");
 
         // TopBar hidden on screens that have their own custom header
         if (_topBar != null) _topBar.SetActive(

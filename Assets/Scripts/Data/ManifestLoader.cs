@@ -195,8 +195,10 @@ public class ManifestLoader : MonoBehaviour
                ?? new List<ArtifactData>();
     }
 
-    /// Returns GPS artifacts that participate in the offline distance-chain route,
-    /// filtered by the currently active soldier, sorted by sequence_index ascending.
+    /// Returns GPS artifacts for the currently active soldier's route,
+    /// sorted by sequence_index ascending.
+    /// Includes artifacts where soldier_id matches, plus any shared artifacts
+    /// that list the active soldier in shared_soldier_ids.
     public List<ArtifactData> GetGPSRouteArtifacts()
     {
         if (!_isLoaded) { LogNotLoaded(); return new List<ArtifactData>(); }
@@ -209,7 +211,9 @@ public class ManifestLoader : MonoBehaviour
                 && a.sequence_index > 0
                 && (string.IsNullOrEmpty(a.gps_progression_mode)
                     || a.gps_progression_mode == GPSProgressionMode.DistanceChain)
-                && (string.IsNullOrEmpty(a.soldier_id) || a.soldier_id == activeSoldier))
+                && (string.IsNullOrEmpty(a.soldier_id)
+                    || a.soldier_id == activeSoldier
+                    || (a.shared_soldier_ids != null && a.shared_soldier_ids.Contains(activeSoldier))))
             .OrderBy(a => a.sequence_index)
             .ToList();
     }

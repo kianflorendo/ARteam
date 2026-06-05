@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 93515ecad9ad2ee468787616f20cd61e
+guid: b76e3dac7b410b54680c78906b7e03b8
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -13,7 +13,7 @@ ScriptedImporter:
   importSettings:
     nodeNameMethod: 1
     animationMethod: 2
-    generateMipMaps: 1
+    generateMipMaps: 0
     texturesReadable: 0
     defaultMinFilterMode: 9729
     defaultMagFilterMode: 9729
@@ -25,4 +25,31 @@ ScriptedImporter:
     lightIntensityFactor: 1
     sceneObjectCreation: 2
   assetDependencies: []
-  reportItems: []
+  reportItems:
+  - type: 0
+    code: 62
+    messages:
+    - 0
+    - WebP
+  - type: 0
+    code: 62
+    messages:
+    - 2
+    - WebP
+  - type: 0
+    code: 62
+    messages:
+    - 1
+    - WebP
+  - type: 0
+    code: 45
+    messages:
+    - 0
+  - type: 0
+    code: 45
+    messages:
+    - 2
+  - type: 0
+    code: 45
+    messages:
+    - 1
