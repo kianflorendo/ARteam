@@ -1,9 +1,3 @@
-﻿// ============================================================
-// ImageAnchorManager.cs - IMPROVED VERSION WITH DEBUG LOGGING
-// Location: Assets/Scripts/AR/ImageAnchorManager.cs
-// Mt. Samat AR Scavenger Hunt -- Terra App
-// ============================================================
-
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -11,21 +5,15 @@ using UnityEngine.XR.ARSubsystems;
 
 public class ImageAnchorManager : MonoBehaviour
 {
-    // -- References --
     [Header("AR References")]
     [Tooltip("Assign the ARTrackedImageManager from XR Origin here")]
     public ARTrackedImageManager imageManager;
 
-    // -- Spawned tracking --
     private Dictionary<string, TrackableId> _spawnedMap
         = new Dictionary<string, TrackableId>();
 
     private Dictionary<TrackableId, string> _trackableToArtifact
         = new Dictionary<TrackableId, string>();
-
-    // ============================================================
-    //  Unity lifecycle
-    // ============================================================
 
     private void Awake()
     {
@@ -35,13 +23,11 @@ public class ImageAnchorManager : MonoBehaviour
         if (imageManager == null)
             Debug.LogError("[ImageAnchorManager] ARTrackedImageManager not found!");
         else
-            Debug.Log("[ImageAnchorManager] ✅ ARTrackedImageManager found: "
-                      + imageManager.name);
+            Debug.Log("[ImageAnchorManager] ARTrackedImageManager found: " + imageManager.name);
     }
 
     private void Start()
     {
-        // Log all reference images in the library for debugging
         if (imageManager != null && imageManager.referenceLibrary != null)
         {
             Debug.Log($"[ImageAnchorManager] Reference library has " +
@@ -55,14 +41,12 @@ public class ImageAnchorManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("[ImageAnchorManager] ❌ Reference library is NULL! " +
-                           "Assign MtSamatImageLibrary to ARTrackedImageManager!");
+            Debug.LogError("[ImageAnchorManager] Reference library is NULL. " +
+                           "Assign MtSamatImageLibrary to ARTrackedImageManager.");
         }
 
-        // Test lookup for each image in library against manifest
         if (ManifestLoader.Instance != null)
         {
-            Debug.Log("[ImageAnchorManager] ManifestLoader is ready");
             if (imageManager != null && imageManager.referenceLibrary != null)
             {
                 for (int i = 0; i < imageManager.referenceLibrary.count; i++)
@@ -80,17 +64,14 @@ public class ImageAnchorManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("[ImageAnchorManager] ManifestLoader.Instance is NULL!");
+            Debug.LogError("[ImageAnchorManager] ManifestLoader.Instance is NULL.");
         }
     }
 
     private void OnEnable()
     {
         if (imageManager != null)
-        {
             imageManager.trackablesChanged.AddListener(OnTrackablesChanged);
-            Debug.Log("[ImageAnchorManager] ✅ Subscribed to trackablesChanged");
-        }
         ManifestLoader.OnManifestLoaded += OnManifestLoaded;
     }
 
@@ -101,9 +82,8 @@ public class ImageAnchorManager : MonoBehaviour
         ManifestLoader.OnManifestLoaded -= OnManifestLoaded;
     }
 
-    // If the manifest finishes loading AFTER an image was already detected,
-    // HandleImageAdded returned null at that point and the spawn was skipped.
-    // This re-processes any currently-tracked images that were missed.
+    // Re-process any currently-tracked images that were missed when the manifest
+    // hadn't loaded yet at the time of their first detection.
     private void OnManifestLoaded()
     {
         Debug.Log("[ImageAnchorManager] Manifest loaded — retrying any already-tracked images.");
@@ -115,9 +95,8 @@ public class ImageAnchorManager : MonoBehaviour
         if (imageManager == null) return;
         foreach (var trackedImage in imageManager.trackables)
         {
-            if (trackedImage.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.None)
+            if (trackedImage.trackingState == TrackingState.None)
                 continue;
-            // Skip if already registered (spawn already happened or in progress)
             if (_trackableToArtifact.ContainsKey(trackedImage.trackableId))
                 continue;
             Debug.Log($"[ImageAnchorManager] Retrying missed image: " +
@@ -126,38 +105,23 @@ public class ImageAnchorManager : MonoBehaviour
         }
     }
 
-    // ============================================================
-    //  Main event handler
-    // ============================================================
-
     private void OnTrackablesChanged(
         ARTrackablesChangedEventArgs<ARTrackedImage> args)
     {
-        // Images added
         foreach (var trackedImage in args.added)
         {
-            Debug.Log($"[ImageAnchorManager] 📸 IMAGE DETECTED: " +
+            Debug.Log($"[ImageAnchorManager] IMAGE DETECTED: " +
                       $"'{trackedImage.referenceImage.name}' " +
                       $"state={trackedImage.trackingState}");
             HandleImageAdded(trackedImage);
         }
 
-        // Images updated
         foreach (var trackedImage in args.updated)
-        {
             HandleImageUpdated(trackedImage);
-        }
 
-        // Images removed
         foreach (var kvp in args.removed)
-        {
             HandleImageRemoved(kvp.Key);
-        }
     }
-
-    // ============================================================
-    //  Added
-    // ============================================================
 
     private void HandleImageAdded(ARTrackedImage trackedImage)
     {
@@ -167,7 +131,7 @@ public class ImageAnchorManager : MonoBehaviour
 
         if (ManifestLoader.Instance == null)
         {
-            Debug.LogError("[ImageAnchorManager] ❌ ManifestLoader.Instance is NULL!");
+            Debug.LogError("[ImageAnchorManager] ManifestLoader.Instance is NULL.");
             return;
         }
 
@@ -175,17 +139,23 @@ public class ImageAnchorManager : MonoBehaviour
 
         if (artifact == null)
         {
-            Debug.LogWarning($"[ImageAnchorManager] ⚠️ Marker '{markerName}' " +
-                             $"NOT found in manifest! Check marker name matches exactly.");
+            Debug.LogWarning($"[ImageAnchorManager] Marker '{markerName}' " +
+                             $"NOT found in manifest. Check marker name matches exactly.");
             return;
         }
 
-        Debug.Log($"[ImageAnchorManager] ✅ Found artifact: " +
+        Debug.Log($"[ImageAnchorManager] Found artifact: " +
                   $"'{artifact.name}' (type={artifact.type})");
 
         if (IsAlreadySpawned(artifact.id))
         {
-            Debug.Log($"[ImageAnchorManager] '{artifact.id}' already spawned. Skipping.");
+            // Image was fully removed by ARCore and re-detected as a new trackable.
+            // Don't re-spawn — just re-show the existing anchor and re-register
+            // the new trackableId so updated/removed events map correctly.
+            _trackableToArtifact[trackedImage.trackableId] = artifact.id;
+            _spawnedMap[artifact.id] = trackedImage.trackableId;
+            ArtifactSpawner.Instance?.Show(artifact.id);
+            Debug.Log($"[ImageAnchorManager] '{artifact.id}' re-detected after removal — re-showing.");
             return;
         }
 
@@ -193,17 +163,13 @@ public class ImageAnchorManager : MonoBehaviour
 
         if (ArtifactSpawner.Instance == null)
         {
-            Debug.LogError("[ImageAnchorManager] ❌ ArtifactSpawner.Instance is NULL!");
+            Debug.LogError("[ImageAnchorManager] ArtifactSpawner.Instance is NULL.");
             return;
         }
 
         ArtifactSpawner.Instance.Spawn(artifact, trackedImage.transform);
-        Debug.Log($"[ImageAnchorManager] ✅ Spawning: {artifact.name}");
+        Debug.Log($"[ImageAnchorManager] Spawning: {artifact.name}");
     }
-
-    // ============================================================
-    //  Updated
-    // ============================================================
 
     private void HandleImageUpdated(ARTrackedImage trackedImage)
     {
@@ -227,10 +193,6 @@ public class ImageAnchorManager : MonoBehaviour
         }
     }
 
-    // ============================================================
-    //  Removed
-    // ============================================================
-
     private void HandleImageRemoved(TrackableId trackableId)
     {
         if (!_trackableToArtifact.TryGetValue(trackableId, out var artifactId))
@@ -245,10 +207,6 @@ public class ImageAnchorManager : MonoBehaviour
             Debug.Log($"[ImageAnchorManager] Hidden: {artifactId}");
         }
     }
-
-    // ============================================================
-    //  Helpers
-    // ============================================================
 
     private void RegisterSpawned(string artifactId, TrackableId trackableId)
     {

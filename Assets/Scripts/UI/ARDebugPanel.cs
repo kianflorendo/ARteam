@@ -1,16 +1,3 @@
-// ============================================================
-// ARDebugPanel.cs
-// Location: Assets/Scripts/UI/ARDebugPanel.cs
-// Mt. Samat AR — Artifact Info Panel.
-//
-// Shows artifact title, category, location, description, and specs.
-// Opened manually via ArtifactActionPanel's "Show Info" button.
-// Auto-closes when the active artifact is despawned.
-//
-// NavigationManager controls outer panel visibility (SetActive).
-// ArtifactActionPanel calls ShowInfo() / Hide() to toggle content.
-// ============================================================
-
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -19,28 +6,21 @@ using UnityEngine.UI;
 public class ARDebugPanel : MonoBehaviour
 {
     [Header("References")]
-    public TextMeshProUGUI debugText;   // existing wired TMP — repurposed for artifact info
+    public TextMeshProUGUI debugText;
 
-    // ── State ────────────────────────────────────────────────
     public bool IsVisible { get; private set; }
 
     private Image        _bg;
     private ArtifactData _current;
 
-    // ── Colors ───────────────────────────────────────────────
     private static readonly Color BG_VISIBLE = new Color(0.06f, 0.06f, 0.06f, 0.88f);
     private static readonly Color BG_HIDDEN  = Color.clear;
-
-    // ─────────────────────────────────────────────────────────
-    //  Unity lifecycle
-    // ─────────────────────────────────────────────────────────
 
     private void Start()
     {
         _bg = GetComponent<Image>();
         if (_bg == null) _bg = gameObject.AddComponent<Image>();
 
-        // Defensive: auto-find if not wired in Inspector or by UIHierarchySetup
         if (debugText == null)
             debugText = GetComponentInChildren<TextMeshProUGUI>(true);
 
@@ -53,7 +33,6 @@ public class ARDebugPanel : MonoBehaviour
 
         SetVisible(false);
 
-        // Auto-close when the artifact this panel is showing is despawned
         ArtifactSpawner.OnArtifactHidden += HandleHidden;
     }
 
@@ -61,10 +40,6 @@ public class ARDebugPanel : MonoBehaviour
     {
         ArtifactSpawner.OnArtifactHidden -= HandleHidden;
     }
-
-    // ─────────────────────────────────────────────────────────
-    //  Event handler
-    // ─────────────────────────────────────────────────────────
 
     private void HandleHidden(string artifactId)
     {
@@ -75,10 +50,6 @@ public class ARDebugPanel : MonoBehaviour
         }
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  Public API — called by ArtifactActionPanel
-    // ─────────────────────────────────────────────────────────
-
     public void ShowInfo(ArtifactData artifact)
     {
         if (artifact == null) return;
@@ -87,11 +58,9 @@ public class ARDebugPanel : MonoBehaviour
         var scroll = artifact.scroll;
         var sb     = new StringBuilder();
 
-        // Title
         string title = !string.IsNullOrEmpty(scroll?.title) ? scroll.title : artifact.name;
         sb.AppendLine($"<b><size=15>{title.ToUpper()}</size></b>");
 
-        // Category / location meta row
         if (!string.IsNullOrEmpty(scroll?.category))
             sb.AppendLine($"<size=11><color=#aaaaaa>{scroll.category}</color></size>");
 
@@ -100,12 +69,10 @@ public class ARDebugPanel : MonoBehaviour
 
         sb.AppendLine();
 
-        // Description
         if (!string.IsNullOrEmpty(scroll?.description))
             sb.AppendLine($"<size=12>{scroll.description}</size>");
 
-        // Specs
-        var specs = scroll?.specs?.Items;
+        var specs = scroll?.specs;
         if (specs != null && specs.Count > 0)
         {
             sb.AppendLine();
@@ -126,10 +93,6 @@ public class ARDebugPanel : MonoBehaviour
         _current = null;
         SetVisible(false);
     }
-
-    // ─────────────────────────────────────────────────────────
-    //  Internal visibility
-    // ─────────────────────────────────────────────────────────
 
     private void SetVisible(bool visible)
     {

@@ -1,10 +1,3 @@
-// ============================================================
-// RegisterController.cs
-// Location: Assets/Scripts/UI/RegisterController.cs
-// Mt. Samat AR — handles player registration form.
-// All references are [SerializeField] — wire in Prefab Editor.
-// ============================================================
-
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

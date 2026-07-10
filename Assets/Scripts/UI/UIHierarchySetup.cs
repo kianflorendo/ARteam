@@ -1,20 +1,3 @@
-// ============================================================
-// UIHierarchySetup.cs
-// Location: Assets/Scripts/UI/UIHierarchySetup.cs
-// Mt. Samat AR — generates the full Figma-based UI hierarchy.
-//
-// HOW TO USE:
-//   1. Delete the old UI_Canvas from the Hierarchy (if it exists)
-//   2. In the Inspector, tick "Generate Hierarchy"
-//   3. Wait one frame — the full hierarchy appears
-//   4. Drag UI_Canvas from Hierarchy → Assets/Prefabs/UI/UI_Canvas.prefab
-//   5. The guard prevents any future re-generation — coworker edits visually
-//
-// SCREENS GENERATED:
-//   PreLogin:  MainMenuScreen | RegisterScreen | HowToPlayScreen
-//   MainApp:   HomeScreen | SoldierScreen | ARScanScreen | AwardsScreen | ProfileScreen
-// ============================================================
-
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -51,20 +34,15 @@ public class UIHierarchySetup : MonoBehaviour
              "After rebuild, wire the new GameObjects to NavigationManager in the Inspector.")]
     public bool rebuildAROverlayPanels  = false;
 
-    // ── Figma colours ────────────────────────────────────────
-    private static readonly Color C_BLACK     = new Color(0.102f, 0.102f, 0.102f); // #1a1a1a
-    private static readonly Color C_GRAY_88   = new Color(0.533f, 0.533f, 0.533f); // #888888
-    private static readonly Color C_GRAY_AA   = new Color(0.667f, 0.667f, 0.667f); // #aaaaaa
-    private static readonly Color C_GRAY_CC   = new Color(0.800f, 0.800f, 0.800f); // #cccccc
-    private static readonly Color C_GRAY_D9   = new Color(0.851f, 0.851f, 0.851f); // #d9d9d9
-    private static readonly Color C_GRAY_E8   = new Color(0.910f, 0.910f, 0.910f); // #e8e8e8
-    private static readonly Color C_GRAY_F8   = new Color(0.973f, 0.973f, 0.973f); // #f8f8f8
+    private static readonly Color C_BLACK     = new Color(0.102f, 0.102f, 0.102f);
+    private static readonly Color C_GRAY_88   = new Color(0.533f, 0.533f, 0.533f);
+    private static readonly Color C_GRAY_AA   = new Color(0.667f, 0.667f, 0.667f);
+    private static readonly Color C_GRAY_CC   = new Color(0.800f, 0.800f, 0.800f);
+    private static readonly Color C_GRAY_D9   = new Color(0.851f, 0.851f, 0.851f);
+    private static readonly Color C_GRAY_E8   = new Color(0.910f, 0.910f, 0.910f);
+    private static readonly Color C_GRAY_F8   = new Color(0.973f, 0.973f, 0.973f);
     private static readonly Color C_WHITE     = Color.white;
     private static readonly Color C_CLEAR     = Color.clear;
-
-    // ─────────────────────────────────────────────────────────
-    //  Trigger (Inspector bool — one-shot)
-    // ─────────────────────────────────────────────────────────
 
     private void Update()
     {
@@ -249,29 +227,21 @@ public class UIHierarchySetup : MonoBehaviour
                   "Select UI_Canvas → Overrides → Apply All to save to prefab.");
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  Main generator
-    // ─────────────────────────────────────────────────────────
-
     public void Generate()
     {
         Debug.Log("[UIHierarchySetup] Generating Figma UI hierarchy...");
 
-        // Ensure manager singletons exist in the scene
         EnsureComponent<NavigationManager>(gameObject);
         EnsureComponent<ActiveSoldierManager>(gameObject);
         EnsureComponent<PlayerProfileManager>(gameObject);
 
-        // Root canvas
         var canvas = BuildCanvas();
 
-        // ── Pre-login group (shown before registration) ──────
         var preLogin = MakeGroup("PreLoginGroup", canvas.transform, C_CLEAR);
         BuildMainMenuScreen(preLogin.transform);
         BuildRegisterScreen(preLogin.transform);
         BuildHowToPlayScreen(preLogin.transform);
 
-        // ── Main app group (shown after registration) ────────
         var mainApp = MakeGroup("MainAppGroup", canvas.transform, C_CLEAR);
         mainApp.SetActive(false);
 
@@ -294,7 +264,6 @@ public class UIHierarchySetup : MonoBehaviour
         BuildTopBar(mainApp.transform);
         BuildBottomNavBar(mainApp.transform);
 
-        // ── AR overlay panels (sit above everything) ─────────
         BuildDebugPanel(canvas.transform);
         BuildARActionPanel(canvas.transform);
         BuildARCollectBanner(canvas.transform);
@@ -304,10 +273,6 @@ public class UIHierarchySetup : MonoBehaviour
         Debug.Log("[UIHierarchySetup] ✅ Done! " +
                   "Now drag UI_Canvas → Assets/Prefabs/UI/UI_Canvas.prefab then save the scene.");
     }
-
-    // ─────────────────────────────────────────────────────────
-    //  Canvas
-    // ─────────────────────────────────────────────────────────
 
     private Canvas BuildCanvas()
     {
@@ -320,16 +285,12 @@ public class UIHierarchySetup : MonoBehaviour
 
         var scaler = go.AddComponent<CanvasScaler>();
         scaler.uiScaleMode         = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(390, 844);   // Figma frame size
-        scaler.matchWidthOrHeight  = 1f;                      // match width on portrait
+        scaler.referenceResolution = new Vector2(390, 844);
+        scaler.matchWidthOrHeight  = 1f;
 
         go.AddComponent<GraphicRaycaster>();
         return canvas;
     }
-
-    // ─────────────────────────────────────────────────────────
-    //  TopBar
-    // ─────────────────────────────────────────────────────────
 
     private void BuildTopBar(Transform parent)
     {
@@ -341,14 +302,12 @@ public class UIHierarchySetup : MonoBehaviour
         var bg = bar.AddComponent<Image>();
         bg.color = C_WHITE;
 
-        // Divider at bottom of TopBar
         var div = MakeRect("Divider", bar.transform);
         Anchor(div, 0, 0, 1, 0);
         SetPivot(div, 0.5f, 0f);
         div.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 2);
         div.AddComponent<Image>().color = C_GRAY_D9;
 
-        // Avatar circle
         var avatar = MakeRect("AvatarCircle", bar.transform);
         Anchor(avatar, 0, 0.5f, 0, 0.5f);
         SetPivot(avatar, 0f, 0.5f);
@@ -357,7 +316,6 @@ public class UIHierarchySetup : MonoBehaviour
         avatarRT.anchoredPosition = new Vector2(20, 0);
         avatar.AddComponent<Image>().color = C_GRAY_E8;
 
-        // Username label
         var userLbl = MakeRect("UsernameLabel", bar.transform);
         Anchor(userLbl, 0, 0.5f, 0, 0.5f);
         SetPivot(userLbl, 0f, 0.5f);
@@ -371,7 +329,6 @@ public class UIHierarchySetup : MonoBehaviour
         userTmp.color     = C_BLACK;
         userTmp.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // XP pill
         var xpPill = MakeRect("XPPill", bar.transform);
         Anchor(xpPill, 1, 0.5f, 1, 0.5f);
         SetPivot(xpPill, 1f, 0.5f);
@@ -390,10 +347,6 @@ public class UIHierarchySetup : MonoBehaviour
         xpTmp.color     = C_GRAY_88;
         xpTmp.alignment = TextAlignmentOptions.Center;
     }
-
-    // ─────────────────────────────────────────────────────────
-    //  BottomNavBar — 5 tabs
-    // ─────────────────────────────────────────────────────────
 
     private void BuildBottomNavBar(Transform parent)
     {
@@ -443,7 +396,6 @@ public class UIHierarchySetup : MonoBehaviour
         iconGo.GetComponent<RectTransform>().sizeDelta = new Vector2(24f, 24f);
         iconGo.AddComponent<Image>().color = C_GRAY_88;
 
-        // Label: fixed width (70px spans the tab) and 13px tall
         var lblGo = MakeRect("Label", tab.transform);
         lblGo.GetComponent<RectTransform>().sizeDelta = new Vector2(70f, 13f);
         var lbl = lblGo.AddComponent<TextMeshProUGUI>();
@@ -453,19 +405,11 @@ public class UIHierarchySetup : MonoBehaviour
         lbl.alignment = TextAlignmentOptions.Center;
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  PRE-LOGIN SCREENS
-    // ─────────────────────────────────────────────────────────
-
-    // ── Main Menu ────────────────────────────────────────────
-
     private void BuildMainMenuScreen(Transform parent)
     {
         var screen = MakeScreen("MainMenuScreen", parent, C_WHITE);
         screen.AddComponent<MainMenuController>();
 
-        // ── Title "MT. SAMAT" ─────────────────────────────────
-        // Figma: center_x=198.5, top=203, w=285, font=50 bold
         var title = MakeRect("Title", screen.transform);
         AbsCenterH(title, 3.5f, 203f, 285f, 68f);
         var tt = title.AddComponent<TextMeshProUGUI>();
@@ -473,8 +417,6 @@ public class UIHierarchySetup : MonoBehaviour
         tt.color = C_BLACK; tt.alignment = TextAlignmentOptions.Center;
         tt.enableWordWrapping = false;
 
-        // ── Subtitle ──────────────────────────────────────────
-        // Figma: centered, top=268, w=172, h=14, font=15
         var sub = MakeRect("Subtitle", screen.transform);
         AbsCenterH(sub, 0f, 268f, 220f, 22f);
         var st = sub.AddComponent<TextMeshProUGUI>();
@@ -482,14 +424,10 @@ public class UIHierarchySetup : MonoBehaviour
         st.color = C_GRAY_88; st.alignment = TextAlignmentOptions.Center;
         st.enableWordWrapping = false;
 
-        // ── Divider ───────────────────────────────────────────
-        // Figma: left=131, top=300, w=128, h=4, color=#d9d9d9
         var div = MakeRect("Divider", screen.transform);
         AbsPos(div, 131f, 300f, 128f, 4f);
         div.AddComponent<Image>().color = C_GRAY_D9;
 
-        // ── START MISSION button ──────────────────────────────
-        // Figma: left=41, top=349, w=309, h=57, bg=#1a1a1a
         var startBtn = MakeRect("StartMissionBtn", screen.transform);
         AbsStretchH(startBtn, 41f, 40f, 349f, 57f);
         startBtn.AddComponent<Image>().color = C_BLACK;
@@ -500,16 +438,10 @@ public class UIHierarchySetup : MonoBehaviour
         smt.text = "START MISSION"; smt.fontSize = 17; smt.fontStyle = FontStyles.Bold;
         smt.color = C_WHITE; smt.alignment = TextAlignmentOptions.Center;
 
-        // ── HOW TO PLAY button ────────────────────────────────
-        // Figma: left=40, top=412, w=309, h=57, bg=#f8f8f8, border=#e8e8e8
         BuildAbsFigmaBtn("HowToPlayBtn", screen.transform, "HOW TO PLAY", 40f, 41f, 412f, 57f);
 
-        // ── SETTINGS button ───────────────────────────────────
-        // Figma: left=40, top=475, w=309, h=57
         BuildAbsFigmaBtn("SettingsBtn",  screen.transform, "SETTINGS",    40f, 41f, 475f, 57f);
 
-        // ── EXIT ──────────────────────────────────────────────
-        // Figma: center at (195, 567)
         var exitBtn = MakeRect("ExitBtn", screen.transform);
         AbsCenterH(exitBtn, 0f, 555f, 100f, 24f);
         exitBtn.AddComponent<Image>().color = C_CLEAR;
@@ -520,8 +452,6 @@ public class UIHierarchySetup : MonoBehaviour
         et.text = "EXIT"; et.fontSize = 15;
         et.color = C_GRAY_AA; et.alignment = TextAlignmentOptions.Center;
 
-        // ── Version label ─────────────────────────────────────
-        // Figma: bottom=54, centered, w=166, h=14
         var ver = MakeRect("VersionLabel", screen.transform);
         AbsBottom(ver, 0f, 54f, 166f, 14f);
         var vt = ver.AddComponent<TextMeshProUGUI>();
@@ -535,7 +465,7 @@ public class UIHierarchySetup : MonoBehaviour
     {
         var go = MakeRect(name, parent);
         AbsStretchH(go, left, right, figmaY, h);
-        go.AddComponent<Image>().color = C_GRAY_E8; // border color
+        go.AddComponent<Image>().color = C_GRAY_E8;
         go.AddComponent<Button>();
 
         // Inner fill (1px inset = border effect)
@@ -545,7 +475,6 @@ public class UIHierarchySetup : MonoBehaviour
         inner.GetComponent<RectTransform>().offsetMax = new Vector2(-1f, -1f);
         inner.AddComponent<Image>().color = C_GRAY_F8;
 
-        // Label on top of fill
         var txtGo = MakeRect("Text", go.transform);
         SetFullScreen(txtGo);
         var t = txtGo.AddComponent<TextMeshProUGUI>();
@@ -553,16 +482,12 @@ public class UIHierarchySetup : MonoBehaviour
         t.color = C_BLACK; t.alignment = TextAlignmentOptions.Center;
     }
 
-    // ── Register ─────────────────────────────────────────────
-
     private void BuildRegisterScreen(Transform parent)
     {
         var screen = MakeScreen("RegisterScreen", parent, C_WHITE);
         screen.SetActive(false);
         screen.AddComponent<RegisterController>();
 
-        // ── Back button ────────────────────────────────────────
-        // Figma: arrow left=36 top=27 + "Back" text center_x=77.5 top=32
         var backBtn = MakeRect("BackBtn", screen.transform);
         AbsPos(backBtn, 20f, 12f, 120f, 44f);
         backBtn.AddComponent<Image>().color = C_CLEAR;
@@ -573,14 +498,10 @@ public class UIHierarchySetup : MonoBehaviour
         bt.text = "← Back"; bt.fontSize = 15; bt.color = C_GRAY_88;
         bt.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // ── Divider ────────────────────────────────────────────
-        // Figma: left=0, top=64, w=390, h=2, bg=#d9d9d9
         var divider = MakeRect("Divider", screen.transform);
         AbsStretchH(divider, 0f, 0f, 64f, 2f);
         divider.AddComponent<Image>().color = C_GRAY_D9;
 
-        // ── "PERSONAL INFORMATION" ─────────────────────────────
-        // Figma: center_x=193, top=89, font=25 bold
         var title = MakeRect("Title", screen.transform);
         AbsCenterH(title, -2f, 89f, 320f, 36f);
         var tt = title.AddComponent<TextMeshProUGUI>();
@@ -588,8 +509,6 @@ public class UIHierarchySetup : MonoBehaviour
         tt.color = C_BLACK; tt.alignment = TextAlignmentOptions.Center;
         tt.enableWordWrapping = false;
 
-        // ── Subtitle ───────────────────────────────────────────
-        // Figma: center_x=144.5, top=133, font=15, color=#888
         var sub = MakeRect("Subtitle", screen.transform);
         AbsCenterH(sub, -50.5f, 133f, 270f, 22f);
         var st = sub.AddComponent<TextMeshProUGUI>();
@@ -597,56 +516,40 @@ public class UIHierarchySetup : MonoBehaviour
         st.color = C_GRAY_88; st.alignment = TextAlignmentOptions.Center;
         st.enableWordWrapping = false;
 
-        // ── FULL NAME label ────────────────────────────────────
-        // Figma: center_x=80, top=179, font=15 bold, color=#888
         var fullNameLbl = MakeRect("FullNameLabel", screen.transform);
         AbsPos(fullNameLbl, 41f, 179f, 100f, 20f);
         var fnl = fullNameLbl.AddComponent<TextMeshProUGUI>();
         fnl.text = "FULL NAME"; fnl.fontSize = 15; fnl.fontStyle = FontStyles.Bold;
         fnl.color = C_GRAY_88; fnl.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // ── Full Name input ────────────────────────────────────
-        // Figma: center_x=192.5, top=204, w=309, h=44, border=#e8e8e8
         BuildAbsInputField("FullNameInput", screen.transform, 38f, 204f, 309f, 44f, "Juan dela Cruz");
 
-        // ── Full name hint ─────────────────────────────────────
-        // Figma: center_x=101, top=255, w=126, font=12, color=#ccc
         var fnHint = MakeRect("FullNameHint", screen.transform);
         AbsPos(fnHint, 38f, 255f, 180f, 18f);
         var fnh = fnHint.AddComponent<TextMeshProUGUI>();
         fnh.text = "// used for mission log"; fnh.fontSize = 12;
         fnh.color = C_GRAY_CC; fnh.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // ── USERNAME label ─────────────────────────────────────
-        // Figma: center_x=80.5, top=289, font=15 bold, color=#888
         var userLbl = MakeRect("UsernameLabel", screen.transform);
         AbsPos(userLbl, 41f, 289f, 100f, 20f);
         var ul = userLbl.AddComponent<TextMeshProUGUI>();
         ul.text = "USERNAME"; ul.fontSize = 15; ul.fontStyle = FontStyles.Bold;
         ul.color = C_GRAY_88; ul.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // ── Username input ─────────────────────────────────────
-        // Figma: center_x=192.5, top=314, w=309, h=44, border=#e8e8e8
         BuildAbsInputField("UsernameInput", screen.transform, 38f, 314f, 309f, 44f, "Cutie_JDC");
 
-        // ── Username hint ──────────────────────────────────────
-        // Figma: center_x=108, top=365, w=140, font=12, color=#ccc
         var unHint = MakeRect("UsernameHint", screen.transform);
         AbsPos(unHint, 38f, 365f, 200f, 18f);
         var unh = unHint.AddComponent<TextMeshProUGUI>();
         unh.text = "// shown on leaderboard"; unh.fontSize = 12;
         unh.color = C_GRAY_CC; unh.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // ── CHOOSE AVATAR label ────────────────────────────────
-        // Figma: center_x=101, top=407, font=15 bold, color=#888
         var avLbl = MakeRect("AvatarLabel", screen.transform);
         AbsPos(avLbl, 41f, 407f, 150f, 20f);
         var avl = avLbl.AddComponent<TextMeshProUGUI>();
         avl.text = "CHOOSE AVATAR"; avl.fontSize = 15; avl.fontStyle = FontStyles.Bold;
         avl.color = C_GRAY_88; avl.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // ── Avatar grid (8 buttons, 4 columns × 2 rows, 70×70 each) ──
-        // Figma: col centers x=72,150,232,312; row tops y=444,528
         float[] avCols = { 37f, 115f, 197f, 277f };
         float[] avRows = { 444f, 528f };
         for (int row = 0; row < 2; row++)
@@ -661,8 +564,6 @@ public class UIHierarchySetup : MonoBehaviour
             }
         }
 
-        // ── SAVE button ────────────────────────────────────────
-        // Figma: center_x=193.5, top=635, w=311, h=53, bg=#1a1a1a
         var saveBtn = MakeRect("SaveBtn", screen.transform);
         AbsStretchH(saveBtn, 38f, 41f, 635f, 53f);
         saveBtn.AddComponent<Image>().color = C_BLACK;
@@ -673,8 +574,6 @@ public class UIHierarchySetup : MonoBehaviour
         saveTmp.text = "SAVE"; saveTmp.fontSize = 17; saveTmp.fontStyle = FontStyles.Bold;
         saveTmp.color = C_WHITE; saveTmp.alignment = TextAlignmentOptions.Center;
 
-        // ── Disclaimer ─────────────────────────────────────────
-        // Figma: center_x=195.5, top=717, w=203, font=12, color=#ccc
         var disc = MakeRect("Disclaimer", screen.transform);
         AbsCenterH(disc, 0.5f, 717f, 280f, 44f);
         var dt = disc.AddComponent<TextMeshProUGUI>();
@@ -686,33 +585,29 @@ public class UIHierarchySetup : MonoBehaviour
     private void BuildAbsInputField(string name, Transform parent,
         float x, float y, float w, float h, string placeholder)
     {
-        // Outer border container (#e8e8e8)
         var outer = MakeRect(name, parent);
         AbsPos(outer, x, y, w, h);
         outer.AddComponent<Image>().color = C_GRAY_E8;
 
-        // White inner fill (1px inset)
+        // White inner fill (1px inset for border effect)
         var inner = MakeRect("InputBg", outer.transform);
         Anchor(inner, 0f, 0f, 1f, 1f);
         inner.GetComponent<RectTransform>().offsetMin = new Vector2(1f,  1f);
         inner.GetComponent<RectTransform>().offsetMax = new Vector2(-1f, -1f);
         inner.AddComponent<Image>().color = C_WHITE;
 
-        // Text viewport (padded)
         var viewport = MakeRect("TextViewport", outer.transform);
         Anchor(viewport, 0f, 0f, 1f, 1f);
         viewport.GetComponent<RectTransform>().offsetMin = new Vector2(12f, 4f);
         viewport.GetComponent<RectTransform>().offsetMax = new Vector2(-12f, -4f);
         viewport.AddComponent<RectMask2D>();
 
-        // Input text
         var textGo = MakeRect("Text", viewport.transform);
         SetFullScreen(textGo);
         var inputTmp = textGo.AddComponent<TextMeshProUGUI>();
         inputTmp.fontSize = 15; inputTmp.color = C_BLACK;
         inputTmp.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // Placeholder
         var phGo = MakeRect("Placeholder", viewport.transform);
         SetFullScreen(phGo);
         var phTmp = phGo.AddComponent<TextMeshProUGUI>();
@@ -720,7 +615,6 @@ public class UIHierarchySetup : MonoBehaviour
         phTmp.color = C_GRAY_AA; phTmp.fontStyle = FontStyles.Italic;
         phTmp.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // Wire TMP_InputField
         var inputField = outer.AddComponent<TMP_InputField>();
         inputField.textViewport  = viewport.GetComponent<RectTransform>();
         inputField.textComponent = inputTmp;
@@ -728,22 +622,17 @@ public class UIHierarchySetup : MonoBehaviour
         inputField.characterLimit = 50;
     }
 
-    // ── How To Play ──────────────────────────────────────────
-
     private void BuildHowToPlayScreen(Transform parent)
     {
         var screen = MakeScreen("HowToPlayScreen", parent, C_WHITE);
         screen.SetActive(false);
         screen.AddComponent<HowToPlayController>();
 
-        // ── Status bar ─────────────────────────────────────────
-        // Figma: top=0, full width, h=44, bg=#f4f4f4
         var statusBar = MakeRect("StatusBar", screen.transform);
         AbsStretchH(statusBar, 0f, 0f, 0f, 44f);
         statusBar.AddComponent<Image>().color = C_GRAY_F8;
 
-        // ── Back button (not in Figma, required for navigation) ─
-        // Positioned inside status bar area, left side
+        // Back button (not in Figma, required for navigation)
         var backBtn = MakeRect("BackBtn", screen.transform);
         AbsPos(backBtn, 16f, 8f, 80f, 30f);
         backBtn.AddComponent<Image>().color = C_CLEAR;
@@ -754,20 +643,14 @@ public class UIHierarchySetup : MonoBehaviour
         bt.text = "← Back"; bt.fontSize = 14; bt.color = C_GRAY_88;
         bt.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // ── Logo circle bg ─────────────────────────────────────
-        // Figma: centered, top=84, size=120, bg=rgba(217,217,217,0.1)
         var logoCircle = MakeRect("LogoCircleBg", screen.transform);
         AbsCenterH(logoCircle, 0f, 84f, 120f, 120f);
         logoCircle.AddComponent<Image>().color = new Color(0.851f, 0.851f, 0.851f, 0.1f);
 
-        // ── Logo box ───────────────────────────────────────────
-        // Figma: left=155, top=104, size=80, bg=#e8e8e8
         var logoBox = MakeRect("LogoPlaceholder", screen.transform);
         AbsPos(logoBox, 155f, 104f, 80f, 80f);
         logoBox.AddComponent<Image>().color = C_GRAY_E8;
 
-        // ── "HOW TO PLAY" ──────────────────────────────────────
-        // Figma: centered, top=222, font=30 bold, color=#1a1a1a
         var title = MakeRect("Title", screen.transform);
         AbsCenterH(title, 0.5f, 222f, 285f, 40f);
         var tt = title.AddComponent<TextMeshProUGUI>();
@@ -775,8 +658,6 @@ public class UIHierarchySetup : MonoBehaviour
         tt.color = C_BLACK; tt.alignment = TextAlignmentOptions.Center;
         tt.enableWordWrapping = false;
 
-        // ── "MT. SAMAT AR" ─────────────────────────────────────
-        // Figma: centered, top=264, font=20 bold, color=#1a1a1a
         var appLabel = MakeRect("AppLabel", screen.transform);
         AbsCenterH(appLabel, 0f, 264f, 220f, 28f);
         var al = appLabel.AddComponent<TextMeshProUGUI>();
@@ -784,8 +665,6 @@ public class UIHierarchySetup : MonoBehaviour
         al.color = C_BLACK; al.alignment = TextAlignmentOptions.Center;
         al.enableWordWrapping = false;
 
-        // ── Steps card background ──────────────────────────────
-        // Figma: left=37, top=315, w=319, h=389, bg=white, border=rgba(0,0,0,0.1)
         var cardBorder = MakeRect("StepsCard", screen.transform);
         AbsPos(cardBorder, 37f, 315f, 319f, 389f);
         cardBorder.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.1f);
@@ -795,35 +674,24 @@ public class UIHierarchySetup : MonoBehaviour
         cardFill.GetComponent<RectTransform>().offsetMax = new Vector2(-1f, -1f);
         cardFill.AddComponent<Image>().color = C_WHITE;
 
-        // ── Step 1 ─────────────────────────────────────────────
-        // Figma: circle left=60 top=359; icon left=92 top=360
-        //        title center=(209.5,369.5) w=189; desc left=92 top=386 w=269
         BuildHowToStepAbs(screen.transform, "1",
             60f, 359f, 92f, 360f,
             115f, 359f, 189f, 92f, 386f, 269f,
             "Point camera at artifacts",
             "Look for circular markers near the monument. Use your AR lens to reveal hidden historical items.");
 
-        // ── Step 2 ─────────────────────────────────────────────
-        // Figma: circle left=60 top=470; icon left=92 top=468
-        //        title center=(211.5,478.5) w=185; desc left=92 top=495 w=241
         BuildHowToStepAbs(screen.transform, "2",
             60f, 470f, 92f, 468f,
             119f, 468f, 185f, 92f, 495f, 241f,
             "Read the historical scroll",
             "Tap the artifact to open its ancient scroll and learn about its role in the 1942 defense.");
 
-        // ── Step 3 ─────────────────────────────────────────────
-        // Figma: circle left=60 top=582; icon left=94 top=582
-        //        title center=(226.5,592.5) w=229; desc left=91 top=609 w=236
         BuildHowToStepAbs(screen.transform, "3",
             60f, 582f, 94f, 582f,
             112f, 582f, 229f, 91f, 609f, 236f,
             "Complete sets, earn rewards",
             "Collecting all items in a category unlocks special commemorative badges and physical rewards.");
 
-        // ── Version ────────────────────────────────────────────
-        // Figma: bottom=54, centered, w=166, h=14
         var ver = MakeRect("VersionLabel", screen.transform);
         AbsBottom(ver, 0f, 54f, 166f, 14f);
         var vt = ver.AddComponent<TextMeshProUGUI>();
@@ -837,7 +705,6 @@ public class UIHierarchySetup : MonoBehaviour
         float descX,   float descY,   float descW,
         string titleText, string descText)
     {
-        // Number circle
         var circle = MakeRect($"Step{num}Circle", parent);
         AbsPos(circle, circleX, circleY, 21f, 21f);
         circle.AddComponent<Image>().color = C_BLACK;
@@ -847,12 +714,10 @@ public class UIHierarchySetup : MonoBehaviour
         nt.text = num; nt.fontSize = 13; nt.fontStyle = FontStyles.Bold;
         nt.color = C_WHITE; nt.alignment = TextAlignmentOptions.Center;
 
-        // Icon placeholder
         var icon = MakeRect($"Step{num}Icon", parent);
         AbsPos(icon, iconX, iconY, 20f, 20f);
         icon.AddComponent<Image>().color = C_GRAY_E8;
 
-        // Step title
         var titleGo = MakeRect($"Step{num}Title", parent);
         AbsPos(titleGo, titleX, titleY, titleW, 21f);
         var titTmp = titleGo.AddComponent<TextMeshProUGUI>();
@@ -860,7 +725,6 @@ public class UIHierarchySetup : MonoBehaviour
         titTmp.color = C_BLACK; titTmp.alignment = TextAlignmentOptions.MidlineLeft;
         titTmp.enableWordWrapping = false;
 
-        // Step description
         var descGo = MakeRect($"Step{num}Desc", parent);
         AbsPos(descGo, descX, descY, descW, 54f);
         var descTmp = descGo.AddComponent<TextMeshProUGUI>();
@@ -870,27 +734,18 @@ public class UIHierarchySetup : MonoBehaviour
         descTmp.enableWordWrapping = true;
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  MAIN APP SCREENS
-    // ─────────────────────────────────────────────────────────
-
-    // ── Home Dashboard ───────────────────────────────────────
-
     private void BuildHomeScreen(Transform parent)
     {
         var screen = MakeScreen("HomeScreen", parent, C_WHITE);
         screen.SetActive(false);
         screen.AddComponent<HomeScreenController>();
 
-        // ── CURRENT PROGRESS ──────────────────────────────────
-        // Figma: center_x=123.5, top=86, font=18 bold, color=#888
         var progLbl = MakeRect("ProgressSectionLabel", screen.transform);
         AbsPos(progLbl, 41f, 86f, 165f, 24f);
         var plt = progLbl.AddComponent<TextMeshProUGUI>();
         plt.text = "CURRENT PROGRESS"; plt.fontSize = 18; plt.fontStyle = FontStyles.Bold;
         plt.color = C_GRAY_88; plt.enableWordWrapping = false;
 
-        // Progress card: center_x=194.5, top=119, w=329, h=84, bg=#f8f8f8, border=#e8e8e8
         var pcOuter = MakeRect("ProgressCard", screen.transform);
         AbsPos(pcOuter, 30f, 119f, 329f, 84f);
         pcOuter.AddComponent<Image>().color = C_GRAY_E8;
@@ -900,26 +755,22 @@ public class UIHierarchySetup : MonoBehaviour
         pcInner.GetComponent<RectTransform>().offsetMax = new Vector2(-1f, -1f);
         pcInner.AddComponent<Image>().color = C_GRAY_F8;
 
-        // Mission label: center_x=160, top=140, font=14, color=#888
         var missionLbl = MakeRect("MissionLabel", screen.transform);
         AbsPos(missionLbl, 41f, 135f, 248f, 20f);
         var ml = missionLbl.AddComponent<TextMeshProUGUI>();
         ml.text = "Mission Progress: Gear Collection"; ml.fontSize = 14;
         ml.color = C_GRAY_88; ml.enableWordWrapping = false;
 
-        // Progress count (dynamic → _progressCountLabel): center_x=330, top=146
         var countLbl = MakeRect("ProgressCountLabel", screen.transform);
         AbsPos(countLbl, 305f, 138f, 54f, 22f);
         var pct = countLbl.AddComponent<TextMeshProUGUI>();
         pct.text = "0/0"; pct.fontSize = 13; pct.fontStyle = FontStyles.Bold;
         pct.color = C_GRAY_88; pct.alignment = TextAlignmentOptions.MidlineRight;
 
-        // Progress bar BG: left=47, top=173, w=297, h=9, bg=#d9d9d9
         var barBG = MakeRect("ProgressBarBG", screen.transform);
         AbsPos(barBG, 47f, 173f, 297f, 9f);
         barBG.AddComponent<Image>().color = C_GRAY_D9;
 
-        // Progress bar fill (dynamic → _progressBarFill): black, filled horizontal
         var barFill = MakeRect("ProgressBarFill", barBG.transform);
         SetFullScreen(barFill);
         var fi = barFill.AddComponent<Image>();
@@ -928,15 +779,12 @@ public class UIHierarchySetup : MonoBehaviour
         fi.fillOrigin = (int)Image.OriginHorizontal.Left;
         fi.fillAmount = 0f;
 
-        // ── AWARD PANEL ────────────────────────────────────────
-        // Figma: center_x=95.5, top=220, font=18 bold, color=#888
         var awardLbl = MakeRect("AwardSectionLabel", screen.transform);
         AbsPos(awardLbl, 30f, 220f, 135f, 24f);
         var alt = awardLbl.AddComponent<TextMeshProUGUI>();
         alt.text = "AWARD PANEL"; alt.fontSize = 18; alt.fontStyle = FontStyles.Bold;
         alt.color = C_GRAY_88; alt.enableWordWrapping = false;
 
-        // Award panel card: center_x=194, top=273, w=330, h=225, border=2px #e8e8e8
         var awardOuter = MakeRect("AwardPanelCard", screen.transform);
         AbsPos(awardOuter, 29f, 273f, 330f, 225f);
         awardOuter.AddComponent<Image>().color = C_GRAY_E8;
@@ -946,15 +794,13 @@ public class UIHierarchySetup : MonoBehaviour
         awardInner.GetComponent<RectTransform>().offsetMax = new Vector2(-2f, -2f);
         awardInner.AddComponent<Image>().color = C_WHITE;
 
-        // 8 badge slots: row1 y=287, row2 y=387; cols x=55,129,203,277
-        // Name bar (53×8 #d8d8d8) and sub bar (38×8 #e8e8e8) at exact Figma positions
         float[] bCols  = { 55f,  129f, 203f, 277f };
         float[] bRows  = { 287f, 387f };
-        float[] nmX1   = { 57f,  131f, 205f, 280f }; // name bar x per col, row1
-        float[] nmX2   = { 58f,  131f, 207f, 280f }; // row2
-        float[] sbX1   = { 65f,  139f, 213f, 288f }; // sub bar x per col, row1
-        float[] sbX2   = { 66f,  139f, 215f, 288f }; // row2
-        var C_D8       = new Color(0.847f, 0.847f, 0.847f, 1f); // #d8d8d8
+        float[] nmX1   = { 57f,  131f, 205f, 280f };
+        float[] nmX2   = { 58f,  131f, 207f, 280f };
+        float[] sbX1   = { 65f,  139f, 213f, 288f };
+        float[] sbX2   = { 66f,  139f, 215f, 288f };
+        var C_D8       = new Color(0.847f, 0.847f, 0.847f, 1f);
 
         for (int r = 0; r < 2; r++)
         {
@@ -963,7 +809,6 @@ public class UIHierarchySetup : MonoBehaviour
                 int idx = r * 4 + c;
                 float slotY = bRows[r];
 
-                // Badge slot icon area (58×62), border=#e8e8e8, bg=rgba(217,217,217,0.1)
                 var slot = MakeRect($"BadgeSlot_{idx}", screen.transform);
                 AbsPos(slot, bCols[c], slotY, 58f, 62f);
                 slot.AddComponent<Image>().color = C_GRAY_E8;
@@ -973,13 +818,11 @@ public class UIHierarchySetup : MonoBehaviour
                 slotFill.GetComponent<RectTransform>().offsetMax = new Vector2(-1f, -1f);
                 slotFill.AddComponent<Image>().color = new Color(0.851f, 0.851f, 0.851f, 0.1f);
 
-                // Name bar (53×8 #d8d8d8)
                 var nameBar = MakeRect($"NameBar_{idx}", screen.transform);
                 float[] nmX = r == 0 ? nmX1 : nmX2;
                 AbsPos(nameBar, nmX[c], slotY + 69f, 53f, 8f);
                 nameBar.AddComponent<Image>().color = C_D8;
 
-                // Sub bar (38×8 #e8e8e8)
                 var subBar = MakeRect($"SubBar_{idx}", screen.transform);
                 float[] sbX = r == 0 ? sbX1 : sbX2;
                 AbsPos(subBar, sbX[c], slotY + 81f, 38f, 8f);
@@ -987,15 +830,12 @@ public class UIHierarchySetup : MonoBehaviour
             }
         }
 
-        // ── CHOOSE YOUR SOLDIER ────────────────────────────────
-        // Figma: center_x=136.5, top=511, font=18 bold, color=#888
         var soldierLbl = MakeRect("SoldierSectionLabel", screen.transform);
         AbsPos(soldierLbl, 30f, 511f, 220f, 24f);
         var slt = soldierLbl.AddComponent<TextMeshProUGUI>();
         slt.text = "CHOOSE YOUR SOLDIER"; slt.fontSize = 18; slt.fontStyle = FontStyles.Bold;
         slt.color = C_GRAY_88; slt.enableWordWrapping = false;
 
-        // Soldier section info bars: left=30, top=539/558
         var sb1 = MakeRect("SoldierInfoBar1", screen.transform);
         AbsPos(sb1, 30f, 539f, 327f, 13f);
         sb1.AddComponent<Image>().color = C_GRAY_E8;
@@ -1003,16 +843,13 @@ public class UIHierarchySetup : MonoBehaviour
         AbsPos(sb2, 30f, 558f, 149f, 13f);
         sb2.AddComponent<Image>().color = C_GRAY_E8;
 
-        // Soldier cards — exact Figma positions
-        // Filipino: left=32, top=583, w=103, h=159, border=black (active)
         BuildHomeSoldierCard(screen.transform, "FilipinoCard",
             32f, 583f, 103f, 159f, true,
-            24f, 20f, 53f,          // avatar rel (x=56-32, y=603-583)
-            51f, 81f,  "PH",        // code rel center_x, rel_y
-            51f, 98f,  "Filipino",  // nat rel center_x, rel_y
-            51f, 117f, "Soldier");  // type rel center_x, rel_y
+            24f, 20f, 53f,
+            51f, 81f,  "PH",
+            51f, 98f,  "Filipino",
+            51f, 117f, "Soldier");
 
-        // Japanese: left=145, top=584, w=103, h=158, border=#d9d9d9 (inactive)
         BuildHomeSoldierCard(screen.transform, "JapaneseCard",
             145f, 584f, 103f, 158f, false,
             26f, 19f, 53f,
@@ -1020,7 +857,6 @@ public class UIHierarchySetup : MonoBehaviour
             52f,   97f, "Japanese",
             51f,   116f, "Soldier");
 
-        // American: left=255, top=583, w=103, h=158, border=#d9d9d9 (inactive)
         BuildHomeSoldierCard(screen.transform, "AmericanCard",
             255f, 583f, 103f, 158f, false,
             26f, 20f, 53f,
@@ -1042,26 +878,22 @@ public class UIHierarchySetup : MonoBehaviour
         card.AddComponent<Button>();
         if (!active) card.AddComponent<CanvasGroup>().alpha = 0.5f;
 
-        // Avatar placeholder (relative to card)
         var av = MakeRect("AvatarCircle", card.transform);
         AbsPos(av, avRelX, avRelY, avSize, avSize);
         av.AddComponent<Image>().color = C_GRAY_E8;
 
-        // Code label (PH/JP/US) — centered at card-relative position
         var codeGo = MakeRect("CodeLabel", card.transform);
         AbsCenterH(codeGo, codeRelCX - cw * 0.5f, codeRelY, 40f, 16f);
         var ct = codeGo.AddComponent<TextMeshProUGUI>();
         ct.text = code; ct.fontSize = 10; ct.fontStyle = FontStyles.Bold;
         ct.color = C_GRAY_88; ct.alignment = TextAlignmentOptions.Center;
 
-        // Nationality
         var natGo = MakeRect("NatLabel", card.transform);
         AbsCenterH(natGo, natRelCX - cw * 0.5f, natRelY, 90f, 20f);
         var nt = natGo.AddComponent<TextMeshProUGUI>();
         nt.text = nationality; nt.fontSize = 15; nt.fontStyle = FontStyles.Bold;
         nt.color = active ? C_WHITE : C_BLACK; nt.alignment = TextAlignmentOptions.Center;
 
-        // Type
         var typeGo = MakeRect("TypeLabel", card.transform);
         AbsCenterH(typeGo, typeRelCX - cw * 0.5f, typeRelY, 90f, 20f);
         var tyt = typeGo.AddComponent<TextMeshProUGUI>();
@@ -1069,18 +901,9 @@ public class UIHierarchySetup : MonoBehaviour
         tyt.color = active ? C_WHITE : C_BLACK; tyt.alignment = TextAlignmentOptions.Center;
     }
 
-    // ── Soldier Screen — exact Figma (home_filipino 228:158) ──
-
     private void BuildSoldierScreen(Transform parent)
     {
-        // Figma key positions:
-        // Status bar: y=0, h=27
-        // Avatars: center/side at y=62-132
-        // Title: y=159; Progress: y=192; Bar: y=212
-        // Divider1: y=240; "ITEMS TO FIND": y=248; Divider2: y=272
-        // Artifact list starts: y=281 (dynamic, generated by controller)
-        // Scan btn: y=716, h=47; NavBar: y=779
-        const float HEADER_H = 280f; // y=0 to y=280 (covers to Divider2 + small gap)
+        const float HEADER_H = 280f;
         const float BTN_Y    = 716f;
         const float BTN_H    =  47f;
         const float CANVAS_H = 844f;
@@ -1089,15 +912,10 @@ public class UIHierarchySetup : MonoBehaviour
         screen.SetActive(false);
         screen.AddComponent<SoldierScreenController>();
 
-        // ── Status bar ─────────────────────────────────────────
-        // Figma: top=0, full width, h=27, bg=#f4f4f4
         var statusBar = MakeRect("StatusBar", screen.transform);
         AbsStretchH(statusBar, 0f, 0f, 0f, 27f);
         statusBar.AddComponent<Image>().color = C_GRAY_F8;
 
-        // ── Side avatars (smaller, carousel) ───────────────────
-        // Figma: left avatar center_x=130.5, top=67, size=65
-        //        right avatar center_x=259.5, top=67, size=65
         var leftAv = MakeRect("LeftAvatar", screen.transform);
         AbsPos(leftAv, 98f, 67f, 65f, 65f);
         leftAv.AddComponent<Image>().color = C_GRAY_E8;
@@ -1106,14 +924,10 @@ public class UIHierarchySetup : MonoBehaviour
         AbsPos(rightAv, 227f, 67f, 65f, 65f);
         rightAv.AddComponent<Image>().color = C_GRAY_E8;
 
-        // ── Center avatar (main, active soldier) ───────────────
-        // Figma: centered, top=62, size=80
         var centerAv = MakeRect("CenterAvatar", screen.transform);
         AbsCenterH(centerAv, 0f, 62f, 80f, 80f);
         centerAv.AddComponent<Image>().color = C_BLACK;
 
-        // ── Nav arrows (Prev / Next) ────────────────────────────
-        // Figma: left arrow left=134 top=92 size=20; right left=235 top=92
         var prevBtn = MakeRect("PrevBtn", screen.transform);
         AbsPos(prevBtn, 118f, 79f, 36f, 36f);
         prevBtn.AddComponent<Image>().color = C_CLEAR;
@@ -1134,8 +948,6 @@ public class UIHierarchySetup : MonoBehaviour
         nt2.text = ">"; nt2.fontSize = 18; nt2.fontStyle = FontStyles.Bold;
         nt2.color = C_GRAY_88; nt2.alignment = TextAlignmentOptions.Center;
 
-        // ── Soldier name label ──────────────────────────────────
-        // Figma: centered, top=159, font=20 bold, color=black
         var nameLabel = MakeRect("SoldierNameLabel", screen.transform);
         AbsCenterH(nameLabel, 0f, 159f, 280f, 28f);
         var nlt = nameLabel.AddComponent<TextMeshProUGUI>();
@@ -1143,8 +955,6 @@ public class UIHierarchySetup : MonoBehaviour
         nlt.color = C_BLACK; nlt.alignment = TextAlignmentOptions.Center;
         nlt.enableWordWrapping = false;
 
-        // ── Progress row ────────────────────────────────────────
-        // "Progress" left: center_x=48.5, top=192; "X/X" right: center_x=349.5, top=192
         var progLblGo = MakeRect("ProgressLabel", screen.transform);
         AbsPos(progLblGo, 23f, 187f, 80f, 18f);
         var plt = progLblGo.AddComponent<TextMeshProUGUI>();
@@ -1157,8 +967,6 @@ public class UIHierarchySetup : MonoBehaviour
         pct.text = "0/0"; pct.fontSize = 12; pct.color = C_GRAY_88;
         pct.alignment = TextAlignmentOptions.MidlineRight;
 
-        // ── Progress bar ────────────────────────────────────────
-        // Figma: left=23, top=212, w=337, h=9, bg=#d9d9d9
         var barBG = MakeRect("ProgressBarBG", screen.transform);
         AbsPos(barBG, 23f, 212f, 337f, 9f);
         barBG.AddComponent<Image>().color = C_GRAY_D9;
@@ -1170,8 +978,6 @@ public class UIHierarchySetup : MonoBehaviour
         fi.fillOrigin = (int)Image.OriginHorizontal.Left;
         fi.fillAmount = 0f;
 
-        // ── Divider + ITEMS TO FIND + Divider ───────────────────
-        // Figma: divider at y=240, label at y=248, divider at y=272
         var div1 = MakeRect("Divider1", screen.transform);
         AbsStretchH(div1, 0f, 0f, 240f, 1f);
         div1.AddComponent<Image>().color = new Color(0.910f, 0.910f, 0.910f, 0.91f);
@@ -1186,8 +992,6 @@ public class UIHierarchySetup : MonoBehaviour
         AbsStretchH(div2, 0f, 0f, 272f, 1f);
         div2.AddComponent<Image>().color = new Color(0.910f, 0.910f, 0.910f, 0.91f);
 
-        // ── Scan next item button ───────────────────────────────
-        // Figma: center_x=195.5, top=716, w=311, h=47, bg=#1a1a1a
         var scanBtn = MakeRect("ScanNextItemBtn", screen.transform);
         AbsStretchH(scanBtn, 40f, 39f, BTN_Y, BTN_H);
         scanBtn.AddComponent<Image>().color = C_BLACK;
@@ -1198,13 +1002,12 @@ public class UIHierarchySetup : MonoBehaviour
         st.text = "Scan next item"; st.fontSize = 17; st.fontStyle = FontStyles.Bold;
         st.color = C_WHITE; st.alignment = TextAlignmentOptions.Center;
 
-        // ── Artifact scroll view ────────────────────────────────
         // Fills from y=280 to y=716 (between header and scan button)
         var sv = MakeRect("ArtifactScrollView", screen.transform);
         Anchor(sv, 0f, 0f, 1f, 1f);
         var svRT = sv.GetComponent<RectTransform>();
-        svRT.offsetMin = new Vector2(0f, CANVAS_H - BTN_Y);      // bottom = y=716
-        svRT.offsetMax = new Vector2(0f, -HEADER_H);             // top    = y=280
+        svRT.offsetMin = new Vector2(0f, CANVAS_H - BTN_Y);
+        svRT.offsetMax = new Vector2(0f, -HEADER_H);
 
         var sr = sv.AddComponent<ScrollRect>();
         sr.horizontal = false; sr.vertical = true;
@@ -1251,8 +1054,6 @@ public class UIHierarchySetup : MonoBehaviour
         div.AddComponent<LayoutElement>().preferredHeight = 1;
     }
 
-    // ── AR Scan Screen (transparent — camera shows through) ──
-
     private void BuildARScanScreen(Transform parent)
     {
         var screen = MakeScreen("ARScanScreen", parent, C_CLEAR);
@@ -1270,7 +1071,6 @@ public class UIHierarchySetup : MonoBehaviour
         header.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 65);
         header.AddComponent<Image>().color = C_WHITE;
 
-        // SCANNING pill
         var pill = MakeRect("ScanningPill", header.transform);
         Anchor(pill, 0, 0.5f, 0, 0.5f);
         SetPivot(pill, 0f, 0.5f);
@@ -1283,18 +1083,15 @@ public class UIHierarchySetup : MonoBehaviour
         scanHlg.padding = new RectOffset(8, 8, 0, 0); scanHlg.spacing = 4;
         scanHlg.childControlHeight = false; scanHlg.childControlWidth = false;
 
-        // Scan dot (pulsing)
         var dot = MakeRect("ScanDot", pill.transform);
         dot.GetComponent<RectTransform>().sizeDelta = new Vector2(7, 7);
         dot.AddComponent<Image>().color = C_GRAY_88;
 
-        // SCANNING text
         var scanLblGo = MakeRect("ScanLabel", pill.transform);
         scanLblGo.GetComponent<RectTransform>().sizeDelta = new Vector2(76, 15);
         var st = scanLblGo.AddComponent<TextMeshProUGUI>();
         st.text = "SCANNING"; st.fontSize = 13; st.fontStyle = FontStyles.Bold; st.color = C_GRAY_88; st.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // Target label
         var targetGo = MakeRect("TargetLabel", header.transform);
         Anchor(targetGo, 0, 0.5f, 0, 0.5f);
         SetPivot(targetGo, 0f, 0.5f);
@@ -1303,7 +1100,6 @@ public class UIHierarchySetup : MonoBehaviour
         var tTmp = targetGo.AddComponent<TextMeshProUGUI>();
         tTmp.text = "Target 1 of 6"; tTmp.fontSize = 12; tTmp.fontStyle = FontStyles.Normal; tTmp.color = C_GRAY_88; tTmp.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // Settings icon
         var gear = MakeRect("SettingsBtn", header.transform);
         Anchor(gear, 1, 0.5f, 1, 0.5f);
         SetPivot(gear, 1f, 0.5f);
@@ -1312,7 +1108,6 @@ public class UIHierarchySetup : MonoBehaviour
         gear.AddComponent<Image>().color = C_GRAY_E8;
         gear.AddComponent<Button>();
 
-        // Divider
         var div = MakeRect("Divider", screen.transform);
         Anchor(div, 0, 1, 1, 1);
         SetPivot(div, 0.5f, 1f);
@@ -1320,7 +1115,6 @@ public class UIHierarchySetup : MonoBehaviour
         div.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -64);
         div.AddComponent<Image>().color = C_GRAY_D9;
 
-        // Viewfinder corners (L-shapes using thin images)
         BuildViewfinderCorners(screen.transform);
 
     }
@@ -1350,14 +1144,12 @@ public class UIHierarchySetup : MonoBehaviour
         corner.GetComponent<RectTransform>().sizeDelta = new Vector2(arm, arm);
         corner.GetComponent<RectTransform>().anchoredPosition = anchoredPos;
 
-        // Horizontal line
         var h = MakeRect("H", corner.transform);
         Anchor(h, 0, isTop ? 1f : 0f, 1, isTop ? 1f : 0f);
         SetPivot(h, 0.5f, isTop ? 1f : 0f);
         h.GetComponent<RectTransform>().sizeDelta = new Vector2(0, thick);
         h.AddComponent<Image>().color = C_BLACK;
 
-        // Vertical line
         var v = MakeRect("V", corner.transform);
         Anchor(v, isLeft ? 0f : 1f, 0, isLeft ? 0f : 1f, 1);
         SetPivot(v, isLeft ? 0f : 1f, 0.5f);
@@ -1365,10 +1157,8 @@ public class UIHierarchySetup : MonoBehaviour
         v.AddComponent<Image>().color = C_BLACK;
     }
 
-    // ── Settings / About Screen (Figma: "settings" node 301:167, 390×2034) ──
     // Absolute positioning. Figma origin → content_y = figma_y − 86
     // (subtracts status-bar 44 px + Figma header 42 px; Unity header is 50 px fixed above scroll).
-
     private void BuildSettingsScreen(Transform parent)
     {
         const float CONTENT_H = 1870f;
@@ -1377,7 +1167,6 @@ public class UIHierarchySetup : MonoBehaviour
         screen.SetActive(false);
         screen.AddComponent<SettingsScreenController>();
 
-        // ── Fixed header (50 px) ──────────────────────────────
         var header = MakeRect("SettingsHeader", screen.transform);
         Anchor(header, 0, 1, 1, 1); SetPivot(header, 0.5f, 1f);
         header.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 50);
@@ -1398,7 +1187,6 @@ public class UIHierarchySetup : MonoBehaviour
         backTmp.text = "← Back"; backTmp.fontSize = 14;
         backTmp.color = C_GRAY_88; backTmp.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // ── ScrollView ────────────────────────────────────────
         var sv = MakeRect("ScrollView", screen.transform);
         Anchor(sv, 0, 0, 1, 1);
         sv.GetComponent<RectTransform>().offsetMin = new Vector2(0, 65);
@@ -1416,7 +1204,6 @@ public class UIHierarchySetup : MonoBehaviour
         sr.content  = content.GetComponent<RectTransform>();
         sr.viewport = vp.GetComponent<RectTransform>();
 
-        // ── App logo circle (Figma y=86 → content_y=0) ────────
         var logoCircle = MakeRect("LogoCircleBg", content.transform);
         AbsCenterH(logoCircle, 0f, 0f, 120f, 120f);
         logoCircle.AddComponent<Image>().color = C_GRAY_E8;
@@ -1425,14 +1212,12 @@ public class UIHierarchySetup : MonoBehaviour
         appLogo.GetComponent<RectTransform>().sizeDelta = new Vector2(80f, 80f);
         appLogo.AddComponent<Image>().color = C_GRAY_D9;
 
-        // ── "MT. SAMAT AR" (Figma y=224 → content_y=138) ──────
         var appNameGo = MakeRect("AppNameLabel", content.transform);
         AbsCenterH(appNameGo, 0f, 138f, 290f, 42f);
         var anTmp = appNameGo.AddComponent<TextMeshProUGUI>();
         anTmp.text = "MT. SAMAT AR"; anTmp.fontSize = 30; anTmp.fontStyle = FontStyles.Bold;
         anTmp.color = C_BLACK; anTmp.alignment = TextAlignmentOptions.Center;
 
-        // ── Description bars (Figma y=305,329,353,377 → content_y=219,243,267,291) ──
         float[] descYs = { 219f, 243f, 267f, 291f };
         float[] descWs = { 295f, 295f, 295f, 186f };
         for (int i = 0; i < descYs.Length; i++)
@@ -1442,29 +1227,23 @@ public class UIHierarchySetup : MonoBehaviour
             bar.AddComponent<Image>().color = C_GRAY_D9;
         }
 
-        // ── App info card 1 (Figma x=48, y=455 → content_y=369) ──
         var card1 = MakeRect("AppInfoCard1", content.transform);
         AbsPos(card1, 48f, 369f, 295f, 205f);
         card1.AddComponent<Image>().color = C_GRAY_F8;
 
-        // ── App info card 2 (Figma x=48, y=690 → content_y=604) ──
         var card2 = MakeRect("AppInfoCard2", content.transform);
         AbsPos(card2, 48f, 604f, 295f, 205f);
         card2.AddComponent<Image>().color = C_GRAY_F8;
 
-        // ── "MEET THE DEVELOPERS" (Figma y=931 → content_y=845) ──
         var devTitleGo = MakeRect("DevelopersLabel", content.transform);
         AbsCenterH(devTitleGo, 0f, 845f, 300f, 40f);
         var dtTmp = devTitleGo.AddComponent<TextMeshProUGUI>();
         dtTmp.text = "MEET THE DEVELOPERS"; dtTmp.fontSize = 20; dtTmp.fontStyle = FontStyles.Bold;
         dtTmp.color = C_BLACK; dtTmp.alignment = TextAlignmentOptions.Center;
 
-        // ── Developer card (Figma: centered, y=1035, 292×177 → content_y=949) ──
         var devCard = MakeRect("DeveloperCard", content.transform);
         AbsCenterH(devCard, 0f, 949f, 292f, 177f);
         devCard.AddComponent<Image>().color = C_GRAY_F8;
-        // Avatar: Figma center_x=106 from screen left, card left=(390-292)/2=49
-        //   → local x = 106-49-30 = 27, local y = 1058-1035 = 23
         var devAv = MakeRect("DevAvatar", devCard.transform);
         AbsPos(devAv, 27f, 23f, 60f, 60f);
         devAv.AddComponent<Image>().color = C_GRAY_D9;
@@ -1475,19 +1254,16 @@ public class UIHierarchySetup : MonoBehaviour
         AbsCenterH(devRoleBar, 0f, 130f, 102f, 13f);
         devRoleBar.AddComponent<Image>().color = C_GRAY_E8;
 
-        // ── Partners section bg (full-width, y=1200, h=290) ───
         var partnersBg = MakeRect("PartnersBg", content.transform);
         AbsStretchH(partnersBg, 0f, 0f, 1200f, 290f);
         partnersBg.AddComponent<Image>().color = new Color(0.910f, 0.910f, 0.910f, 0.8f);
 
-        // "Our Partners & Supporters" (Figma y=1310 → content_y=1224)
         var partnersTitle = MakeRect("PartnersTitle", content.transform);
         AbsCenterH(partnersTitle, 0f, 1224f, 310f, 56f);
         var ptTmp = partnersTitle.AddComponent<TextMeshProUGUI>();
         ptTmp.text = "Our Partners &\nSupporters"; ptTmp.fontSize = 20; ptTmp.fontStyle = FontStyles.Bold;
         ptTmp.color = C_BLACK; ptTmp.alignment = TextAlignmentOptions.Center;
 
-        // AFP logo (Figma: center_x=138, y=1377 → content_y=1291; left=138-35=103)
         var afpLogo = MakeRect("AFP_Logo", content.transform);
         AbsPos(afpLogo, 103f, 1291f, 70f, 70f);
         afpLogo.AddComponent<Image>().color = C_GRAY_D9;
@@ -1501,7 +1277,6 @@ public class UIHierarchySetup : MonoBehaviour
             lt.color = C_GRAY_88; lt.alignment = TextAlignmentOptions.Center;
         }
 
-        // DOT logo (Figma: center_x=257, y=1377 → content_y=1291; left=257-35=222)
         var dotLogo = MakeRect("DOT_Logo", content.transform);
         AbsPos(dotLogo, 222f, 1291f, 70f, 70f);
         dotLogo.AddComponent<Image>().color = C_GRAY_D9;
@@ -1515,7 +1290,6 @@ public class UIHierarchySetup : MonoBehaviour
             lt.color = C_GRAY_88; lt.alignment = TextAlignmentOptions.Center;
         }
 
-        // NHCP logo (Figma: centered, y=1484 → content_y=1398)
         var nhcpLogo = MakeRect("NHCP_Logo", content.transform);
         AbsCenterH(nhcpLogo, 0f, 1398f, 70f, 70f);
         nhcpLogo.AddComponent<Image>().color = C_GRAY_D9;
@@ -1529,19 +1303,16 @@ public class UIHierarchySetup : MonoBehaviour
             lt.color = C_GRAY_88; lt.alignment = TextAlignmentOptions.Center;
         }
 
-        // ── Feedback section bg (full-width, y=1580, h=220) ───
         var feedbackBg = MakeRect("FeedbackBg", content.transform);
         AbsStretchH(feedbackBg, 0f, 0f, 1580f, 220f);
         feedbackBg.AddComponent<Image>().color = new Color(0.910f, 0.910f, 0.910f, 0.8f);
 
-        // "Have questions or feedback?" (Figma y=1688 → content_y=1602)
         var feedbackTitle = MakeRect("FeedbackTitle", content.transform);
         AbsCenterH(feedbackTitle, 0f, 1602f, 310f, 56f);
         var ftTmp = feedbackTitle.AddComponent<TextMeshProUGUI>();
         ftTmp.text = "Have questions or\nfeedback?"; ftTmp.fontSize = 20; ftTmp.fontStyle = FontStyles.Bold;
         ftTmp.color = C_BLACK; ftTmp.alignment = TextAlignmentOptions.Center;
 
-        // Feedback description
         var feedbackDesc = MakeRect("FeedbackDesc", content.transform);
         AbsCenterH(feedbackDesc, 0f, 1660f, 310f, 64f);
         var fdTmp = feedbackDesc.AddComponent<TextMeshProUGUI>();
@@ -1549,7 +1320,6 @@ public class UIHierarchySetup : MonoBehaviour
         fdTmp.fontSize = 14; fdTmp.fontStyle = FontStyles.Normal;
         fdTmp.color = C_GRAY_88; fdTmp.alignment = TextAlignmentOptions.Center;
 
-        // ── "Contact us" button (Figma y=1828 → content_y=1742, 143×32) ──
         var contactBtn = MakeRect("ContactUsBtn", content.transform);
         AbsCenterH(contactBtn, 0f, 1742f, 143f, 32f);
         contactBtn.AddComponent<Image>().color = C_WHITE;
@@ -1560,7 +1330,6 @@ public class UIHierarchySetup : MonoBehaviour
         contactTmp.text = "Contact us →"; contactTmp.fontSize = 13; contactTmp.fontStyle = FontStyles.Bold;
         contactTmp.color = C_GRAY_CC; contactTmp.alignment = TextAlignmentOptions.Center;
 
-        // Version label
         var verGo = MakeRect("VersionLabel", content.transform);
         AbsCenterH(verGo, 0f, 1800f, 300f, 24f);
         var vt = verGo.AddComponent<TextMeshProUGUI>();
@@ -1568,11 +1337,8 @@ public class UIHierarchySetup : MonoBehaviour
         vt.color = C_GRAY_AA; vt.alignment = TextAlignmentOptions.Center;
     }
 
-    // ── Awards Screen ────────────────────────────────────────
-
     private void BuildAwardsScreen(Transform parent)
     {
-        // Figma: "AWARDS" title at y=110; awards list at y=242; each row 68px, spacing 20px; 10 rows total
         var screen = MakeScreen("AwardsScreen", parent, C_WHITE);
         screen.SetActive(false);
         screen.AddComponent<AwardsScreenController>();
@@ -1580,11 +1346,9 @@ public class UIHierarchySetup : MonoBehaviour
         var sv = BuildScrollView("ScrollView", screen.transform);
         var content = sv.transform.Find("Viewport/Content");
 
-        // ── Spacer to clear TopBar → title at screen y=110 ────
+        // Spacer to clear TopBar → title at screen y=110
         AddSpacer(content, 110);
 
-        // ── "AWARDS" title ─────────────────────────────────────
-        // Figma: center_x=77.5 (left-aligned), top=110, font=20 bold
         var titleGo = MakeRect("AwardsTitle", content);
         titleGo.AddComponent<LayoutElement>().preferredHeight = 28;
         var tt = titleGo.AddComponent<TextMeshProUGUI>();
@@ -1592,8 +1356,6 @@ public class UIHierarchySetup : MonoBehaviour
         tt.color = C_BLACK; tt.alignment = TextAlignmentOptions.MidlineLeft;
         tt.enableWordWrapping = false;
 
-        // ── Description placeholder bars ───────────────────────
-        // Figma: bars at y=145(w=328), y=166(w=328), y=187(w=225)
         AddSpacer(content, 7);
         AddDescBar(content, 328, 13, C_GRAY_D9);
         AddSpacer(content, 8);
@@ -1601,47 +1363,40 @@ public class UIHierarchySetup : MonoBehaviour
         AddSpacer(content, 8);
         AddDescBar(content, 225, 13, C_GRAY_E8);
 
-        // ── Spacer to reach list start at y=242 ────────────────
+        // Spacer to reach list start at y=242
         // 110(spacer)+28(title)+7+13+8+13+8+13 = 200; need 242 → add 42px
         AddSpacer(content, 42);
 
-        // ── Award rows (10 rows, 68px each, 20px spacing) ──────
-        // Figma: list container left=29, w=310, rows 68px, spacing 20px
         var list = MakeRect("AwardsList", content);
         list.AddComponent<LayoutElement>().preferredHeight = 860; // 10×68 + 9×20
         var lVlg = list.AddComponent<VerticalLayoutGroup>();
         lVlg.spacing = 20;
         lVlg.childControlWidth = true; lVlg.childControlHeight = false;
         lVlg.childForceExpandWidth = true;
-        lVlg.padding = new RectOffset(29, 29, 0, 0); // Figma: list left=29 from screen
+        lVlg.padding = new RectOffset(29, 29, 0, 0);
 
         for (int i = 0; i < 10; i++)
         {
             var row = MakeRect($"AwardRow_{i}", list.transform);
             row.AddComponent<LayoutElement>().preferredHeight = 68;
-            // Figma: row 0 border=black (earned), rows 1-9 border=#d9d9d9 (locked)
             row.AddComponent<Image>().color = new Color(0.910f, 0.910f, 0.910f, 0.1f);
 
             var rHlg = row.AddComponent<HorizontalLayoutGroup>();
-            // Figma: badge left=44-29=15; status right=303+18=321, container end=339; right=339-321=18
             rHlg.padding = new RectOffset(15, 18, 9, 9);
             rHlg.spacing = 12;
             rHlg.childControlHeight = false; rHlg.childControlWidth = false;
             rHlg.childAlignment = TextAnchor.MiddleLeft;
 
-            // Badge icon: Figma 50×50, row 0=black, others=#f8f8f8 border #e8e8e8
             var badge = MakeRect("BadgeIcon", row.transform);
             badge.GetComponent<RectTransform>().sizeDelta = new Vector2(50, 50);
             badge.AddComponent<Image>().color = (i == 0) ? C_BLACK : C_GRAY_F8;
 
-            // Info column
             var info = MakeRect("InfoCol", row.transform);
             info.GetComponent<RectTransform>().sizeDelta = new Vector2(173, 50);
             var iVlg = info.AddComponent<VerticalLayoutGroup>();
             iVlg.childControlWidth = true; iVlg.childControlHeight = false;
             iVlg.childForceExpandWidth = true; iVlg.spacing = 4;
 
-            // Award title: Figma name bar 173×13 → TMP row
             var titleRow = MakeRect("AwardTitle", info.transform);
             titleRow.AddComponent<LayoutElement>().preferredHeight = 18;
             var trt = titleRow.AddComponent<TextMeshProUGUI>();
@@ -1649,7 +1404,6 @@ public class UIHierarchySetup : MonoBehaviour
             trt.fontSize = 13; trt.fontStyle = FontStyles.Bold;
             trt.color = C_BLACK; trt.alignment = TextAlignmentOptions.MidlineLeft;
 
-            // Award desc: Figma sub bar 79×13 → TMP row
             var descRow = MakeRect("AwardDesc", info.transform);
             descRow.AddComponent<LayoutElement>().preferredHeight = 28;
             var drt = descRow.AddComponent<TextMeshProUGUI>();
@@ -1658,7 +1412,6 @@ public class UIHierarchySetup : MonoBehaviour
             drt.fontSize = 11; drt.color = C_GRAY_88;
             drt.alignment = TextAlignmentOptions.TopLeft; drt.enableWordWrapping = true;
 
-            // Status icon: Figma 18×18 #e8e8e8
             var statusGo = MakeRect("StatusIcon", row.transform);
             statusGo.GetComponent<RectTransform>().sizeDelta = new Vector2(18, 18);
             statusGo.AddComponent<Image>().color = C_GRAY_E8;
@@ -1675,18 +1428,12 @@ public class UIHierarchySetup : MonoBehaviour
         go.AddComponent<Image>().color = color;
     }
 
-    // ── Profile Screen ───────────────────────────────────────
-
     private void BuildProfileScreen(Transform parent)
     {
-        // Figma (302:110) — all positions in SCREEN coordinates (390×844 reference)
-        // ScrollView starts at y=65 (header height). Content positions = screen_y - 65.
         var screen = MakeScreen("ProfileScreen", parent, C_WHITE);
         screen.SetActive(false);
         screen.AddComponent<ProfileScreenController>();
 
-        // ── Custom header ──────────────────────────────────────────
-        // Figma: "MT. SAMAT AR" center_x=78.5 top=29; gear left=331 top=24; divider top=63
         var header = MakeRect("ProfileHeader", screen.transform);
         AbsStretchH(header, 0f, 0f, 0f, 65f);
         header.AddComponent<Image>().color = C_WHITE;
@@ -1696,7 +1443,6 @@ public class UIHierarchySetup : MonoBehaviour
         headerDiv.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, 2f);
         headerDiv.AddComponent<Image>().color = C_GRAY_D9;
 
-        // "MT. SAMAT AR" — left area, center_x=78.5, top=29 in screen
         var headerTitleGo = MakeRect("HeaderTitle", header.transform);
         AbsPos(headerTitleGo, 20f, 17f, 140f, 28f);
         var htTmp = headerTitleGo.AddComponent<TextMeshProUGUI>();
@@ -1704,7 +1450,6 @@ public class UIHierarchySetup : MonoBehaviour
         htTmp.color = C_BLACK; htTmp.alignment = TextAlignmentOptions.MidlineLeft;
         htTmp.enableWordWrapping = false;
 
-        // Gear button — Figma: left=331, top=24, size=30 (touch area)
         var gearBtn = MakeRect("SettingsBtn", header.transform);
         AbsPos(gearBtn, 329f, 20f, 34f, 34f);
         gearBtn.AddComponent<Image>().color = C_CLEAR;
@@ -1715,7 +1460,6 @@ public class UIHierarchySetup : MonoBehaviour
         gearTmp.text = "⚙"; gearTmp.fontSize = 20;
         gearTmp.color = C_GRAY_88; gearTmp.alignment = TextAlignmentOptions.Center;
 
-        // ── Scroll view: below header (y=65) to above NavBar (y=779) ──
         var sv = BuildScrollView("ScrollView", screen.transform);
         Anchor(sv, 0f, 0f, 1f, 1f);
         sv.GetComponent<RectTransform>().offsetMin = new Vector2(0f,  65f);
@@ -1723,26 +1467,17 @@ public class UIHierarchySetup : MonoBehaviour
 
         var content = sv.transform.Find("Viewport/Content");
 
-        // Fixed-height content area (all elements absolutely positioned within it)
-        // Total content height = 1071px (progress card bottom at 852+154=1006, plus 65px padding)
         var area = MakeRect("ProfileContentArea", content);
         area.AddComponent<LayoutElement>().preferredHeight = 1071f;
 
-        // All AbsPos below are relative to ProfileContentArea (content_y = screen_y - 65)
-
-        // ── Avatar circle ──────────────────────────────────────────
-        // Figma: center_x=193, screen_y=100, size=110 → content_y=35
         var avCircle = MakeRect("AvatarCircle", area.transform);
         AbsCenterH(avCircle, -2f, 35f, 110f, 110f);
         avCircle.AddComponent<Image>().color = C_GRAY_E8;
 
-        // XP badge (placeholder): left=190, screen_y=183 → content_y=118
         var xpBadge = MakeRect("XPBadge", area.transform);
         AbsPos(xpBadge, 190f, 118f, 58f, 22f);
         xpBadge.AddComponent<Image>().color = C_GRAY_D9;
 
-        // ── Name + Username combined label ─────────────────────────
-        // Figma: "JUAN DELA CRUZ" + "cutie_jdc" on same line, screen_y≈227 → content_y=162
         var nameUserGo = MakeRect("NameAndUsernameLabel", area.transform);
         AbsCenterH(nameUserGo, 0f, 162f, 320f, 26f);
         var nuTmp = nameUserGo.AddComponent<TextMeshProUGUI>();
@@ -1751,8 +1486,6 @@ public class UIHierarchySetup : MonoBehaviour
         nuTmp.alignment = TextAlignmentOptions.Center; nuTmp.richText = true;
         nuTmp.enableWordWrapping = false;
 
-        // ── Stat cards (2 side by side) ────────────────────────────
-        // Figma: left=38 top=337 w=150 h=110 | left=202 top=337 w=150 h=110 → content_y=272
         var leftStat = MakeRect("ArtifactsCard", area.transform);
         AbsPos(leftStat, 38f, 272f, 150f, 110f);
         leftStat.AddComponent<Image>().color = new Color(0.851f, 0.851f, 0.851f, 0.25f);
@@ -1763,15 +1496,11 @@ public class UIHierarchySetup : MonoBehaviour
         rightStat.AddComponent<Image>().color = new Color(0.851f, 0.851f, 0.851f, 0.25f);
         BuildProfileStatContent(rightStat.transform, "—", "BADGES EARNED");
 
-        // ── Wide stat card ─────────────────────────────────────────
-        // Figma: left=38, screen_y=458, w=314, h=110 → content_y=393
         var wideStat = MakeRect("WideStatCard", area.transform);
         AbsPos(wideStat, 38f, 393f, 314f, 110f);
         wideStat.AddComponent<Image>().color = new Color(0.851f, 0.851f, 0.851f, 0.25f);
         BuildProfileStatContent(wideStat.transform, "—", "OVERALL JOURNEY");
 
-        // ── RECENT ACHIEVEMENTS row ────────────────────────────────
-        // Figma: "RECENT ACHIEVEMENTS" center_x=143 screen_y=595; "View Gallery" cx=319.5 → content_y=530
         var recentLblGo = MakeRect("RecentAchLabel", area.transform);
         AbsPos(recentLblGo, 38f, 530f, 200f, 24f);
         var rl = recentLblGo.AddComponent<TextMeshProUGUI>();
@@ -1788,25 +1517,18 @@ public class UIHierarchySetup : MonoBehaviour
         gt.text = "View Gallery"; gt.fontSize = 11; gt.color = C_GRAY_88;
         gt.alignment = TextAlignmentOptions.MidlineRight;
 
-        // ── Achievement rows (3 rows, 73px each, spacing 9px) ──────
-        // Figma: screen_y 637, 719, 804 → content_y 572, 654, 739
         BuildAbsAchievementRow(area.transform, "Achievement_1", 572f, "COMPLETED",   "May 15, 2026");
         BuildAbsAchievementRow(area.transform, "Achievement_2", 654f, "COMPLETED",   "May 15, 2026");
         BuildAbsAchievementRow(area.transform, "Achievement_3", 739f, "IN PROGRESS", "80% Done");
 
-        // ── Progress card ──────────────────────────────────────────
-        // Figma: center_x=194.5, screen_y=917, w=319, h=154 → content_y=852
         var progressCard = MakeRect("ProgressCard", area.transform);
         AbsCenterH(progressCard, -0.5f, 852f, 319f, 154f);
         progressCard.AddComponent<Image>().color = C_GRAY_F8;
 
-        // Inside progress card (card left=35 in content area):
-        // "Progress" stub bar: left=54-35=19, screen_y=963 → card_y=46
         var progStub = MakeRect("ProgressStub", progressCard.transform);
         AbsPos(progStub, 19f, 46f, 81f, 18f);
         progStub.AddComponent<Image>().color = C_GRAY_D9;
 
-        // Progress bar BG: left=55-35=20, screen_y=1020 → card_y=103
         var barBG = MakeRect("ProgressBarBG", progressCard.transform);
         AbsPos(barBG, 20f, 103f, 278f, 5f);
         barBG.AddComponent<Image>().color = C_GRAY_D9;
@@ -1818,14 +1540,12 @@ public class UIHierarchySetup : MonoBehaviour
         fi.fillOrigin = (int)Image.OriginHorizontal.Left;
         fi.fillAmount = 0f;
 
-        // Progress label (dynamic): center_x=132.5-35=97.5, screen_y=1035 → card_y=118
         var progressLblGo = MakeRect("ProgressLabel", progressCard.transform);
         AbsPos(progressLblGo, 19f, 112f, 220f, 22f);
         var plt = progressLblGo.AddComponent<TextMeshProUGUI>();
         plt.text = "Progress: 0/0 Artifacts Found"; plt.fontSize = 11;
         plt.color = C_GRAY_88; plt.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // Resume Journey button: center_x=293-35=258, screen_y=1034 → card_y=117
         var resumeBtnGo = MakeRect("ResumeBtn", progressCard.transform);
         AbsPos(resumeBtnGo, 210f, 111f, 88f, 24f);
         resumeBtnGo.AddComponent<Image>().color = C_CLEAR;
@@ -1836,8 +1556,6 @@ public class UIHierarchySetup : MonoBehaviour
         resumeTmp.text = "Resume Journey"; resumeTmp.fontSize = 10;
         resumeTmp.color = C_GRAY_88; resumeTmp.fontStyle = FontStyles.Underline;
         resumeTmp.alignment = TextAlignmentOptions.MidlineRight;
-
-        // Bottom spacer handled by LayoutElement preferredHeight=1071 on area
     }
 
     private void BuildProfileStatContent(Transform card, string value, string label)
@@ -1863,34 +1581,28 @@ public class UIHierarchySetup : MonoBehaviour
     private void BuildAbsAchievementRow(Transform parent, string name, float contentY,
         string status, string date)
     {
-        // Figma: left=38, right=38 (38px margin both sides), h=73, bg=rgba(232,232,232,0.6)
         var row = MakeRect(name, parent);
         AbsStretchH(row, 38f, 38f, contentY, 73f);
         row.AddComponent<Image>().color = new Color(0.910f, 0.910f, 0.910f, 0.6f);
 
-        // Icon: Figma left=59-38=21 within row (screen left=59, row left=38), top=647→row_y=10
         var icon = MakeRect("AchIcon", row.transform);
         AbsPos(icon, 21f, 10f, 55f, 55f);
         icon.AddComponent<Image>().color = C_GRAY_F8;
 
-        // Title bar (placeholder): left=126-38=88 in row, top=657→row_y=20, w=135
         var titleBar = MakeRect("AchTitle", row.transform);
         AbsPos(titleBar, 88f, 20f, 135f, 13f);
         titleBar.AddComponent<Image>().color = C_GRAY_D9;
 
-        // Sub bar: left=126-38=88, top=676→row_y=39, w=79
         var subBar = MakeRect("AchSub", row.transform);
         AbsPos(subBar, 88f, 39f, 79f, 13f);
         subBar.AddComponent<Image>().color = C_GRAY_E8;
 
-        // Status label: center_x=306-38=268 → right-align, top=660→row_y=23
         var stGo = MakeRect("StatusLabel", row.transform);
         AbsPos(stGo, 220f, 18f, 88f, 18f);
         var st = stGo.AddComponent<TextMeshProUGUI>();
         st.text = status; st.fontSize = 10; st.color = C_GRAY_88;
         st.alignment = TextAlignmentOptions.MidlineRight;
 
-        // Date label: right-align, top=676→row_y=39
         var dtGo = MakeRect("DateLabel", row.transform);
         AbsPos(dtGo, 220f, 39f, 88f, 16f);
         var dt = dtGo.AddComponent<TextMeshProUGUI>();
@@ -1938,14 +1650,12 @@ public class UIHierarchySetup : MonoBehaviour
         row.AddComponent<LayoutElement>().preferredHeight = 73;
         row.AddComponent<Image>().color = new Color(0.910f, 0.910f, 0.910f, 0.6f);
 
-        // Icon — left side, absolute position
         var icon = MakeRect("AchIcon", row.transform);
         Anchor(icon, 0, 0, 0, 1); SetPivot(icon, 0f, 0.5f);
         icon.GetComponent<RectTransform>().sizeDelta        = new Vector2(55, -16);
         icon.GetComponent<RectTransform>().anchoredPosition = new Vector2(20, 0);
         icon.AddComponent<Image>().color = C_GRAY_F8;
 
-        // Title — middle, upper half
         var titleGo = MakeRect("AchTitle", row.transform);
         Anchor(titleGo, 0, 0.5f, 1, 1); SetPivot(titleGo, 0f, 1f);
         titleGo.GetComponent<RectTransform>().anchoredPosition = new Vector2(88, -8);
@@ -1955,7 +1665,6 @@ public class UIHierarchySetup : MonoBehaviour
         tTmp.fontStyle = FontStyles.Bold; tTmp.color = C_GRAY_88;
         tTmp.alignment = TextAlignmentOptions.MidlineLeft;
 
-        // Status — right, upper half
         var stGo = MakeRect("StatusLabel", row.transform);
         Anchor(stGo, 1, 0.5f, 1, 1); SetPivot(stGo, 1f, 1f);
         stGo.GetComponent<RectTransform>().anchoredPosition = new Vector2(-12, -8);
@@ -1964,7 +1673,6 @@ public class UIHierarchySetup : MonoBehaviour
         stTmp.text = status; stTmp.fontSize = 10; stTmp.color = C_GRAY_88;
         stTmp.alignment = TextAlignmentOptions.MidlineRight;
 
-        // Date — right, lower half
         var dtGo = MakeRect("DateLabel", row.transform);
         Anchor(dtGo, 1, 0, 1, 0.5f); SetPivot(dtGo, 1f, 0f);
         dtGo.GetComponent<RectTransform>().anchoredPosition = new Vector2(-12, 8);
@@ -1974,10 +1682,6 @@ public class UIHierarchySetup : MonoBehaviour
         dtTmp.alignment = TextAlignmentOptions.MidlineRight;
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  AR Debug Panel (kept from original — unchanged logic)
-    // ─────────────────────────────────────────────────────────
-
     private void BuildDebugPanel(Transform parent)
     {
         var panel = MakeRect("AR_DebugPanel", parent);
@@ -1985,7 +1689,7 @@ public class UIHierarchySetup : MonoBehaviour
         Anchor(panel, 0, 0, 1, 0);
         SetPivot(panel, 0.5f, 0f);
         var rt = panel.GetComponent<RectTransform>();
-        rt.sizeDelta        = new Vector2(-20, 220); // 370px wide, 220px tall
+        rt.sizeDelta        = new Vector2(-20, 220);
         rt.anchoredPosition = new Vector2(0, 145);   // 145px from bottom: above ActionPanel (70+60+15)
 
         // Background is now managed at runtime by ARDebugPanel.SetVisible()
@@ -2016,7 +1720,7 @@ public class UIHierarchySetup : MonoBehaviour
         Anchor(panel, 0, 0, 1, 0);
         SetPivot(panel, 0.5f, 0f);
         var rt = panel.GetComponent<RectTransform>();
-        rt.sizeDelta        = new Vector2(-20, 60);  // 60px tall, 10px margin each side
+        rt.sizeDelta        = new Vector2(-20, 60);
         rt.anchoredPosition = new Vector2(0f, 70f);  // 70px from bottom: 65px NavBar + 5px gap
 
         panel.AddComponent<Image>().color = new Color(0.06f, 0.06f, 0.06f, 0.85f);
@@ -2033,9 +1737,9 @@ public class UIHierarchySetup : MonoBehaviour
         hlg.childControlHeight    = true;
         hlg.childForceExpandWidth = true;
 
-        // CollectButton — green, resolved via "ButtonRow/CollectButton"
+        // CollectButton — resolved via "ButtonRow/CollectButton"
         var collectGo = MakeRect("CollectButton", row.transform);
-        collectGo.AddComponent<Image>().color = new Color(0.290f, 0.486f, 0.349f); // terra green
+        collectGo.AddComponent<Image>().color = new Color(0.290f, 0.486f, 0.349f);
         collectGo.AddComponent<Button>();
         var collectText = MakeRect("Text", collectGo.transform);
         SetFullScreen(collectText);
@@ -2047,9 +1751,9 @@ public class UIHierarchySetup : MonoBehaviour
         cTmp.alignment = TextAlignmentOptions.Center;
         cTmp.enableWordWrapping = false;
 
-        // ShowInfoButton — cream, resolved via "ButtonRow/ShowInfoButton"
+        // ShowInfoButton — resolved via "ButtonRow/ShowInfoButton"
         var infoGo = MakeRect("ShowInfoButton", row.transform);
-        infoGo.AddComponent<Image>().color = new Color(0.910f, 0.910f, 0.910f); // C_GRAY_E8
+        infoGo.AddComponent<Image>().color = new Color(0.910f, 0.910f, 0.910f);
         infoGo.AddComponent<Button>();
         var infoText = MakeRect("Text", infoGo.transform);
         SetFullScreen(infoText);
@@ -2057,7 +1761,7 @@ public class UIHierarchySetup : MonoBehaviour
         iTmp.text      = "SHOW INFO";
         iTmp.fontSize  = 13;
         iTmp.fontStyle = FontStyles.Bold;
-        iTmp.color     = new Color(0.102f, 0.102f, 0.102f); // dark
+        iTmp.color     = new Color(0.102f, 0.102f, 0.102f);
         iTmp.alignment = TextAlignmentOptions.Center;
         iTmp.enableWordWrapping = false;
 
@@ -2074,7 +1778,7 @@ public class UIHierarchySetup : MonoBehaviour
         Anchor(panel, 0, 1, 1, 1);
         SetPivot(panel, 0.5f, 1f);
         var rt = panel.GetComponent<RectTransform>();
-        rt.sizeDelta        = new Vector2(0f, 60f);   // full width, 60px tall
+        rt.sizeDelta        = new Vector2(0f, 60f);
         rt.anchoredPosition = new Vector2(0f, 70f);   // starts off-screen above (script sets HIDDEN_Y=70)
 
         panel.AddComponent<Image>().color = new Color(0.06f, 0.06f, 0.06f, 0.88f);
@@ -2091,7 +1795,6 @@ public class UIHierarchySetup : MonoBehaviour
         vlg.padding               = new RectOffset(16, 16, 6, 6);
         vlg.spacing               = 2;
 
-        // CollectedLabel — e.g. "Bolo Knife collected!"
         var collectedGo = MakeRect("CollectedLabel", content.transform);
         collectedGo.AddComponent<LayoutElement>().preferredHeight = 22;
         var cLabel = collectedGo.AddComponent<TextMeshProUGUI>();
@@ -2102,23 +1805,18 @@ public class UIHierarchySetup : MonoBehaviour
         cLabel.alignment = TextAlignmentOptions.Center;
         cLabel.enableWordWrapping = false;
 
-        // RemainingLabel — e.g. "4 artifacts remaining"
         var remainingGo = MakeRect("RemainingLabel", content.transform);
         remainingGo.AddComponent<LayoutElement>().preferredHeight = 18;
         var rLabel = remainingGo.AddComponent<TextMeshProUGUI>();
         rLabel.text      = "artifacts remaining";
         rLabel.fontSize  = 11;
-        rLabel.color     = new Color(0.800f, 0.800f, 0.800f); // C_GRAY_CC
+        rLabel.color     = new Color(0.800f, 0.800f, 0.800f);
         rLabel.alignment = TextAlignmentOptions.Center;
         rLabel.enableWordWrapping = false;
 
         // Hidden by default; NavigationManager.ShowScreen controls SetActive
         panel.SetActive(false);
     }
-
-    // ─────────────────────────────────────────────────────────
-    //  Shared UI builders
-    // ─────────────────────────────────────────────────────────
 
     private GameObject BuildScrollView(string name, Transform parent)
     {
@@ -2203,7 +1901,7 @@ public class UIHierarchySetup : MonoBehaviour
         {
             var av = MakeRect($"Avatar_{i}", grid.transform);
             var img = av.AddComponent<Image>();
-            img.color = (i == 0) ? C_BLACK : C_GRAY_E8; // first selected
+            img.color = (i == 0) ? C_BLACK : C_GRAY_E8;
             av.AddComponent<Button>();
         }
     }
@@ -2242,10 +1940,6 @@ public class UIHierarchySetup : MonoBehaviour
         t.text = text; t.fontSize = 15; t.fontStyle = FontStyles.Bold; t.color = C_GRAY_88; t.alignment = TextAlignmentOptions.MidlineLeft;
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  Primitives
-    // ─────────────────────────────────────────────────────────
-
     private GameObject MakeScreen(string name, Transform parent, Color bg)
     {
         var go = MakeRect(name, parent);
@@ -2280,7 +1974,6 @@ public class UIHierarchySetup : MonoBehaviour
         rt.anchoredPosition = Vector2.zero;
     }
 
-    // ── Absolute position helpers (Figma top-left origin → Unity) ───────────
     // AbsPos: anchor top-left, exact Figma x/y/w/h
     private static void AbsPos(GameObject go, float x, float y, float w, float h)
     {

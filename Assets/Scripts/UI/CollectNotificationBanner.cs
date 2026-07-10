@@ -1,40 +1,21 @@
-// ============================================================
-// CollectNotificationBanner.cs
-// Location: Assets/Scripts/UI/CollectNotificationBanner.cs
-// Mt. Samat AR — top-of-screen slide-in notification.
-//
-// Appears when the player collects an artifact.
-// Shows artifact name + remaining GPS route artifact count.
-// Slides down from above ScanHeader, holds briefly, then slides back up.
-//
-// NavigationManager controls outer panel visibility (SetActive).
-// ============================================================
-
 using System.Collections;
 using TMPro;
 using UnityEngine;
 
 public class CollectNotificationBanner : MonoBehaviour
 {
-    // ── Child refs ───────────────────────────────────────────
     private TextMeshProUGUI _collectedLabel;
     private TextMeshProUGUI _remainingLabel;
 
-    // ── Animation ────────────────────────────────────────────
     private RectTransform _rt;
     private Coroutine     _activeRoutine;
 
-    // Y positions relative to top anchor (negative = down into screen)
-    // ScanHeader is 65px. Banner is 60px tall.
-    // SHOWN_Y: centres the banner below the ScanHeader with 5px gap.
-    private const float SHOWN_Y   = -95f;   // 65px header + 5px gap + 25px half-height
-    private const float HIDDEN_Y  =  70f;   // fully above the screen
-    private const float SLIDE_SPD = 700f;   // pixels per second
+    // ScanHeader is 65px; banner is 60px tall.
+    // SHOWN_Y centres the banner below the ScanHeader with 5px gap (65 + 5 + 25 half-height).
+    private const float SHOWN_Y   = -95f;
+    private const float HIDDEN_Y  =  70f;
+    private const float SLIDE_SPD = 700f;
     private const float HOLD_SEC  = 2.5f;
-
-    // ─────────────────────────────────────────────────────────
-    //  Unity lifecycle
-    // ─────────────────────────────────────────────────────────
 
     private void Start()
     {
@@ -44,7 +25,6 @@ public class CollectNotificationBanner : MonoBehaviour
         _remainingLabel = transform.Find("BannerContent/RemainingLabel")
                                    ?.GetComponent<TextMeshProUGUI>();
 
-        // Start off-screen above the top
         if (_rt != null) _rt.anchoredPosition = new Vector2(0f, HIDDEN_Y);
 
         CollectionController.OnArtifactCollected += HandleArtifactCollected;
@@ -55,15 +35,10 @@ public class CollectNotificationBanner : MonoBehaviour
         CollectionController.OnArtifactCollected -= HandleArtifactCollected;
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  Event handler
-    // ─────────────────────────────────────────────────────────
-
     private void HandleArtifactCollected(ArtifactData artifact)
     {
         if (artifact == null) return;
 
-        // Only animate if this panel is active and visible on screen
         if (!gameObject.activeInHierarchy) return;
 
         int remaining = GetRemainingCount();
@@ -76,14 +51,9 @@ public class CollectNotificationBanner : MonoBehaviour
                 ? $"{remaining} {(remaining == 1 ? "artifact" : "artifacts")} remaining"
                 : "Route complete!";
 
-        // Cancel any in-progress animation before starting a new one
         if (_activeRoutine != null) StopCoroutine(_activeRoutine);
         _activeRoutine = StartCoroutine(ShowAndDismiss());
     }
-
-    // ─────────────────────────────────────────────────────────
-    //  Animation coroutine
-    // ─────────────────────────────────────────────────────────
 
     private IEnumerator ShowAndDismiss()
     {
@@ -107,10 +77,6 @@ public class CollectNotificationBanner : MonoBehaviour
 
         _rt.anchoredPosition = new Vector2(0f, targetY);
     }
-
-    // ─────────────────────────────────────────────────────────
-    //  Remaining artifact count
-    // ─────────────────────────────────────────────────────────
 
     private static int GetRemainingCount()
     {

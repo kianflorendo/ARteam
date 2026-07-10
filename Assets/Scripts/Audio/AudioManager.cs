@@ -1,13 +1,3 @@
-﻿// ============================================================
-// AudioManager.cs
-// Location: Assets/Scripts/Audio/AudioManager.cs
-// Mt. Samat AR Scavenger Hunt — Terra App
-//
-// Singleton audio router. Loads 5 SFX clips from Addressables.
-// If a clip is missing (no audio assets imported yet), it logs
-// a warning and continues — no crash, no spam.
-// ============================================================
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +23,6 @@ public class AudioManager : MonoBehaviour
     private AudioClip _badgeEarnedClip;
     private AudioClip _uiTapClip;
 
-    // Addressable keys matching the Implementation Plan audio group
     private const string KeyCollect = "audio/collect";
     private const string KeyScrollUnfurl = "audio/scroll_unfurl";
     private const string KeyCompletionFanfare = "audio/completion_fanfare";
@@ -70,15 +59,11 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // ── Public SFX calls (called by other scripts) ──────────────
-
     public void PlayCollectSFX() => PlaySFX(_collectClip);
     public void PlayScrollUnfurlSFX() => PlaySFX(_scrollUnfurlClip);
     public void PlayCompletionFanfareSFX() => PlaySFX(_completionFanfareClip);
     public void PlayBadgeEarnedSFX() => PlaySFX(_badgeEarnedClip);
     public void PlayUITapSFX() => PlayUI(_uiTapClip);
-
-    // ── Internal helpers ─────────────────────────────────────────
 
     void PlaySFX(AudioClip clip)
     {
@@ -105,11 +90,9 @@ public class AudioManager : MonoBehaviour
 
     IEnumerator LoadClip(string key, System.Action<AudioClip> onLoaded)
     {
-        // Check whether the key exists BEFORE calling LoadAssetAsync.
-        // LoadResourceLocationsAsync never throws InvalidKeyException —
-        // it simply returns an empty list when the key is missing.
-        // This prevents Addressables from internally logging an exception
-        // for audio clips that haven't been imported yet.
+        // Check whether the key exists BEFORE calling LoadAssetAsync. LoadResourceLocationsAsync
+        // returns an empty list when the key is missing, preventing the InvalidKeyException
+        // that LoadAssetAsync would log for audio clips not yet imported.
         var locationOp = Addressables.LoadResourceLocationsAsync(key, typeof(AudioClip));
         yield return locationOp;
 

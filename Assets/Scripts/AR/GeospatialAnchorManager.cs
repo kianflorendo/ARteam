@@ -1,9 +1,6 @@
 using UnityEngine;
 
-/// <summary>
-/// Legacy scene component kept only so existing scene references do not break.
-/// GPS progression is now handled by OfflineGPSRouteManager.
-/// </summary>
+// Legacy scene-reference compatibility shim. GPS progression is now handled by OfflineGPSRouteManager.
 public class GeospatialAnchorManager : MonoBehaviour
 {
     public static GeospatialAnchorManager Instance { get; private set; }

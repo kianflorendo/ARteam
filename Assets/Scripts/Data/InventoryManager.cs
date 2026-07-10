@@ -1,14 +1,3 @@
-﻿// ============================================================
-// InventoryManager.cs
-// Location: Assets/Scripts/Data/InventoryManager.cs
-// Mt. Samat AR Scavenger Hunt — Terra App
-//
-// Manages all player progress: collected artifacts,
-// soldier progress, division progress, AFP token badges.
-// Auto-loads on Awake, auto-saves after every mutation.
-// Persists across scenes via DontDestroyOnLoad.
-// ============================================================
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,25 +5,17 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    // ── Singleton ────────────────────────────────────────────
     public static InventoryManager Instance { get; private set; }
 
-    // ── Events ───────────────────────────────────────────────
-    public static event Action<string> OnArtifactCollected;         // artifactId
-    public static event Action<string> OnSoldierProgressUpdated;    // soldierId
-    public static event Action<string> OnDivisionProgressUpdated;   // divisionId
+    public static event Action<string> OnArtifactCollected;
+    public static event Action<string> OnSoldierProgressUpdated;
+    public static event Action<string> OnDivisionProgressUpdated;
     public static event Action<AFPTokenBadge> OnBadgeAdded;
 
-    // ── Private state ────────────────────────────────────────
     private InventoryData _inventory;
 
-    // ── File paths ───────────────────────────────────────────
     private const string INVENTORY_FILENAME = "inventory.json";
     private string SavePath => Path.Combine(Application.persistentDataPath, INVENTORY_FILENAME);
-
-    // ─────────────────────────────────────────────────────────
-    //  Unity lifecycle
-    // ─────────────────────────────────────────────────────────
 
     private void Awake()
     {
@@ -48,10 +29,6 @@ public class InventoryManager : MonoBehaviour
 
         Load();
     }
-
-    // ─────────────────────────────────────────────────────────
-    //  Load & Save
-    // ─────────────────────────────────────────────────────────
 
     private void Load()
     {
@@ -96,7 +73,6 @@ public class InventoryManager : MonoBehaviour
         Debug.Log($"[InventoryManager] New player created: {_inventory.player_id}");
     }
 
-    /// Saves inventory to persistentDataPath/inventory.json
     public void Save()
     {
         try
@@ -110,19 +86,12 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  Artifact collection
-    // ─────────────────────────────────────────────────────────
-
-    /// Returns true if the artifact has already been collected
     public bool IsCollected(string artifactId)
     {
         return _inventory.collected_artifact_ids?.Contains(artifactId) ?? false;
     }
 
-    /// Removes artifact IDs from collected list and auto-saves.
-    /// Used by the debug reset button to un-collect GPS test artifacts.
-    public void RemoveCollectedArtifacts(System.Collections.Generic.List<string> artifactIds)
+    public void RemoveCollectedArtifacts(List<string> artifactIds)
     {
         if (_inventory.collected_artifact_ids == null || artifactIds == null) return;
         bool changed = false;
@@ -137,8 +106,6 @@ public class InventoryManager : MonoBehaviour
         if (changed) Save();
     }
 
-    /// Records artifact as collected and auto-saves.
-    /// Does nothing if already collected (prevents duplicates).
     public void CollectArtifact(string artifactId)
     {
         if (IsCollected(artifactId))
@@ -153,16 +120,11 @@ public class InventoryManager : MonoBehaviour
         OnArtifactCollected?.Invoke(artifactId);
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  Soldier progress
-    // ─────────────────────────────────────────────────────────
-
     public SoldierProgress GetSoldierProgress(string soldierId)
     {
         var entry = _inventory.soldier_progress?.Find(e => e.soldier_id == soldierId);
         if (entry == null)
         {
-            // Create entry if it doesn't exist yet
             entry = new SoldierProgressEntry
             {
                 soldier_id = soldierId,
@@ -201,10 +163,6 @@ public class InventoryManager : MonoBehaviour
             Debug.Log($"[InventoryManager] Soldier {soldierId} COMPLETED!");
         }
     }
-
-    // ─────────────────────────────────────────────────────────
-    //  Division progress
-    // ─────────────────────────────────────────────────────────
 
     public DivisionProgress GetDivisionProgress(string divisionId)
     {
@@ -250,17 +208,11 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  Token Badges
-    // ─────────────────────────────────────────────────────────
-
-    /// Adds a newly generated AFP token badge and auto-saves
     public void AddBadge(AFPTokenBadge badge)
     {
         if (_inventory.earned_badges == null)
             _inventory.earned_badges = new List<AFPTokenBadge>();
 
-        // Prevent duplicate badge
         if (_inventory.earned_badges.Exists(b => b.badge_id == badge.badge_id))
         {
             Debug.LogWarning($"[InventoryManager] Badge {badge.badge_id} already exists. Skipping.");
@@ -275,20 +227,17 @@ public class InventoryManager : MonoBehaviour
         OnBadgeAdded?.Invoke(badge);
     }
 
-    /// Returns all earned badges
     public List<AFPTokenBadge> GetAllBadges()
     {
         return _inventory.earned_badges ?? new List<AFPTokenBadge>();
     }
 
-    /// Returns all badges with status "pending" (not yet synced to AFP)
     public List<AFPTokenBadge> GetPendingBadges()
     {
         return _inventory.earned_badges?.FindAll(b => b.status == BadgeStatus.Pending)
                ?? new List<AFPTokenBadge>();
     }
 
-    /// Updates the status of a badge (e.g. pending → synced → approved)
     public void UpdateBadgeStatus(string badgeId, string newStatus)
     {
         var badge = _inventory.earned_badges?.Find(b => b.badge_id == badgeId);
@@ -304,10 +253,6 @@ public class InventoryManager : MonoBehaviour
     }
 
     public int GetTotalBadgesEarned() => _inventory.earned_badges?.Count ?? 0;
-
-    // ─────────────────────────────────────────────────────────
-    //  AFP Tokens (legacy — kept for backend compatibility)
-    // ─────────────────────────────────────────────────────────
 
     public void AddToken(AFPToken token)
     {
@@ -335,10 +280,6 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  Player info
-    // ─────────────────────────────────────────────────────────
-
     public string GetPlayerId() => _inventory.player_id;
     public string GetPlayerName() => _inventory.player_name;
     public int GetLevel() => _inventory.level;
@@ -350,17 +291,11 @@ public class InventoryManager : MonoBehaviour
         Save();
     }
 
-    /// Increments player level and saves
     public void IncrementLevel()
     {
         _inventory.level++;
         Save();
     }
-
-    // ─────────────────────────────────────────────────────────
-    //  Soldier unlock tracking
-    //  All three soldiers are always unlocked — player can switch freely.
-    // ─────────────────────────────────────────────────────────
 
     public bool IsSoldierUnlocked(string soldierId)
     {
@@ -377,10 +312,6 @@ public class InventoryManager : MonoBehaviour
     {
         return _inventory.collected_artifact_ids ?? new List<string>();
     }
-
-    // ─────────────────────────────────────────────────────────
-    //  Debug helper — call from TestData.cs to verify
-    // ─────────────────────────────────────────────────────────
 
     public void DebugPrintInventory()
     {

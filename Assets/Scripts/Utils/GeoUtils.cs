@@ -1,23 +1,8 @@
-// ============================================================
-// GeoUtils.cs
-// Location: Assets/Scripts/Utils/GeoUtils.cs
-// Mt. Samat AR Scavenger Hunt -- Terra App
-//
-// GPS utility functions for coordinate math and debug calculations.
-// ============================================================
-
 using UnityEngine;
 
 public static class GeoUtils
 {
-    // Earth radius in meters
     private const double EARTH_RADIUS_METERS = 6371000.0;
-
-    // ============================================================
-    //  Haversine Distance
-    //  Returns the distance in meters between two GPS coordinates.
-    //  Used to check if user is within geofence_radius of artifact.
-    // ============================================================
 
     public static float HaversineDistance(
         double lat1, double lng1,
@@ -38,12 +23,6 @@ public static class GeoUtils
         return (float)(EARTH_RADIUS_METERS * c);
     }
 
-    // ============================================================
-    //  IsInsideGeofence
-    //  Returns true if the user's GPS position is within
-    //  the given radius (meters) of the target coordinates.
-    // ============================================================
-
     public static bool IsInsideGeofence(
         double userLat, double userLng,
         double targetLat, double targetLng,
@@ -53,16 +32,8 @@ public static class GeoUtils
         return distance <= radiusMeters;
     }
 
-    // ============================================================
-    //  Helpers
-    // ============================================================
-
     private static double ToRadians(double degrees)
         => degrees * System.Math.PI / 180.0;
-
-    // ============================================================
-    //  Debug helper -- returns formatted distance string
-    // ============================================================
 
     public static string FormatDistance(float meters)
     {

@@ -1,6 +1,6 @@
 {
-    "version": "1.5.0",
-    "build_date": "2026-05-30",
+    "version": "1.5.2",
+    "build_date": "2026-07-06",
     "artifacts": [
         {
             "id": "INFO-TEST-001",
@@ -21,11 +21,11 @@
                 "category": "Image Tracking Test",
                 "description": "This is test image 1 for info-only image tracking. No 3D model appears - only this scroll. You can trigger this multiple times by pointing your camera at test image 1!",
                 "location": "Test Location 1",
-                "specs": {
-                    "Test Number": "1",
-                    "Artifact Type": "Info Only",
-                    "Anchor Mode": "Image Tracking"
-                }
+                "specs": [
+                    {"key": "Test Number", "value": "1"},
+                    {"key": "Artifact Type", "value": "Info Only"},
+                    {"key": "Anchor Mode", "value": "Image Tracking"}
+                ]
             }
         },
         {
@@ -47,11 +47,11 @@
                 "category": "Image Tracking Test",
                 "description": "This is test image 2 for info-only image tracking. Point your camera at different test images to see different scrolls appear in AR!",
                 "location": "Test Location 2",
-                "specs": {
-                    "Test Number": "2",
-                    "Artifact Type": "Info Only",
-                    "Anchor Mode": "Image Tracking"
-                }
+                "specs": [
+                    {"key": "Test Number", "value": "2"},
+                    {"key": "Artifact Type", "value": "Info Only"},
+                    {"key": "Anchor Mode", "value": "Image Tracking"}
+                ]
             }
         },
         {
@@ -73,11 +73,11 @@
                 "category": "Image Tracking Test",
                 "description": "This is test image 3 for info-only image tracking. Each test image shows a different scroll to verify image tracking is working correctly!",
                 "location": "Test Location 3",
-                "specs": {
-                    "Test Number": "3",
-                    "Artifact Type": "Info Only",
-                    "Anchor Mode": "Image Tracking"
-                }
+                "specs": [
+                    {"key": "Test Number", "value": "3"},
+                    {"key": "Artifact Type", "value": "Info Only"},
+                    {"key": "Anchor Mode", "value": "Image Tracking"}
+                ]
             }
         },
         {
@@ -99,11 +99,11 @@
                 "category": "Image Tracking Test",
                 "description": "This is test image 4 for info-only image tracking. Testing that ScrollUIManager correctly displays different content for different images!",
                 "location": "Test Location 4",
-                "specs": {
-                    "Test Number": "4",
-                    "Artifact Type": "Info Only",
-                    "Anchor Mode": "Image Tracking"
-                }
+                "specs": [
+                    {"key": "Test Number", "value": "4"},
+                    {"key": "Artifact Type", "value": "Info Only"},
+                    {"key": "Anchor Mode", "value": "Image Tracking"}
+                ]
             }
         },
         {
@@ -125,11 +125,11 @@
                 "category": "Image Tracking Test",
                 "description": "This is test image 5 for info-only image tracking. Final test image to verify all 5 image anchors work independently in AR!",
                 "location": "Test Location 5",
-                "specs": {
-                    "Test Number": "5",
-                    "Artifact Type": "Info Only",
-                    "Anchor Mode": "Image Tracking"
-                }
+                "specs": [
+                    {"key": "Test Number", "value": "5"},
+                    {"key": "Artifact Type", "value": "Info Only"},
+                    {"key": "Anchor Mode", "value": "Image Tracking"}
+                ]
             }
         },
         {
@@ -139,7 +139,7 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 1,
-            "distance_from_previous_meters": 1.0,
+            "distance_from_previous_meters": 0.0,
             "spawn_distance_from_player_meters": 1.0,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
@@ -157,12 +157,12 @@
                 "category": "Filipino Infantry Weapon",
                 "description": "Standard-issue weapon of Filipino guerrilla fighters during the Battle of Bataan, 1942. Used by soldiers of the USAFFE Philippine Army in close-combat situations across the jungle terrain of Bataan.",
                 "location": "GPS Test Location 1",
-                "specs": {
-                    "Blade Length": "45 cm",
-                    "Origin": "Philippines",
-                    "Year Used": "1941-1942",
-                    "Test Mode": "GPS Collectible"
-                }
+                "specs": [
+                    {"key": "Blade Length", "value": "45 cm"},
+                    {"key": "Origin", "value": "Philippines"},
+                    {"key": "Year Used", "value": "1941-1942"},
+                    {"key": "Test Mode", "value": "GPS Collectible"}
+                ]
             }
         },
         {
@@ -190,13 +190,13 @@
                 "category": "Artillery Weapon",
                 "description": "The M2 60mm Mortar was a light infantry mortar used by American and Filipino forces during the Battle of Bataan. It provided crucial fire support for defensive positions across the peninsula.",
                 "location": "GPS Test Location 2",
-                "specs": {
-                    "Caliber": "60mm",
-                    "Range": "1,815 meters",
-                    "Weight": "19.1 kg",
-                    "Origin": "United States",
-                    "Test Mode": "GPS Collectible"
-                }
+                "specs": [
+                    {"key": "Caliber", "value": "60mm"},
+                    {"key": "Range", "value": "1,815 meters"},
+                    {"key": "Weight", "value": "19.1 kg"},
+                    {"key": "Origin", "value": "United States"},
+                    {"key": "Test Mode", "value": "GPS Collectible"}
+                ]
             }
         },
         {
@@ -224,13 +224,13 @@
                 "category": "American Infantry Weapon",
                 "description": "The Thompson Submachine Gun, known as the Tommy Gun, was widely used by American forces during World War II. USAFFE soldiers carried this weapon during the defense of Bataan in 1942.",
                 "location": "GPS Test Location 3",
-                "specs": {
-                    "Caliber": ".45 ACP",
-                    "Rate of Fire": "700 rpm",
-                    "Weight": "4.8 kg",
-                    "Origin": "United States",
-                    "Test Mode": "GPS Collectible"
-                }
+                "specs": [
+                    {"key": "Caliber", "value": ".45 ACP"},
+                    {"key": "Rate of Fire", "value": "700 rpm"},
+                    {"key": "Weight", "value": "4.8 kg"},
+                    {"key": "Origin", "value": "United States"},
+                    {"key": "Test Mode", "value": "GPS Collectible"}
+                ]
             }
         },
         {
@@ -257,13 +257,13 @@
                 "title": "M1 Steel Helmet",
                 "category": "USAFFE Protective Equipment",
                 "description": "The M1 steel helmet was standard headgear for American and Filipino USAFFE soldiers throughout the Battle of Bataan (January-April 1942). Adopted just months before the Pacific War began, it offered far superior shrapnel protection over earlier designs. During the grueling four-month siege, soldiers repurposed their helmets as cooking pots and water vessels when supplies ran critically low.",
-                "location": "Weapons & Equipment Hall \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Material": "Manganese steel",
-                    "Weight": "0.73 kg",
-                    "Origin": "United States",
-                    "Year Adopted": "1941"
-                }
+                "location": "Weapons & Equipment Hall — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Material", "value": "Manganese steel"},
+                    {"key": "Weight", "value": "0.73 kg"},
+                    {"key": "Origin", "value": "United States"},
+                    {"key": "Year Adopted", "value": "1941"}
+                ]
             }
         },
         {
@@ -283,9 +283,7 @@
             "gps_altitude": 0.0,
             "gps_geofence_radius_meters": 15.0,
             "soldier_id": "S-001",
-            "shared_soldier_ids": [
-                "S-003"
-            ],
+            "shared_soldier_ids": ["S-003"],
             "division_id": "D-21",
             "bundle_key": "artifacts/automata",
             "tracking_lost_behavior": "freeze",
@@ -293,13 +291,13 @@
                 "title": "M1911A1 Automatic Pistol",
                 "category": "USAFFE Sidearm",
                 "description": "The Colt M1911A1 .45 caliber automatic pistol was the standard sidearm of American officers and senior non-commissioned officers defending Bataan. Its powerful .45 ACP cartridge and dependable operation in the punishing jungle heat made it a trusted last-resort weapon. When ammunition ran out in the final days of Bataan's fall, many officers destroyed their M1911s rather than allow them to fall into Japanese hands.",
-                "location": "Officers' Armory Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Caliber": ".45 ACP",
-                    "Capacity": "7+1 rounds",
-                    "Weight": "1.13 kg",
-                    "Origin": "United States"
-                }
+                "location": "Officers' Armory Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Caliber", "value": ".45 ACP"},
+                    {"key": "Capacity", "value": "7+1 rounds"},
+                    {"key": "Weight", "value": "1.13 kg"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -326,13 +324,13 @@
                 "title": "M1918A2 Browning Automatic Rifle",
                 "category": "USAFFE Squad Automatic Weapon",
                 "description": "The Browning Automatic Rifle M1918A2 was the backbone of automatic firepower for USAFFE rifle squads during the Battle of Bataan. Capable of delivering sustained fire at up to 650 rounds per minute, each squad's BAR team suppressed Japanese infantry assaults through the dense Bataan jungle. Its reliability under tropical conditions made it one of the most valued weapons of the Bataan campaign.",
-                "location": "Heavy Weapons Gallery \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Caliber": ".30-06 Springfield",
-                    "Rate of Fire": "300-650 rpm",
-                    "Weight": "8.8 kg",
-                    "Origin": "United States"
-                }
+                "location": "Heavy Weapons Gallery — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Caliber", "value": ".30-06 Springfield"},
+                    {"key": "Rate of Fire", "value": "300-650 rpm"},
+                    {"key": "Weight", "value": "8.8 kg"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -359,14 +357,14 @@
                 "title": "M1903 Springfield Bolt-Action Rifle",
                 "category": "Filipino Infantry Weapon",
                 "description": "The M1903 Springfield was the primary service rifle of both Filipino and American USAFFE infantry at the outbreak of WWII. Chambered in .30-06 Springfield, this bolt-action rifle was accurate and reliable in Bataan's tropical jungle. Filipino soldiers of the Philippine Army, hastily mobilized in 1941, were issued the M1903 alongside the M1917 Enfield. Despite supply shortages throughout the siege, the Springfield remained a dependable weapon during the four-month Bataan defense.",
-                "location": "Weapons Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Caliber": ".30-06 Springfield",
-                    "Action": "Bolt-action",
-                    "Weight": "3.94 kg",
-                    "Effective Range": "914 m",
-                    "Origin": "United States"
-                }
+                "location": "Weapons Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Caliber", "value": ".30-06 Springfield"},
+                    {"key": "Action", "value": "Bolt-action"},
+                    {"key": "Weight", "value": "3.94 kg"},
+                    {"key": "Effective Range", "value": "914 m"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -393,14 +391,14 @@
                 "title": "M1917 Enfield Rifle",
                 "category": "Filipino Infantry Weapon",
                 "description": "The M1917 Enfield, a WWI-era bolt-action rifle rechambered for .30-06 Springfield, was reissued to Philippine Army troops in 1941 to supplement the limited M1903 Springfield supply. Produced in large numbers during WWI, it was distributed widely among the Filipino reserve divisions activated just months before the Japanese invasion. Despite its bulk, it proved a rugged and reliable weapon throughout the Bataan campaign.",
-                "location": "Weapons Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Caliber": ".30-06 Springfield",
-                    "Action": "Bolt-action",
-                    "Weight": "4.17 kg",
-                    "Effective Range": "823 m",
-                    "Origin": "United States"
-                }
+                "location": "Weapons Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Caliber", "value": ".30-06 Springfield"},
+                    {"key": "Action", "value": "Bolt-action"},
+                    {"key": "Weight", "value": "4.17 kg"},
+                    {"key": "Effective Range", "value": "823 m"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -420,9 +418,7 @@
             "gps_altitude": 0.0,
             "gps_geofence_radius_meters": 15.0,
             "soldier_id": "S-001",
-            "shared_soldier_ids": [
-                "S-003"
-            ],
+            "shared_soldier_ids": ["S-003"],
             "division_id": "D-21",
             "bundle_key": "artifacts/colt_45_pist",
             "tracking_lost_behavior": "freeze",
@@ -430,14 +426,14 @@
                 "title": "M1911A1 Colt .45 Pistol",
                 "category": "Filipino / American Sidearm",
                 "description": "The M1911A1 semi-automatic pistol was the standard sidearm issued to USAFFE officers, NCOs, and crew-served weapon teams during the Battle of Bataan. Its powerful .45 ACP cartridge delivered reliable stopping power in close-range jungle encounters. Both American and Filipino officers carried the Colt .45 as a symbol of rank and a last-resort weapon throughout the desperate four-month siege.",
-                "location": "Officers' Armory Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Caliber": ".45 ACP",
-                    "Capacity": "7+1 rounds",
-                    "Weight": "1.13 kg",
-                    "Action": "Semi-automatic",
-                    "Origin": "United States"
-                }
+                "location": "Officers' Armory Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Caliber", "value": ".45 ACP"},
+                    {"key": "Capacity", "value": "7+1 rounds"},
+                    {"key": "Weight", "value": "1.13 kg"},
+                    {"key": "Action", "value": "Semi-automatic"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -457,9 +453,7 @@
             "gps_altitude": 0.0,
             "gps_geofence_radius_meters": 15.0,
             "soldier_id": "S-001",
-            "shared_soldier_ids": [
-                "S-003"
-            ],
+            "shared_soldier_ids": ["S-003"],
             "division_id": "D-21",
             "bundle_key": "artifacts/bayonet",
             "tracking_lost_behavior": "freeze",
@@ -467,14 +461,14 @@
                 "title": "M1905/M1 Bayonet",
                 "category": "USAFFE Close-Combat Weapon",
                 "description": "The M1905 bayonet, designed for mounting on the M1903 Springfield rifle, featured a 40.6 cm blade for close-quarters combat. In the desperate final stages of the Battle of Bataan, when ammunition supplies were nearly exhausted, USAFFE officers ordered bayonet charges against advancing Japanese forces. The bayonet became a symbol of the defenders' grim determination to hold the line at all costs.",
-                "location": "Weapons Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Blade Length": "40.6 cm (M1905)",
-                    "Weight": "0.45 kg",
-                    "Material": "Carbon steel blade",
-                    "Compatible": "M1903 Springfield, M1 Garand",
-                    "Origin": "United States"
-                }
+                "location": "Weapons Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Blade Length", "value": "40.6 cm (M1905)"},
+                    {"key": "Weight", "value": "0.45 kg"},
+                    {"key": "Material", "value": "Carbon steel blade"},
+                    {"key": "Compatible", "value": "M1903 Springfield, M1 Garand"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -494,9 +488,7 @@
             "gps_altitude": 0.0,
             "gps_geofence_radius_meters": 15.0,
             "soldier_id": "S-001",
-            "shared_soldier_ids": [
-                "S-003"
-            ],
+            "shared_soldier_ids": ["S-003"],
             "division_id": "D-21",
             "bundle_key": "artifacts/pineapple_grenade",
             "tracking_lost_behavior": "freeze",
@@ -504,14 +496,14 @@
                 "title": "Mk 2 \"Pineapple\" Fragmentation Grenade",
                 "category": "USAFFE Infantry Explosive",
                 "description": "The Mk 2 fragmentation grenade, nicknamed the \"Pineapple\" for its segmented cast-iron body, was standard issue for USAFFE infantry at Bataan. Filled with 57g of TNT with a 4-5 second delay fuse, soldiers used it to break up Japanese banzai charges and clear fortified positions in the dense jungle. As the siege deepened, every remaining grenade was carefully rationed for the most critical defensive moments.",
-                "location": "Ordnance Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Weight": "595 g",
-                    "Filler": "57 g TNT",
-                    "Fuse Delay": "4-5 seconds",
-                    "Casualty Radius": "5-15 m",
-                    "Origin": "United States"
-                }
+                "location": "Ordnance Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Weight", "value": "595 g"},
+                    {"key": "Filler", "value": "57 g TNT"},
+                    {"key": "Fuse Delay", "value": "4-5 seconds"},
+                    {"key": "Casualty Radius", "value": "5-15 m"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -531,9 +523,7 @@
             "gps_altitude": 0.0,
             "gps_geofence_radius_meters": 15.0,
             "soldier_id": "S-001",
-            "shared_soldier_ids": [
-                "S-003"
-            ],
+            "shared_soldier_ids": ["S-003"],
             "division_id": "D-21",
             "bundle_key": "artifacts/cartridge_belt",
             "tracking_lost_behavior": "freeze",
@@ -541,13 +531,13 @@
                 "title": "M1923 Cartridge Belt",
                 "category": "USAFFE Load-Bearing Equipment",
                 "description": "The M1923 Dismounted Cartridge Belt held ten five-round clips of .30-06 Springfield ammunition, giving each rifleman immediate access to 50 rounds. Standard issue for both Filipino and American USAFFE infantry at Bataan, this web cotton belt kept vital ammunition organized and accessible during intense jungle fighting. As the siege lengthened and resupply was blocked by Japanese naval patrols, ammunition conservation became critical for every soldier.",
-                "location": "Equipment Hall \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Capacity": "50 rounds (.30-06)",
-                    "Pockets": "10 clip pockets",
-                    "Material": "Web cotton",
-                    "Origin": "United States"
-                }
+                "location": "Equipment Hall — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Capacity", "value": "50 rounds (.30-06)"},
+                    {"key": "Pockets", "value": "10 clip pockets"},
+                    {"key": "Material", "value": "Web cotton"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -567,9 +557,7 @@
             "gps_altitude": 0.0,
             "gps_geofence_radius_meters": 15.0,
             "soldier_id": "S-001",
-            "shared_soldier_ids": [
-                "S-003"
-            ],
+            "shared_soldier_ids": ["S-003"],
             "division_id": "D-21",
             "bundle_key": "artifacts/machine_gun",
             "tracking_lost_behavior": "freeze",
@@ -577,14 +565,14 @@
                 "title": "M1919A4 Browning .30 Cal Machine Gun",
                 "category": "USAFFE Support Weapon",
                 "description": "The M1919A4 Browning .30 caliber air-cooled machine gun was the primary medium support weapon of USAFFE infantry during the Battle of Bataan. Belt-fed and capable of 400-600 rounds per minute, Browning machine gun teams anchored defensive perimeters along the Abucay Hacienda line and the Orion-Bagac road, exacting a heavy toll on Japanese infantry assaults until the final capitulation in April 1942.",
-                "location": "Heavy Weapons Gallery \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Caliber": ".30-06 Springfield",
-                    "Rate of Fire": "400-600 rpm",
-                    "Weight": "14.1 kg",
-                    "Feed": "Belt-fed",
-                    "Origin": "United States"
-                }
+                "location": "Heavy Weapons Gallery — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Caliber", "value": ".30-06 Springfield"},
+                    {"key": "Rate of Fire", "value": "400-600 rpm"},
+                    {"key": "Weight", "value": "14.1 kg"},
+                    {"key": "Feed", "value": "Belt-fed"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -604,9 +592,7 @@
             "gps_altitude": 0.0,
             "gps_geofence_radius_meters": 15.0,
             "soldier_id": "S-001",
-            "shared_soldier_ids": [
-                "S-003"
-            ],
+            "shared_soldier_ids": ["S-003"],
             "division_id": "D-21",
             "bundle_key": "artifacts/canteen",
             "tracking_lost_behavior": "freeze",
@@ -614,13 +600,13 @@
                 "title": "M1910 Canteen with Cup & Cover",
                 "category": "USAFFE Field Survival Equipment",
                 "description": "The M1910 canteen and its aluminum cup were indispensable survival items for every USAFFE soldier at Bataan. In the oppressive tropical heat, dehydration, dysentery, and malaria were constant threats alongside Japanese bullets. Soldiers boiled contaminated water from jungle streams in their canteen cups when purification tablets ran out. As the siege deepened, clean drinking water became as critical to survival as ammunition.",
-                "location": "Field Equipment Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Capacity": "1 quart (0.95 L)",
-                    "Material": "Aluminum",
-                    "Cover": "Olive drab wool felt",
-                    "Origin": "United States"
-                }
+                "location": "Field Equipment Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Capacity", "value": "1 quart (0.95 L)"},
+                    {"key": "Material", "value": "Aluminum"},
+                    {"key": "Cover", "value": "Olive drab wool felt"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -647,13 +633,13 @@
                 "title": "Bamboo Stretcher",
                 "category": "Filipino Improvised Medical Equipment",
                 "description": "The bamboo stretcher was a vital piece of improvised medical equipment used by Filipino medics and soldiers during the Battle of Bataan. When standard canvas-and-pole litters were unavailable, Bataan's abundant bamboo was fashioned into stretchers to evacuate the wounded through dense jungle terrain. Field hospitals at Limay and Little Baguio were overwhelmed with casualties, and these improvised bamboo stretchers were essential for saving lives.",
-                "location": "Medical Equipment Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Material": "Local bamboo",
-                    "Construction": "Field-improvised",
-                    "Origin": "Philippines",
-                    "Year Used": "1942"
-                }
+                "location": "Medical Equipment Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Material", "value": "Local bamboo"},
+                    {"key": "Construction", "value": "Field-improvised"},
+                    {"key": "Origin", "value": "Philippines"},
+                    {"key": "Year Used", "value": "1942"}
+                ]
             }
         },
         {
@@ -680,14 +666,14 @@
                 "title": "Type 38 Arisaka Rifle",
                 "category": "Imperial Japanese Infantry Weapon",
                 "description": "The Type 38 Arisaka was the primary bolt-action infantry rifle of the Imperial Japanese Army during the assault on the Philippines and the Battle of Bataan. Notable for its unusual length of 127 cm, designed to compensate for the shorter stature of Japanese soldiers in bayonet combat, it was accurate and dependable in tropical conditions. Japanese soldiers of General Homma's 14th Army carried the Type 38 during relentless assaults on USAFFE defensive lines.",
-                "location": "Enemy Forces Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Caliber": "6.5x50mmSR",
-                    "Action": "Bolt-action",
-                    "Weight": "3.95 kg",
-                    "Length": "127 cm",
-                    "Origin": "Empire of Japan"
-                }
+                "location": "Enemy Forces Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Caliber", "value": "6.5x50mmSR"},
+                    {"key": "Action", "value": "Bolt-action"},
+                    {"key": "Weight", "value": "3.95 kg"},
+                    {"key": "Length", "value": "127 cm"},
+                    {"key": "Origin", "value": "Empire of Japan"}
+                ]
             }
         },
         {
@@ -714,14 +700,14 @@
                 "title": "Type 96 Light Machine Gun",
                 "category": "Imperial Japanese Support Weapon",
                 "description": "The Type 96 Light Machine Gun was the standard squad automatic weapon of Japanese infantry during the Battle of Bataan. Fed by a 30-round top-mounted magazine and chambered in 6.5x50mm Arisaka, it gave Japanese squads effective mobile fire support during assaults on USAFFE defensive positions. Its optical sight provided superior accuracy in jungle engagements along the Abucay line and during the brutal battles for the East and West Roads of Bataan.",
-                "location": "Enemy Forces Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Caliber": "6.5x50mmSR",
-                    "Capacity": "30-round magazine",
-                    "Rate of Fire": "550 rpm",
-                    "Weight": "9 kg",
-                    "Origin": "Empire of Japan"
-                }
+                "location": "Enemy Forces Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Caliber", "value": "6.5x50mmSR"},
+                    {"key": "Capacity", "value": "30-round magazine"},
+                    {"key": "Rate of Fire", "value": "550 rpm"},
+                    {"key": "Weight", "value": "9 kg"},
+                    {"key": "Origin", "value": "Empire of Japan"}
+                ]
             }
         },
         {
@@ -748,13 +734,13 @@
                 "title": "Type 89 Grenade Discharger",
                 "category": "Imperial Japanese Infantry Weapon",
                 "description": "The Type 89 Grenade Discharger, misnamed the \"knee mortar\" by Allied soldiers, was an extremely versatile and feared weapon of Japanese infantry squads at Bataan. Capable of launching grenade shells, 50mm mortar rounds, and smoke projectiles, it gave Japanese squads organic indirect-fire capability at the squad level. USAFFE soldiers found it particularly dangerous in dense jungle where its high-angle trajectories reached defenders behind cover.",
-                "location": "Enemy Forces Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Caliber": "50mm",
-                    "Range": "50-650 m",
-                    "Weight": "4.7 kg",
-                    "Origin": "Empire of Japan"
-                }
+                "location": "Enemy Forces Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Caliber", "value": "50mm"},
+                    {"key": "Range", "value": "50-650 m"},
+                    {"key": "Weight", "value": "4.7 kg"},
+                    {"key": "Origin", "value": "Empire of Japan"}
+                ]
             }
         },
         {
@@ -781,12 +767,12 @@
                 "title": "Japanese Rice Ration Sack",
                 "category": "Imperial Japanese Field Equipment",
                 "description": "The rice ration sack was a fundamental part of the Imperial Japanese soldier's field kit during the Bataan campaign. Japanese soldiers were trained to subsist largely on locally procured rice, reflecting Japanese military doctrine of field self-sufficiency. This relative self-sufficiency contrasted sharply with the catastrophic food crisis faced by USAFFE defenders, whose supply lines were cut by January 1942, reducing rations to a quarter of the standard daily allowance.",
-                "location": "Japanese Forces Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Material": "Cotton / Jute weave",
-                    "Capacity": "Approx. 3-day rice supply",
-                    "Origin": "Empire of Japan"
-                }
+                "location": "Japanese Forces Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Material", "value": "Cotton / Jute weave"},
+                    {"key": "Capacity", "value": "Approx. 3-day rice supply"},
+                    {"key": "Origin", "value": "Empire of Japan"}
+                ]
             }
         },
         {
@@ -813,13 +799,13 @@
                 "title": "Japanese Propaganda Leaflet",
                 "category": "Imperial Japanese Psychological Warfare",
                 "description": "Imperial Japanese forces dropped propaganda leaflets over Bataan by aircraft and fired them in artillery shells as a psychological warfare tool. These leaflets urged Filipino soldiers to abandon their American commanders, appealing to pan-Asian solidarity and promising good treatment as prisoners. Despite the desperate situation at Bataan, the vast majority of Filipino and American defenders rejected surrender appeals and continued fighting until General King's capitulation on April 9, 1942.",
-                "location": "Historical Documents \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Material": "Printed paper",
-                    "Delivery": "Aerial / Artillery shell",
-                    "Language": "English and Tagalog",
-                    "Origin": "Empire of Japan"
-                }
+                "location": "Historical Documents — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Material", "value": "Printed paper"},
+                    {"key": "Delivery", "value": "Aerial / Artillery shell"},
+                    {"key": "Language", "value": "English and Tagalog"},
+                    {"key": "Origin", "value": "Empire of Japan"}
+                ]
             }
         },
         {
@@ -846,14 +832,14 @@
                 "title": "M1 81mm Mortar",
                 "category": "American Artillery Weapon",
                 "description": "The M1 81mm Mortar provided USAFFE forces at Bataan with crucial medium indirect-fire support at the battalion level. Heavier and longer-ranged than the M2 60mm mortar, its powerful shells could destroy Japanese field fortifications and disrupt troop concentrations beyond the range of infantry weapons. During the defense of Bataan's I Corps and II Corps sectors, M1 81mm mortar crews played a vital role in blunting Japanese breakthrough attempts along the main battle line.",
-                "location": "Artillery Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Caliber": "81mm",
-                    "Maximum Range": "2,560 m",
-                    "Weight": "61.5 kg",
-                    "Shell Weight": "3.12 kg",
-                    "Origin": "United States"
-                }
+                "location": "Artillery Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Caliber", "value": "81mm"},
+                    {"key": "Maximum Range", "value": "2,560 m"},
+                    {"key": "Weight", "value": "61.5 kg"},
+                    {"key": "Shell Weight", "value": "3.12 kg"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -880,13 +866,13 @@
                 "title": "HBT Herringbone Twill Fatigue Uniform",
                 "category": "American Uniform",
                 "description": "The Herringbone Twill (HBT) two-piece fatigue uniform was the working and combat dress of American soldiers in the Pacific Theater during WWII. Made from durable twill-weave olive drab cotton, it was designed for tropical conditions. American soldiers of the USAFFE wore the HBT throughout the Battle of Bataan, and by the end of the four-month siege, many uniforms were in tatters from the relentless jungle fighting.",
-                "location": "Uniforms & Equipment Hall \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Material": "Herringbone Twill cotton",
-                    "Color": "Olive Drab",
-                    "Type": "Two-piece (jacket and trousers)",
-                    "Origin": "United States"
-                }
+                "location": "Uniforms & Equipment Hall — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Material", "value": "Herringbone Twill cotton"},
+                    {"key": "Color", "value": "Olive Drab"},
+                    {"key": "Type", "value": "Two-piece (jacket and trousers)"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -913,12 +899,12 @@
                 "title": "M1938 Canvas Leggings",
                 "category": "American Uniform Equipment",
                 "description": "The M1938 Canvas Leggings were worn over the lower leg and boot by American soldiers at Bataan. Made from olive drab canvas secured with metal hooks, they protected legs from thorns, insects, leeches, and mud during operations in the dense Bataan jungle. Filipino USAFFE soldiers also received canvas leggings as part of their standard equipment issue when stocks were available.",
-                "location": "Uniforms & Equipment Hall \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Material": "Canvas (olive drab)",
-                    "Fastening": "Metal hooks and eyelets",
-                    "Origin": "United States"
-                }
+                "location": "Uniforms & Equipment Hall — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Material", "value": "Canvas (olive drab)"},
+                    {"key": "Fastening", "value": "Metal hooks and eyelets"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -944,13 +930,13 @@
             "scroll": {
                 "title": "Army Service Shoe (Leather)",
                 "category": "American Uniform Equipment",
-                "description": "The standard-issue Army leather service shoe proved problematic in Bataan's jungle terrain, where mud, water crossings, and sharp terrain quickly deteriorated the leather. During the four-month siege, many shoes wore out beyond repair as the supply situation collapsed. By April 1942, some defenders of Bataan were fighting barefoot or wearing crude sandals fashioned from whatever materials were at hand \u00e2\u20ac\u201d a stark testament to the total failure of USAFFE supply lines.",
-                "location": "Uniforms & Equipment Hall \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Material": "Russet leather",
-                    "Type": "Low-quarter service shoe",
-                    "Origin": "United States"
-                }
+                "description": "The standard-issue Army leather service shoe proved problematic in Bataan's jungle terrain, where mud, water crossings, and sharp terrain quickly deteriorated the leather. During the four-month siege, many shoes wore out beyond repair as the supply situation collapsed. By April 1942, some defenders of Bataan were fighting barefoot or wearing crude sandals fashioned from whatever materials were at hand — a stark testament to the total failure of USAFFE supply lines.",
+                "location": "Uniforms & Equipment Hall — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Material", "value": "Russet leather"},
+                    {"key": "Type", "value": "Low-quarter service shoe"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -977,13 +963,13 @@
                 "title": "M2A2 Service Gas Mask",
                 "category": "USAFFE Protective Equipment",
                 "description": "The M2A2 Lightweight Service Gas Mask was issued to USAFFE soldiers as protection against potential Japanese chemical weapons use. In practice, Japanese forces did not deploy poison gas during the Bataan campaign, and the bulky masks became an additional burden for already overloaded soldiers battling food and ammunition shortages. The mask featured a canister filter providing protection against mustard gas, chlorine, and other chemical warfare agents.",
-                "location": "Protective Equipment Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Type": "Service Mask (lightweight)",
-                    "Protection": "Chemical warfare agents",
-                    "Canister Filter": "Yes",
-                    "Origin": "United States"
-                }
+                "location": "Protective Equipment Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Type", "value": "Service Mask (lightweight)"},
+                    {"key": "Protection", "value": "Chemical warfare agents"},
+                    {"key": "Canister Filter", "value": "Yes"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -1010,13 +996,13 @@
                 "title": "M1936 Web Pistol Belt",
                 "category": "USAFFE Load-Bearing Equipment",
                 "description": "The M1936 Web Pistol Belt was the primary load-bearing belt for USAFFE officers and pistol-armed soldiers at Bataan. Made from olive drab cotton webbing, it served as the foundation for attaching the M1916 holster, magazine pouches, first aid pouch, and canteen. Officers of both the Philippine Army and U.S. forces wore the M1936 pistol belt with their M1911A1 Colt .45 throughout the Bataan campaign.",
-                "location": "Equipment Hall \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Material": "Olive drab cotton webbing",
-                    "Buckle": "Open-end brass slide",
-                    "Compatible": "M1916 holster, pouches, canteen",
-                    "Origin": "United States"
-                }
+                "location": "Equipment Hall — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Material", "value": "Olive drab cotton webbing"},
+                    {"key": "Buckle", "value": "Open-end brass slide"},
+                    {"key": "Compatible", "value": "M1916 holster, pouches, canteen"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -1042,14 +1028,14 @@
             "scroll": {
                 "title": "M1936 Field Suspenders",
                 "category": "USAFFE Load-Bearing Equipment",
-                "description": "The M1936 Field Suspenders were paired with the M1936 Pistol Belt and M1923 Cartridge Belt to distribute the weight of a soldier's combat load during the Battle of Bataan. Made from heavy olive drab cotton webbing with metal wire hooks, they transferred equipment weight from the hips to the shoulders \u00e2\u20ac\u201d critical when soldiers carried ammunition, rations, and gear through Bataan's rugged jungle terrain for months of continuous fighting.",
-                "location": "Equipment Hall \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Material": "Olive drab cotton webbing",
-                    "Hooks": "Metal wire",
-                    "Compatible": "M1936 Pistol Belt, M1923 Cartridge Belt",
-                    "Origin": "United States"
-                }
+                "description": "The M1936 Field Suspenders were paired with the M1936 Pistol Belt and M1923 Cartridge Belt to distribute the weight of a soldier's combat load during the Battle of Bataan. Made from heavy olive drab cotton webbing with metal wire hooks, they transferred equipment weight from the hips to the shoulders — critical when soldiers carried ammunition, rations, and gear through Bataan's rugged jungle terrain for months of continuous fighting.",
+                "location": "Equipment Hall — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Material", "value": "Olive drab cotton webbing"},
+                    {"key": "Hooks", "value": "Metal wire"},
+                    {"key": "Compatible", "value": "M1936 Pistol Belt, M1923 Cartridge Belt"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -1075,13 +1061,13 @@
             "scroll": {
                 "title": "M1928 Haversack",
                 "category": "USAFFE Load-Bearing Equipment",
-                "description": "The M1928 Haversack was the standard individual field pack of American infantrymen at Bataan. Attached to the M1936 suspenders, it carried a soldier's rations, personal items, blanket roll, and spare ammunition. As the Bataan siege stretched into its fourth month and food rations were cut to one-quarter the standard daily allowance, haversacks that once carried days of field rations became depressingly light \u00e2\u20ac\u201d a grim reflection of the collapsing supply situation.",
-                "location": "Field Equipment Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Material": "Olive drab canvas",
-                    "Attachment": "M1936 Suspenders",
-                    "Origin": "United States"
-                }
+                "description": "The M1928 Haversack was the standard individual field pack of American infantrymen at Bataan. Attached to the M1936 suspenders, it carried a soldier's rations, personal items, blanket roll, and spare ammunition. As the Bataan siege stretched into its fourth month and food rations were cut to one-quarter the standard daily allowance, haversacks that once carried days of field rations became depressingly light — a grim reflection of the collapsing supply situation.",
+                "location": "Field Equipment Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Material", "value": "Olive drab canvas"},
+                    {"key": "Attachment", "value": "M1936 Suspenders"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -1107,13 +1093,13 @@
             "scroll": {
                 "title": "M1938 Canvas Map Case",
                 "category": "USAFFE Officer Field Equipment",
-                "description": "The M1938 Canvas Map Case was carried by USAFFE officers during the Battle of Bataan to protect maps, operational orders, and intelligence reports from tropical humidity and rain. Officers coordinating the complex defensive lines \u00e2\u20ac\u201d the Abucay-Mauban line and later the Orion-Bagac line \u00e2\u20ac\u201d relied on accurate topographic maps stored in these waterproof canvas cases to direct their troops across the rugged Bataan Peninsula.",
-                "location": "Officers' Equipment Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Material": "Waterproofed canvas",
-                    "Size": "Approx. 28x38 cm",
-                    "Origin": "United States"
-                }
+                "description": "The M1938 Canvas Map Case was carried by USAFFE officers during the Battle of Bataan to protect maps, operational orders, and intelligence reports from tropical humidity and rain. Officers coordinating the complex defensive lines — the Abucay-Mauban line and later the Orion-Bagac line — relied on accurate topographic maps stored in these waterproof canvas cases to direct their troops across the rugged Bataan Peninsula.",
+                "location": "Officers' Equipment Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Material", "value": "Waterproofed canvas"},
+                    {"key": "Size", "value": "Approx. 28x38 cm"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -1139,14 +1125,14 @@
             "scroll": {
                 "title": "M1907 Rifle Sling",
                 "category": "USAFFE Infantry Equipment",
-                "description": "The M1907 leather rifle sling was standard issue for the M1903 Springfield and M1 Garand rifles carried by every USAFFE infantryman at Bataan. More than a carrying strap, the properly adjusted M1907 sling stabilized a rifleman's aim in the standing, kneeling, and prone positions \u00e2\u20ac\u201d techniques critical for the long-range rifle fire used to slow advancing Japanese infantry. As defenders retreated southward through the jungle, slings kept rifles accessible during forced marches under fire.",
-                "location": "Field Equipment Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Material": "Russet leather",
-                    "Width": "2.5 cm",
-                    "Compatible": "M1903 Springfield, M1 Garand",
-                    "Origin": "United States"
-                }
+                "description": "The M1907 leather rifle sling was standard issue for the M1903 Springfield and M1 Garand rifles carried by every USAFFE infantryman at Bataan. More than a carrying strap, the properly adjusted M1907 sling stabilized a rifleman's aim in the standing, kneeling, and prone positions — techniques critical for the long-range rifle fire used to slow advancing Japanese infantry. As defenders retreated southward through the jungle, slings kept rifles accessible during forced marches under fire.",
+                "location": "Field Equipment Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Material", "value": "Russet leather"},
+                    {"key": "Width", "value": "2.5 cm"},
+                    {"key": "Compatible", "value": "M1903 Springfield, M1 Garand"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -1173,14 +1159,14 @@
                 "title": "M1910 T-Handle Entrenching Tool",
                 "category": "USAFFE Field Engineering Equipment",
                 "description": "The M1910 T-Handle Entrenching Tool was carried by every USAFFE infantryman defending Bataan. The ability to quickly dig a fighting foxhole was the difference between life and death under relentless Japanese artillery bombardment. USAFFE engineers and infantry units used entrenching tools to construct the extensive defensive lines, anti-tank ditches, and machine gun positions that enabled the four-month resistance on the Bataan Peninsula.",
-                "location": "Field Equipment Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Weight": "0.86 kg",
-                    "Blade": "Steel spade",
-                    "Handle": "Wood T-grip",
-                    "Action": "Folding",
-                    "Origin": "United States"
-                }
+                "location": "Field Equipment Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Weight", "value": "0.86 kg"},
+                    {"key": "Blade", "value": "Steel spade"},
+                    {"key": "Handle", "value": "Wood T-grip"},
+                    {"key": "Action", "value": "Folding"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -1207,13 +1193,13 @@
                 "title": "M1938 Lensatic Compass",
                 "category": "USAFFE Navigation Equipment",
                 "description": "The M1938 Lensatic Compass was the standard military compass issued to American officers and NCOs during the Bataan campaign. Essential for navigation through the dense jungle and mountainous terrain of the Bataan Peninsula, it allowed patrols to maintain direction even when landmarks were obscured by the jungle canopy. USAFFE scouts and patrol leaders relied on their lensatic compass for night movements and flanking operations against Japanese positions.",
-                "location": "Officers' Equipment Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Type": "Lensatic (liquid-damped)",
-                    "Accuracy": "+/- 1 degree",
-                    "Material": "Aluminum housing",
-                    "Origin": "United States"
-                }
+                "location": "Officers' Equipment Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Type", "value": "Lensatic (liquid-damped)"},
+                    {"key": "Accuracy", "value": "+/- 1 degree"},
+                    {"key": "Material", "value": "Aluminum housing"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -1239,14 +1225,14 @@
             "scroll": {
                 "title": "EE-8 Field Telephone",
                 "category": "USAFFE Communications Equipment",
-                "description": "The EE-8 Field Telephone was the primary tactical communications device used by USAFFE units during the Battle of Bataan. Connected by WD-1 telephone wire strung between command posts and frontline units, the EE-8 enabled real-time coordination of defensive fire and troop movements. USAFFE signal corps soldiers worked continuously under fire to repair telephone lines cut by Japanese artillery \u00e2\u20ac\u201d when wire was destroyed, runners and radio took over.",
-                "location": "Communications Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Type": "Magneto-powered field telephone",
-                    "Wire Range": "Up to 35 km",
-                    "Weight": "2.3 kg",
-                    "Origin": "United States"
-                }
+                "description": "The EE-8 Field Telephone was the primary tactical communications device used by USAFFE units during the Battle of Bataan. Connected by WD-1 telephone wire strung between command posts and frontline units, the EE-8 enabled real-time coordination of defensive fire and troop movements. USAFFE signal corps soldiers worked continuously under fire to repair telephone lines cut by Japanese artillery — when wire was destroyed, runners and radio took over.",
+                "location": "Communications Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Type", "value": "Magneto-powered field telephone"},
+                    {"key": "Wire Range", "value": "Up to 35 km"},
+                    {"key": "Weight", "value": "2.3 kg"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -1272,14 +1258,14 @@
             "scroll": {
                 "title": "Atabrine (Quinacrine) Medicine",
                 "category": "USAFFE Medical Supply",
-                "description": "Atabrine \u00e2\u20ac\u201d quinacrine hydrochloride \u00e2\u20ac\u201d was the synthetic anti-malarial drug administered to American and Filipino USAFFE soldiers at Bataan. Malaria was catastrophic among the defenders: by the end of the siege, an estimated 80-90% of all USAFFE soldiers suffered from the disease. With quinine exhausted and Atabrine stocks critically low by early 1942, malaria incapacitated thousands of defenders who might otherwise have held the line. A small bottle of Atabrine became one of the most valuable objects in Bataan.",
-                "location": "Medical Display \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Active Ingredient": "Quinacrine HCl",
-                    "Dose": "100mg tablets",
-                    "Use": "Anti-malarial prophylaxis and treatment",
-                    "Origin": "United States"
-                }
+                "description": "Atabrine — quinacrine hydrochloride — was the synthetic anti-malarial drug administered to American and Filipino USAFFE soldiers at Bataan. Malaria was catastrophic among the defenders: by the end of the siege, an estimated 80-90% of all USAFFE soldiers suffered from the disease. With quinine exhausted and Atabrine stocks critically low by early 1942, malaria incapacitated thousands of defenders who might otherwise have held the line. A small bottle of Atabrine became one of the most valuable objects in Bataan.",
+                "location": "Medical Display — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Active Ingredient", "value": "Quinacrine HCl"},
+                    {"key": "Dose", "value": "100mg tablets"},
+                    {"key": "Use", "value": "Anti-malarial prophylaxis and treatment"},
+                    {"key": "Origin", "value": "United States"}
+                ]
             }
         },
         {
@@ -1308,12 +1294,12 @@
                 "category": "USAFFE Medical Equipment",
                 "description": "The M1942 First Aid Pouch was standard-issue medical equipment carried by every USAFFE infantryman at Bataan. Each pouch contained a field dressing bandage, iodine swab, sulfanilamide powder for wound infection, and a morphine syrette for pain. During the Bataan Death March and the siege itself, medics and soldiers alike depended on these pouches to treat wounds under fire — but supplies ran critically short by early 1942. Both Filipino and American soldiers shared whatever medical supplies remained, reflecting the combined USAFFE spirit of the Bataan defenders.",
                 "location": "Medical Display — Mt. Samat Shrine",
-                "specs": {
-                    "Contents": "Field dressing, iodine, sulfanilamide, morphine syrette",
-                    "Issue": "Standard USAFFE infantryman kit",
-                    "Origin": "United States",
-                    "Year": "1942"
-                }
+                "specs": [
+                    {"key": "Contents", "value": "Field dressing, iodine, sulfanilamide, morphine syrette"},
+                    {"key": "Issue", "value": "Standard USAFFE infantryman kit"},
+                    {"key": "Origin", "value": "United States"},
+                    {"key": "Year", "value": "1942"}
+                ]
             }
         },
         {
@@ -1334,12 +1320,12 @@
                 "title": "Bolo Knife",
                 "category": "Filipino Infantry Weapon",
                 "description": "Standard-issue weapon of Filipino guerrilla fighters during the Battle of Bataan, 1942. Used by soldiers of the USAFFE Philippine Army in close-combat situations across the jungle terrain of Bataan.",
-                "location": "Weapons Display, West Wing \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Blade Length": "45 cm",
-                    "Origin": "Philippines",
-                    "Year Used": "1941-1942"
-                }
+                "location": "Weapons Display, West Wing — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Blade Length", "value": "45 cm"},
+                    {"key": "Origin", "value": "Philippines"},
+                    {"key": "Year Used", "value": "1941-1942"}
+                ]
             }
         },
         {
@@ -1360,13 +1346,13 @@
                 "title": "Type 38 Arisaka Rifle",
                 "category": "Imperial Infantry Weapon",
                 "description": "Primary bolt-action rifle of the Imperial Japanese Army during the Battle of Bataan, 1942. Known for its remarkable length and accuracy, designed by Colonel Arisaka Nariakira.",
-                "location": "North Entrance \u00e2\u20ac\u201d Memorial Grounds",
-                "specs": {
-                    "Cartridge": "6.5x50mmSR",
-                    "Action": "Bolt-action",
-                    "Weight": "3.95 kg",
-                    "Origin": "Empire of Japan"
-                }
+                "location": "North Entrance — Memorial Grounds",
+                "specs": [
+                    {"key": "Cartridge", "value": "6.5x50mmSR"},
+                    {"key": "Action", "value": "Bolt-action"},
+                    {"key": "Weight", "value": "3.95 kg"},
+                    {"key": "Origin", "value": "Empire of Japan"}
+                ]
             }
         },
         {
@@ -1387,12 +1373,12 @@
                 "title": "21st Division - Mountain Watchers",
                 "category": "Philippine Army Division",
                 "description": "The 21st Division was one of the ten reserve divisions of the Philippine Army mobilized in 1941. They defended the northern sector of the Bataan Peninsula during the fierce winter offensive.",
-                "location": "Division Emblems Hall \u00e2\u20ac\u201d Mt. Samat Shrine",
-                "specs": {
-                    "Activated": "September 1, 1941",
-                    "Area Defended": "North Bataan",
-                    "Commander": "Brig. Gen. Mateo Capinpin"
-                }
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {"key": "Activated", "value": "September 1, 1941"},
+                    {"key": "Area Defended", "value": "North Bataan"},
+                    {"key": "Commander", "value": "Brig. Gen. Mateo Capinpin"}
+                ]
             }
         },
         {
@@ -1413,12 +1399,12 @@
                 "title": "Dambana ng Kagitingan",
                 "category": "National Shrine",
                 "description": "The Shrine of Valor stands atop Mt. Samat in Bataan, Philippines. Built to commemorate the gallantry and heroism of Filipino and American soldiers during the Battle of Bataan in World War II.",
-                "location": "Summit \u00e2\u20ac\u201d Mt. Samat National Shrine",
-                "specs": {
-                    "Height": "92 meters",
-                    "Constructed": "1966",
-                    "Dedicated": "April 9, 1966"
-                }
+                "location": "Summit — Mt. Samat National Shrine",
+                "specs": [
+                    {"key": "Height", "value": "92 meters"},
+                    {"key": "Constructed", "value": "1966"},
+                    {"key": "Dedicated", "value": "April 9, 1966"}
+                ]
             }
         }
     ],

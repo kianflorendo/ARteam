@@ -3,17 +3,13 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
-/// <summary>
-/// Ensures the AR camera background renders the device camera feed.
-///
-/// Root causes addressed:
-/// 1. alpha=0 backgroundColor composites as white on Android - use Color.black.
-/// 2. ARCameraBackground loses frameReceived subscription after ARSession
-///    disable/enable cycles - force a disable->enable cycle to re-subscribe.
-/// 3. ARSession can get stuck at SessionInitializing outdoors - auto-reset
-///    after 15 seconds to restart the AR initialization sequence.
-/// 4. ARCameraManager can be unexpectedly disabled - ensure it stays enabled.
-/// </summary>
+// Ensures the AR camera background renders the device camera feed. Addresses:
+//   1. alpha=0 backgroundColor composites as white on Android — use Color.black.
+//   2. ARCameraBackground loses frameReceived subscription after ARSession disable/enable
+//      cycles — force a disable→enable cycle to re-subscribe.
+//   3. ARSession can get stuck at SessionInitializing outdoors — auto-reset after 30 s
+//      to restart the AR initialization sequence (up to MAX_RESETS = 3 times = 90 s).
+//   4. ARCameraManager can be unexpectedly disabled — ensure it stays enabled.
 [DefaultExecutionOrder(-120)]
 public class ARCameraBackgroundEnforcer : MonoBehaviour
 {
@@ -23,8 +19,8 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
 
     private bool _applied;
     private float _stuckTimer;
-    private int _resetCount;        // number of stuck-resets attempted this session
-    private const int MAX_RESETS = 3; // give up after 3 x 30 s = 90 s of stuck time
+    private int _resetCount;
+    private const int MAX_RESETS = 3;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void EnsureExists()
@@ -63,7 +59,6 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
 
             _stuckTimer += Time.unscaledDeltaTime;
 
-            // Allow up to MAX_RESETS attempts, one every 30 s.
             if (_stuckTimer > 30f && _resetCount < MAX_RESETS)
             {
                 _stuckTimer = 0f;
@@ -144,7 +139,7 @@ public class ARCameraBackgroundEnforcer : MonoBehaviour
             return;
         }
 
-        // ARCameraDisplay owns the background enabled state after the first
-        // CPU frame. Keeping it alive here would re-introduce the white OES bug.
+        // ARCameraDisplay owns the background enabled state after the first CPU frame.
+        // Keeping it alive here would re-introduce the white OES bug.
     }
 }

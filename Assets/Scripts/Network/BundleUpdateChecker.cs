@@ -1,16 +1,3 @@
-﻿// ============================================================
-// BundleUpdateChecker.cs
-// Location: Assets/Scripts/Network/BundleUpdateChecker.cs
-// Mt. Samat AR Scavenger Hunt -- Terra App
-//
-// On app launch with internet:
-//   1. Fetch manifest.json from LFS
-//   2. Compare version with local manifest version
-//   3. If newer: download updated manifest silently
-//   4. User is never blocked -- plays with existing content
-//      while update runs in background
-// ============================================================
-
 using System;
 using System.Collections;
 using System.IO;
@@ -19,32 +6,23 @@ using UnityEngine.Networking;
 
 public class BundleUpdateChecker : MonoBehaviour
 {
-    // -- Singleton --
     public static BundleUpdateChecker Instance { get; private set; }
 
-    // -- Events --
     public static event Action<string> OnUpdateAvailable;
     public static event Action OnUpdateComplete;
     public static event Action<string> OnUpdateFailed;
 
-    // -- LFS Configuration --
     [Header("LFS Configuration")]
     [Tooltip("Set to your GitHub LFS raw URL before deploying")]
     public string lfsBaseUrl = "https://media.githubusercontent.com/media/NoContextOrg/anino-assets/main/";
 
     private const string MANIFEST_LFS_PATH = "manifest/manifest.json";
 
-    // -- State --
     private bool _isChecking = false;
     private const float CHECK_TIMEOUT_SECONDS = 10f;
 
-    // -- File paths --
     private string LocalManifestPath =>
         Path.Combine(Application.persistentDataPath, "manifest.json");
-
-    // ============================================================
-    //  Unity lifecycle
-    // ============================================================
 
     private void Awake()
     {
@@ -62,16 +40,11 @@ public class BundleUpdateChecker : MonoBehaviour
         StartCoroutine(CheckForUpdates());
     }
 
-    // ============================================================
-    //  Main update check flow
-    // ============================================================
-
     public IEnumerator CheckForUpdates()
     {
         if (_isChecking) yield break;
         _isChecking = true;
 
-        // Step 1 -- Check internet connectivity
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
             Debug.Log("[BundleUpdateChecker] No internet. Using bundled assets.");
@@ -81,7 +54,6 @@ public class BundleUpdateChecker : MonoBehaviour
 
         Debug.Log("[BundleUpdateChecker] Internet available. Checking for updates...");
 
-        // Step 2 -- Fetch remote manifest.json from LFS
         string remoteManifestUrl = lfsBaseUrl + MANIFEST_LFS_PATH;
         string remoteJson = null;
 
@@ -108,7 +80,6 @@ public class BundleUpdateChecker : MonoBehaviour
             yield break;
         }
 
-        // Step 3 -- Parse remote version
         string remoteVersion = ParseVersion(remoteJson);
         if (string.IsNullOrEmpty(remoteVersion))
         {
@@ -117,7 +88,6 @@ public class BundleUpdateChecker : MonoBehaviour
             yield break;
         }
 
-        // Step 4 -- Compare with local version
         string localVersion = ManifestLoader.Instance != null
             ? ManifestLoader.Instance.GetVersion()
             : "0.0.0";
@@ -131,7 +101,6 @@ public class BundleUpdateChecker : MonoBehaviour
             yield break;
         }
 
-        // Step 5 -- Newer version found -- save updated manifest
         Debug.Log($"[BundleUpdateChecker] New content available: v{remoteVersion}. " +
                   "Downloading silently in background...");
         OnUpdateAvailable?.Invoke(remoteVersion);
@@ -140,10 +109,6 @@ public class BundleUpdateChecker : MonoBehaviour
 
         _isChecking = false;
     }
-
-    // ============================================================
-    //  Save updated manifest
-    // ============================================================
 
     private IEnumerator SaveUpdatedManifest(string json, string version)
     {
@@ -162,10 +127,6 @@ public class BundleUpdateChecker : MonoBehaviour
 
         yield return null;
     }
-
-    // ============================================================
-    //  Helpers
-    // ============================================================
 
     private string ParseVersion(string json)
     {

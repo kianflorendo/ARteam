@@ -1,17 +1,3 @@
-// ============================================================
-// NavigationManager.cs
-// Location: Assets/Scripts/UI/NavigationManager.cs
-// Mt. Samat AR — manages all screen switching.
-//
-// Pre-login flow:  MainMenuScreen → RegisterScreen / HowToPlayScreen
-// Main app flow:   5-tab nav (Home / Soldier / AR Scan / Awards / Profile)
-//
-// All references are [SerializeField] — wire once in the Prefab
-// Editor by dragging GameObjects / components to each field.
-// Coworkers can rename or restructure the hierarchy freely without
-// breaking any code paths.
-// ============================================================
-
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,18 +6,15 @@ public class NavigationManager : MonoBehaviour
 {
     public static NavigationManager Instance { get; private set; }
 
-    // ── Groups ───────────────────────────────────────────────
     [Header("Groups")]
     [SerializeField] private GameObject _preLoginGroup;
     [SerializeField] private GameObject _mainAppGroup;
 
-    // ── Pre-login screens ────────────────────────────────────
     [Header("Pre-Login Screens")]
     [SerializeField] private GameObject _mainMenuScreen;
     [SerializeField] private GameObject _registerScreen;
     [SerializeField] private GameObject _howToPlayScreen;
 
-    // ── Main app screens ─────────────────────────────────────
     [Header("Main App Screens")]
     [SerializeField] private GameObject _topBar;
     [SerializeField] private GameObject _homeScreen;
@@ -41,22 +24,16 @@ public class NavigationManager : MonoBehaviour
     [SerializeField] private GameObject _profileScreen;
     [SerializeField] private GameObject _settingsScreen;
 
-    // ── Debug overlay (only active on ARScan) ───────────────
     [Header("Debug Panel")]
     [SerializeField] private GameObject _arDebugPanel;
 
-    // ── AR action panels (only active on ARScan) ─────────────
-    // After rebuilding the UI hierarchy via UIHierarchySetup, drag
-    // AR_ActionPanel and AR_CollectBanner from the Hierarchy into these fields.
     [Header("AR Action Panels")]
     [SerializeField] private GameObject _artifactActionPanel;
     [SerializeField] private GameObject _collectNotificationBanner;
 
-    // ── Bottom nav bar (hidden on ARScan for full-screen AR) ─
     [Header("Bottom Nav Bar")]
     [SerializeField] private GameObject _bottomNavBar;
 
-    // ── Bottom nav buttons ───────────────────────────────────
     [Header("Nav Tab Buttons")]
     [SerializeField] private Button _homeTabBtn;
     [SerializeField] private Button _soldierTabBtn;
@@ -64,7 +41,6 @@ public class NavigationManager : MonoBehaviour
     [SerializeField] private Button _awardsTabBtn;
     [SerializeField] private Button _profileTabBtn;
 
-    // ── Bottom nav tab labels (for active-state colouring) ───
     [Header("Nav Tab Labels")]
     [SerializeField] private TextMeshProUGUI _homeTabLabel;
     [SerializeField] private TextMeshProUGUI _soldierTabLabel;
@@ -74,10 +50,6 @@ public class NavigationManager : MonoBehaviour
 
     private static readonly Color TAB_ACTIVE   = new Color(0.102f, 0.102f, 0.102f);
     private static readonly Color TAB_INACTIVE = new Color(0.471f, 0.443f, 0.424f);
-
-    // ─────────────────────────────────────────────────────────
-    //  Unity lifecycle
-    // ─────────────────────────────────────────────────────────
 
     private void Awake()
     {
@@ -107,19 +79,14 @@ public class NavigationManager : MonoBehaviour
         _profileTabBtn?.onClick.AddListener(() => ShowScreen("Profile"));
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  Public API
-    // ─────────────────────────────────────────────────────────
-
     public void ShowPreLoginScreen(string screenName)
     {
         _preLoginGroup?.SetActive(true);
         _mainAppGroup?.SetActive(false);
 
-        // Camera feed must never show on pre-login screens
+        // Camera feed must never show on pre-login screens.
         ARCameraDisplay.SetSuppressed(true);
 
-        // Ensure AR overlay panels are hidden during pre-login
         if (_arDebugPanel             != null) _arDebugPanel.SetActive(false);
         if (_artifactActionPanel      != null) _artifactActionPanel.SetActive(false);
         if (_collectNotificationBanner != null) _collectNotificationBanner.SetActive(false);
@@ -147,15 +114,14 @@ public class NavigationManager : MonoBehaviour
         Show(_profileScreen,  screenName == "Profile");
         Show(_settingsScreen, screenName == "Settings");
 
-        // Camera feed: only show on ARScan, suppressed on all other screens
+        // Camera feed only on ARScan; suppressed elsewhere.
         ARCameraDisplay.SetSuppressed(screenName != "ARScan");
 
-        // Debug panel and AR action panels only visible on ARScan
         if (_arDebugPanel             != null) _arDebugPanel.SetActive(screenName == "ARScan");
         if (_artifactActionPanel      != null) _artifactActionPanel.SetActive(screenName == "ARScan");
         if (_collectNotificationBanner != null) _collectNotificationBanner.SetActive(screenName == "ARScan");
 
-        // TopBar hidden on screens that have their own custom header
+        // TopBar hidden on screens that have their own custom header.
         if (_topBar != null) _topBar.SetActive(
             screenName != "ARScan" &&
             screenName != "Soldier" &&
@@ -169,10 +135,6 @@ public class NavigationManager : MonoBehaviour
 
         Debug.Log($"[NavigationManager] MainApp → {screenName}");
     }
-
-    // ─────────────────────────────────────────────────────────
-    //  Helpers
-    // ─────────────────────────────────────────────────────────
 
     private void SetActiveTab(string screenName)
     {

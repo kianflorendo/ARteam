@@ -2,19 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-/// <summary>
-/// Artifact card used in Soldier Inventory Screen
-/// Shows: artifact image, name, "ACQUIRED" badge, checkmark, description
-/// Matches Terra Figma design: horizontal card with image on left
-/// </summary>
 public class SoldierArtifactCard : MonoBehaviour
 {
     [Header("UI Elements")]
     public Image artifactImage;
-    public TextMeshProUGUI artifactNameText;        // "M1 Garand"
-    public TextMeshProUGUI acquiredBadge;           // "ACQUIRED" badge (green pill)
-    public GameObject checkmarkIcon;                // Green checkmark
-    public TextMeshProUGUI descriptionText;         // Short description
+    public TextMeshProUGUI artifactNameText;
+    public TextMeshProUGUI acquiredBadge;
+    public GameObject checkmarkIcon;
+    public TextMeshProUGUI descriptionText;
 
     private ArtifactData _artifact;
     private bool _isCollected;
@@ -35,14 +30,11 @@ public class SoldierArtifactCard : MonoBehaviour
 
         if (checkmarkIcon != null)
             checkmarkIcon.SetActive(isCollected);
-
-        // TODO: Load artifactImage from Addressables using artifact.bundle_key
     }
 
     public void OnCardClicked()
     {
         AudioManager.Instance?.PlayUITapSFX();
         Debug.Log($"[SoldierArtifactCard] Clicked: {_artifact.id}");
-        // TODO: Show artifact detail popup
     }
 }

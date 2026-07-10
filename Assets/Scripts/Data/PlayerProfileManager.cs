@@ -1,9 +1,3 @@
-// ============================================================
-// PlayerProfileManager.cs
-// Location: Assets/Scripts/Data/PlayerProfileManager.cs
-// Mt. Samat AR — stores player registration data in PlayerPrefs.
-// ============================================================
-
 using UnityEngine;
 
 public class PlayerProfileManager : MonoBehaviour

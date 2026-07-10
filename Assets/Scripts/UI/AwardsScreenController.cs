@@ -1,10 +1,3 @@
-// ============================================================
-// AwardsScreenController.cs
-// Location: Assets/Scripts/UI/AwardsScreenController.cs
-// Mt. Samat AR — Awards list screen.
-// All references are [SerializeField] — wire in Prefab Editor.
-// ============================================================
-
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

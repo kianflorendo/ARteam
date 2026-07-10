@@ -1,22 +1,10 @@
-// ============================================================
-// ARPlaneDisabler.cs
-// Location: Assets/Scripts/AR/ARPlaneDisabler.cs
-// Mt. Samat AR Scavenger Hunt — Terra App
-//
-// The app uses GPS distance-based spawning and image tracking —
-// it does NOT use AR plane detection for any feature. However,
-// ARPlaneManager in the XR Origin prefab is enabled by default
-// and causes ARCore to detect and RENDER floor/wall/table planes
-// as large white mesh overlays on top of the camera feed.
-//
-// This script permanently disables ARPlaneManager at startup,
-// destroys any already-spawned plane trackables, and subscribes
-// to the changed event so nothing leaks through later.
-// ============================================================
-
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
+// The app uses GPS distance-based spawning and image tracking — not plane detection.
+// ARPlaneManager is enabled by default in the XR Origin prefab and would otherwise
+// render detected floor/wall/table planes as large white mesh overlays on top of the
+// camera feed. This script permanently disables it and kills any pre-spawned planes.
 [DefaultExecutionOrder(-130)]
 public class ARPlaneDisabler : MonoBehaviour
 {
@@ -36,7 +24,6 @@ public class ARPlaneDisabler : MonoBehaviour
 
         _planeManager.enabled = false;
 
-        // Destroy any planes that loaded before we disabled the manager.
         foreach (var plane in _planeManager.trackables)
             Destroy(plane.gameObject);
 

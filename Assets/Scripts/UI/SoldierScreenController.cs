@@ -1,14 +1,3 @@
-// ============================================================
-// SoldierScreenController.cs
-// Location: Assets/Scripts/UI/SoldierScreenController.cs
-// Mt. Samat AR — Soldier tab: artifact checklist per soldier.
-//
-// Figma: carousel (prev/next) + progress bar + ITEMS TO FIND
-// list with per-artifact collected checkmarks + Scan Next Item.
-// All static references are [SerializeField] — wire in Prefab Editor.
-// Artifact rows are created dynamically at runtime.
-// ============================================================
-
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -16,10 +5,8 @@ using UnityEngine.UI;
 
 public class SoldierScreenController : MonoBehaviour
 {
-    // ── Soldier ID cycle order ────────────────────────────
     private static readonly string[] SOLDIER_IDS = { "S-001", "S-002", "S-003" };
 
-    // ── Serialized references (wire in Prefab Editor) ────
     [Header("Carousel")]
     [SerializeField] private Image  _centerAvatar;
     [SerializeField] private Button _prevBtn;
@@ -34,20 +21,14 @@ public class SoldierScreenController : MonoBehaviour
     [SerializeField] private Transform _artifactListContainer;
     [SerializeField] private Button    _scanNextItemBtn;
 
-    // ── Runtime state ────────────────────────────────────
     private int                _currentIndex;
     private readonly List<GameObject> _rows = new List<GameObject>();
 
-    // ── Colours (match UIHierarchySetup palette) ─────────
     private static readonly Color COL_BLACK   = new Color(0.102f, 0.102f, 0.102f);
     private static readonly Color COL_WHITE   = Color.white;
     private static readonly Color COL_GRAY_D9 = new Color(0.851f, 0.851f, 0.851f);
     private static readonly Color COL_GRAY_E8 = new Color(0.910f, 0.910f, 0.910f);
     private static readonly Color COL_GRAY_88 = new Color(0.533f, 0.533f, 0.533f);
-
-    // ─────────────────────────────────────────────────────
-    //  Unity lifecycle
-    // ─────────────────────────────────────────────────────
 
     private void Awake()
     {
@@ -61,10 +42,6 @@ public class SoldierScreenController : MonoBehaviour
         SyncIndex();
         RefreshDisplay();
     }
-
-    // ─────────────────────────────────────────────────────
-    //  Refresh
-    // ─────────────────────────────────────────────────────
 
     private void SyncIndex()
     {
@@ -82,21 +59,16 @@ public class SoldierScreenController : MonoBehaviour
         SoldierData data       = ManifestLoader.Instance?.GetSoldier(soldierId);
         bool        unlocked   = InventoryManager.Instance?.IsSoldierUnlocked(soldierId) ?? false;
 
-        // Soldier name
         if (_soldierNameLabel != null)
         {
             string nat = data?.nationality ?? "Filipino";
             _soldierNameLabel.text = nat.ToUpper() + " SOLDIER";
         }
 
-        // Center avatar: black when unlocked, gray when locked
         if (_centerAvatar != null)
             _centerAvatar.color = unlocked ? COL_BLACK : COL_GRAY_D9;
 
-        // Progress bar and count
         RefreshProgress(data, unlocked);
-
-        // Artifact rows
         RebuildArtifactList(data, unlocked);
     }
 
@@ -119,10 +91,6 @@ public class SoldierScreenController : MonoBehaviour
         if (_progressBarFill    != null)
             _progressBarFill.fillAmount = total > 0 ? (float)found / total : 0f;
     }
-
-    // ─────────────────────────────────────────────────────
-    //  Dynamic row builder
-    // ─────────────────────────────────────────────────────
 
     private void RebuildArtifactList(SoldierData data, bool unlocked)
     {
@@ -170,14 +138,12 @@ public class SoldierScreenController : MonoBehaviour
         hlg.padding               = new RectOffset(20, 18, 0, 0);
         hlg.spacing               = 10;
 
-        // Artifact image square (placeholder)
         var img = new GameObject("ArtImg", typeof(RectTransform));
         img.transform.SetParent(row.transform, false);
         var imgLE = img.AddComponent<LayoutElement>();
         imgLE.preferredWidth = 40; imgLE.preferredHeight = 40;
         img.AddComponent<Image>().color = COL_GRAY_E8;
 
-        // Name bar flex container
         var flex = new GameObject("Flex", typeof(RectTransform));
         flex.transform.SetParent(row.transform, false);
         var flexLE = flex.AddComponent<LayoutElement>();
@@ -192,7 +158,6 @@ public class SoldierScreenController : MonoBehaviour
         barRT.sizeDelta = new Vector2(0, 15);
         bar.AddComponent<Image>().color = COL_GRAY_E8;
 
-        // Check circle
         var circle = new GameObject("CheckCircle", typeof(RectTransform));
         circle.transform.SetParent(row.transform, false);
         var circleLE = circle.AddComponent<LayoutElement>();
@@ -239,10 +204,6 @@ public class SoldierScreenController : MonoBehaviour
 
         _rows.Add(locked);
     }
-
-    // ─────────────────────────────────────────────────────
-    //  Button handlers
-    // ─────────────────────────────────────────────────────
 
     private void OnPrev()
     {

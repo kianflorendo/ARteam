@@ -1,12 +1,3 @@
-﻿// ============================================================
-// ScrollAnimator.cs
-// Location: Assets/Scripts/UI/ScrollAnimator.cs
-// Mt. Samat AR Scavenger Hunt — Terra App
-//
-// Simple scale-based unfurl animation for the scroll.
-// AnimateIn scales from 0→1; AnimateOut scales 1→0.
-// ============================================================
-
 using System.Collections;
 using UnityEngine;
 

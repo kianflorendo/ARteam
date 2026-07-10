@@ -1,29 +1,18 @@
-// ============================================================
-// ARCameraDisplay.cs
-// Location: Assets/Scripts/AR/ARCameraDisplay.cs
-// Mt. Samat AR Scavenger Hunt - Terra App
-//
-// CPU-path camera display that shows the real environment on Android
-// devices where ARCameraBackground's GPU OES blit renders white garbage.
-// This class replaces whatever ARCameraBackground draws with real camera
-// pixels from the CPU image path.
-//
-// Canvas modes:
-//   ScreenSpaceOverlay  (SessionInitializing)
-//     Renders on top of everything; no Camera reference needed.
-//     Covers the black AR-init clear color while ARCore starts up.
-//
-//   ScreenSpaceCamera at 15 m  (SessionTracking)
-//     Depth-tested in the 3D scene. GPS artifacts at ~1 m stay in
-//     front of this 15 m canvas.
-// ============================================================
-
 using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
+// CPU-path camera display that shows the real environment on Android devices where
+// ARCameraBackground's GPU OES blit renders white garbage. This class replaces what
+// ARCameraBackground draws with real camera pixels from the CPU image path.
+//
+// Canvas modes:
+//   ScreenSpaceOverlay  (SessionInitializing) — renders on top of everything; no Camera
+//     reference needed. Covers the black AR-init clear color while ARCore starts up.
+//   ScreenSpaceCamera at 15 m  (SessionTracking) — depth-tested in the 3D scene so GPS
+//     artifacts at ~1 m stay in front of this canvas.
 [DefaultExecutionOrder(-110)]
 public class ARCameraDisplay : MonoBehaviour
 {
@@ -36,7 +25,7 @@ public class ARCameraDisplay : MonoBehaviour
     public static bool IsSubsystemRunning { get; private set; }
 
     // Suppressed = true means the camera feed canvas is force-hidden regardless of
-    // AR session state. NavigationManager sets this to false only on ARScan screen.
+    // AR session state. NavigationManager sets this to false only on the ARScan screen.
     private static bool _isSuppressed = true;
 
     public static void SetSuppressed(bool suppressed)
@@ -105,14 +94,12 @@ public class ARCameraDisplay : MonoBehaviour
             && _cameraManager.subsystem != null
             && _cameraManager.subsystem.running;
 
-        // Cache ARCameraBackground reference once.
         if (_arBackground == null && Camera.main != null)
             _arBackground = Camera.main.GetComponent<ARCameraBackground>();
 
-        // Suppress ARCameraBackground while the CPU feed is live.
-        // ARCameraBackground's URP blit overwrites the CPU canvas with the
-        // white OES texture on every frame that contains a 3D artifact.
-        // Disable it as soon as the first real CPU frame is decoded.
+        // Suppress ARCameraBackground while the CPU feed is live. Its URP blit overwrites
+        // the CPU canvas with the white OES texture on every frame that contains a 3D
+        // artifact, so disable it as soon as the first real CPU frame is decoded.
         if (_hasTexture && _arBackground != null && _arBackground.enabled)
             _arBackground.enabled = false;
 

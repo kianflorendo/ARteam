@@ -1,10 +1,3 @@
-// ============================================================
-// MainMenuController.cs
-// Location: Assets/Scripts/UI/MainMenuController.cs
-// Mt. Samat AR — handles Main Menu screen buttons.
-// All references are [SerializeField] — wire in Prefab Editor.
-// ============================================================
-
 using UnityEngine;
 using UnityEngine.UI;
 

@@ -5,11 +5,6 @@ using UnityEngine;
 using UnityEngine.Android;
 #endif
 
-/// <summary>
-/// Starts Unity's offline location service and exposes a filtered GPS fix.
-/// GPS is only used to capture the player's route origin for the offline route.
-/// The exact 1m / 5m / 10m progression distances are measured in AR world space.
-/// </summary>
 [DefaultExecutionOrder(-150)]
 public class LocationServiceManager : MonoBehaviour
 {
@@ -27,6 +22,12 @@ public class LocationServiceManager : MonoBehaviour
     public int stableSamplesRequired = 3;
     [Range(0.05f, 1f)] public float smoothingFactor = 0.3f;
 
+    [Header("Debug / Indoor Testing")]
+    [Tooltip("Forces HasStableFix = true immediately. Use this for indoor testing when real GPS cannot lock.")]
+    // ⚠️  TESTER BUILD: set to true so artifacts show without real GPS.
+    // ⚠️  PRODUCTION BUILD: change back to false before building for real-location use.
+    public bool forceStableFix = true;
+
     private GPSDistanceFilter _filter;
     private bool _serviceRequested;
     private bool _serviceRunning;
@@ -35,11 +36,11 @@ public class LocationServiceManager : MonoBehaviour
     private double _lastTimestamp = -1d;
     private int _stableSampleCount;
 
-    public bool HasFilteredFix => _filter != null && _filter.HasSample;
-    public bool HasStableFix => HasFilteredFix && _stableSampleCount >= stableSamplesRequired;
-    public double FilteredLatitude => _filter != null ? _filter.FilteredLatitude : 0d;
+    public bool HasFilteredFix => forceStableFix || (_filter != null && _filter.HasSample);
+    public bool HasStableFix   => forceStableFix || (HasFilteredFix && _stableSampleCount >= stableSamplesRequired);
+    public double FilteredLatitude  => _filter != null ? _filter.FilteredLatitude : 0d;
     public double FilteredLongitude => _filter != null ? _filter.FilteredLongitude : 0d;
-    public float FilteredAccuracy => _filter != null ? _filter.FilteredAccuracy : 0f;
+    public float FilteredAccuracy   => forceStableFix ? 5f : (_filter != null ? _filter.FilteredAccuracy : 0f);
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void EnsureExists()
@@ -71,9 +72,9 @@ public class LocationServiceManager : MonoBehaviour
             return;
         }
 
-        // Recovery: if the startup coroutine timed out but the device GPS later
-        // became Running on its own, start consuming samples. Without this the
-        // status stays "Initializing" forever even after GPS locks.
+        // Recovery: if the startup coroutine timed out but the device GPS later became Running
+        // on its own, start consuming samples. Without this the status stays "Initializing"
+        // forever even after GPS locks.
         if (!_serviceRunning && Input.location.status == LocationServiceStatus.Running)
         {
             _serviceRunning = true;
@@ -171,6 +172,9 @@ public class LocationServiceManager : MonoBehaviour
 
     public string GetStatusString()
     {
+        if (forceStableFix)
+            return "GPS FORCED (debug mode)";
+
         if (!HasLocationPermission())
             return "Location permission pending";
 

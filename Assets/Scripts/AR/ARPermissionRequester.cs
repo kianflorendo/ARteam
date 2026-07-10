@@ -7,10 +7,6 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.Android;
 #endif
 
-/// <summary>
-/// Requests camera and location permissions before enabling the AR session.
-/// The AR session must stay disabled until camera permission is confirmed.
-/// </summary>
 public class ARPermissionRequester : MonoBehaviour
 {
     private ARSession _arSession;
@@ -21,6 +17,7 @@ public class ARPermissionRequester : MonoBehaviour
     private void Awake()
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
+        // ARSession must stay disabled until camera permission is confirmed.
         _arSession = FindAnyObjectByType<ARSession>();
         if (_arSession != null)
             _arSession.enabled = false;

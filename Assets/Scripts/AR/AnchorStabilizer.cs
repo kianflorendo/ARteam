@@ -1,8 +1,6 @@
 using UnityEngine;
 
-/// <summary>
-/// Legacy placeholder kept for scene compatibility after removing geospatial GPS runtime logic.
-/// </summary>
+// Legacy scene-reference compatibility shim. Geospatial GPS runtime logic has been removed.
 public class AnchorStabilizer : MonoBehaviour
 {
     public static AnchorStabilizer Instance { get; private set; }

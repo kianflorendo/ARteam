@@ -1,14 +1,3 @@
-﻿// ============================================================
-// ManifestLoader.cs
-// Location: Assets/Scripts/Data/ManifestLoader.cs
-// Mt. Samat AR Scavenger Hunt — Terra App
-//
-// Reads manifest.json on app start.
-// Priority: persistentDataPath (LFS updated) over StreamingAssets (bundled).
-// Caches all data in memory after first parse.
-// All other scripts read data through this singleton.
-// ============================================================
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,26 +8,16 @@ using UnityEngine.Networking;
 
 public class ManifestLoader : MonoBehaviour
 {
-    // ── Singleton ────────────────────────────────────────────
     public static ManifestLoader Instance { get; private set; }
-
-    // ── Events ───────────────────────────────────────────────
     public static event Action OnManifestLoaded;
 
-    // ── Private state ────────────────────────────────────────
     private ManifestData _manifest;
     private bool _isLoaded = false;
 
-    // ── File paths ───────────────────────────────────────────
     private const string MANIFEST_FILENAME = "manifest.json";
-
-    // ─────────────────────────────────────────────────────────
-    //  Unity lifecycle
-    // ─────────────────────────────────────────────────────────
 
     private void Awake()
     {
-        // Singleton enforcement
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -50,15 +29,8 @@ public class ManifestLoader : MonoBehaviour
         StartCoroutine(LoadManifestAsync());
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  Load — prefer LFS updated, fall back to bundled.
-    //  Uses UnityWebRequest for StreamingAssets so it works
-    //  correctly on Android (jar:file:// scheme inside APK).
-    // ─────────────────────────────────────────────────────────
-
     private IEnumerator LoadManifestAsync()
     {
-        // Always load the bundled StreamingAssets manifest so we can compare versions.
         // On Android, StreamingAssets lives inside the APK and must be read via
         // UnityWebRequest (direct File.ReadAllText doesn't work in jar:file:// paths).
 #if UNITY_EDITOR
@@ -77,10 +49,8 @@ public class ManifestLoader : MonoBehaviour
                 Debug.LogError($"[ManifestLoader] Failed to read StreamingAssets: {req.error}");
         }
 
-        // Check whether a cached (LFS-downloaded) manifest exists and compare versions.
-        // Use whichever has the HIGHER version number.
-        // This ensures a new APK build (with a bumped version) always replaces a stale
-        // device-side cache, while still allowing live LFS updates to override the APK.
+        // Use whichever has the HIGHER version number so a new APK build (with a bumped version)
+        // always replaces a stale device-side cache, while still allowing live LFS updates to override the APK.
         string lfsPath = Path.Combine(Application.persistentDataPath, MANIFEST_FILENAME);
         string json   = streamingJson;
         string source = "StreamingAssets";
@@ -97,27 +67,22 @@ public class ManifestLoader : MonoBehaviour
 
                 if (CompareVersions(lfsVer, streamVer) > 0)
                 {
-                    // LFS copy is strictly newer — use it (live update scenario).
                     json   = lfsJson;
                     source = $"LFS/persistentDataPath (v{lfsVer} > bundled v{streamVer})";
                 }
                 else
                 {
-                    // Bundled version is same or newer — use StreamingAssets.
-                    // Delete the stale cached file so it doesn't win on the next launch.
                     File.Delete(lfsPath);
                     source = $"StreamingAssets (v{streamVer} >= cached v{lfsVer}; cache cleared)";
                 }
             }
             catch
             {
-                // Corrupt cache — fall back to bundled.
                 File.Delete(lfsPath);
             }
         }
         else if (File.Exists(lfsPath))
         {
-            // StreamingAssets failed to load — use cached as last resort.
             json   = File.ReadAllText(lfsPath);
             source = "LFS/persistentDataPath (StreamingAssets unavailable)";
         }
@@ -144,7 +109,6 @@ public class ManifestLoader : MonoBehaviour
         }
     }
 
-    // Compares semantic version strings ("1.2.3"). Returns >0 if a > b, 0 if equal, <0 if a < b.
     private static int CompareVersions(string a, string b)
     {
         int[] Pa = ParseVersion(a);
@@ -167,27 +131,18 @@ public class ManifestLoader : MonoBehaviour
         return result;
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  Public lookup methods
-    // ─────────────────────────────────────────────────────────
-
-    /// Returns the full ArtifactData for a given artifact id (e.g. "A-001")
     public ArtifactData GetArtifact(string id)
     {
         if (!_isLoaded) { LogNotLoaded(); return null; }
         return _manifest.artifacts?.Find(a => a.id == id);
     }
 
-    /// Returns the ArtifactData whose marker_name matches the given name.
-    /// Used by ImageAnchorManager when ARTrackedImage is detected.
     public ArtifactData GetArtifactByMarker(string markerName)
     {
         if (!_isLoaded) { LogNotLoaded(); return null; }
         return _manifest.artifacts?.Find(a => a.marker_name == markerName);
     }
 
-    /// Returns all artifacts with anchor_mode == "gps".
-    /// Used by offline GPS route progression.
     public List<ArtifactData> GetGPSArtifacts()
     {
         if (!_isLoaded) { LogNotLoaded(); return new List<ArtifactData>(); }
@@ -195,10 +150,6 @@ public class ManifestLoader : MonoBehaviour
                ?? new List<ArtifactData>();
     }
 
-    /// Returns GPS artifacts for the currently active soldier's route,
-    /// sorted by sequence_index ascending.
-    /// Includes artifacts where soldier_id matches, plus any shared artifacts
-    /// that list the active soldier in shared_soldier_ids.
     public List<ArtifactData> GetGPSRouteArtifacts()
     {
         if (!_isLoaded) { LogNotLoaded(); return new List<ArtifactData>(); }
@@ -218,7 +169,6 @@ public class ManifestLoader : MonoBehaviour
             .ToList();
     }
 
-    /// Returns all artifacts with anchor_mode == "image".
     public List<ArtifactData> GetImageArtifacts()
     {
         if (!_isLoaded) { LogNotLoaded(); return new List<ArtifactData>(); }
@@ -226,46 +176,36 @@ public class ManifestLoader : MonoBehaviour
                ?? new List<ArtifactData>();
     }
 
-    /// Returns SoldierData for a given soldier id (e.g. "S-001")
     public SoldierData GetSoldier(string id)
     {
         if (!_isLoaded) { LogNotLoaded(); return null; }
         return _manifest.soldiers?.Find(s => s.id == id);
     }
 
-    /// Returns DivisionData for a given division id (e.g. "D-21")
     public DivisionData GetDivision(string id)
     {
         if (!_isLoaded) { LogNotLoaded(); return null; }
         return _manifest.divisions?.Find(d => d.id == id);
     }
 
-    /// Returns all soldiers
     public List<SoldierData> GetAllSoldiers()
     {
         if (!_isLoaded) { LogNotLoaded(); return new List<SoldierData>(); }
         return _manifest.soldiers ?? new List<SoldierData>();
     }
 
-    /// Returns all divisions
     public List<DivisionData> GetAllDivisions()
     {
         if (!_isLoaded) { LogNotLoaded(); return new List<DivisionData>(); }
         return _manifest.divisions ?? new List<DivisionData>();
     }
 
-    /// Returns current manifest version string
     public string GetVersion()
     {
         return _isLoaded ? _manifest.version : "unknown";
     }
 
-    /// Returns true if manifest has been loaded and parsed successfully
     public bool IsLoaded => _isLoaded;
-
-    // ─────────────────────────────────────────────────────────
-    //  Private helpers
-    // ─────────────────────────────────────────────────────────
 
     private void LogNotLoaded()
     {

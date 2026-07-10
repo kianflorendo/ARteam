@@ -1,16 +1,3 @@
-﻿// ============================================================
-// LFSDownloader.cs
-// Location: Assets/Scripts/Network/LFSDownloader.cs
-// Mt. Samat AR Scavenger Hunt — Terra App
-//
-// Downloads updated asset bundles from Git LFS silently
-// in the background. User is never blocked or interrupted.
-// Downloaded bundles are stored in persistentDataPath/bundles/
-// and will override the bundled APK versions on next launch.
-//
-// Called by BundleUpdateChecker when a newer manifest is found.
-// ============================================================
-
 using System;
 using System.Collections;
 using System.IO;
@@ -19,29 +6,21 @@ using UnityEngine.Networking;
 
 public class LFSDownloader : MonoBehaviour
 {
-    // ── Singleton ────────────────────────────────────────────
     public static LFSDownloader Instance { get; private set; }
 
-    // ── Events ───────────────────────────────────────────────
-    public static event Action<float> OnDownloadProgress;   // 0.0 to 1.0
-    public static event Action<string> OnBundleDownloaded;   // bundle key
+    public static event Action<float> OnDownloadProgress;
+    public static event Action<string> OnBundleDownloaded;
     public static event Action OnAllDownloadsComplete;
-    public static event Action<string> OnDownloadFailed;     // error message
+    public static event Action<string> OnDownloadFailed;
 
-    // ── Configuration ────────────────────────────────────────
     [Header("LFS Configuration")]
     [Tooltip("Must match BundleUpdateChecker.lfsBaseUrl")]
     public string lfsBaseUrl = "https://media.githubusercontent.com/media/your-org/mtsamatar-assets/main/";
 
     private const float DOWNLOAD_TIMEOUT = 60f;
 
-    // ── Local bundle storage path ────────────────────────────
     private string BundleStoragePath =>
         Path.Combine(Application.persistentDataPath, "bundles");
-
-    // ─────────────────────────────────────────────────────────
-    //  Unity lifecycle
-    // ─────────────────────────────────────────────────────────
 
     private void Awake()
     {
@@ -53,18 +32,10 @@ public class LFSDownloader : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Ensure local bundle storage folder exists
         if (!Directory.Exists(BundleStoragePath))
             Directory.CreateDirectory(BundleStoragePath);
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  Public API
-    // ─────────────────────────────────────────────────────────
-
-    /// Downloads a single bundle from LFS by its bundle key.
-    /// Bundle key matches bundle_key in manifest.json
-    /// e.g. "artifacts/bolo_knife" → downloads bolo_knife.bundle
     public IEnumerator DownloadBundle(string bundleKey)
     {
         if (string.IsNullOrEmpty(bundleKey))
@@ -84,7 +55,6 @@ public class LFSDownloader : MonoBehaviour
             request.timeout = (int)DOWNLOAD_TIMEOUT;
             var operation = request.SendWebRequest();
 
-            // Report progress while downloading
             while (!operation.isDone)
             {
                 OnDownloadProgress?.Invoke(request.downloadProgress);
@@ -98,7 +68,6 @@ public class LFSDownloader : MonoBehaviour
                 yield break;
             }
 
-            // Save bundle to local storage
             try
             {
                 string dir = Path.GetDirectoryName(localPath);
@@ -118,8 +87,6 @@ public class LFSDownloader : MonoBehaviour
         }
     }
 
-    /// Downloads a list of bundles sequentially in background.
-    /// Reports overall progress via OnDownloadProgress event.
     public IEnumerator DownloadBundles(System.Collections.Generic.List<string> bundleKeys)
     {
         if (bundleKeys == null || bundleKeys.Count == 0)
@@ -145,11 +112,6 @@ public class LFSDownloader : MonoBehaviour
         OnAllDownloadsComplete?.Invoke();
     }
 
-    // ─────────────────────────────────────────────────────────
-    //  Helpers
-    // ─────────────────────────────────────────────────────────
-
-    /// Checks if a bundle has already been downloaded locally
     public bool IsBundleDownloaded(string bundleKey)
     {
         string fileName = GetFileNameFromKey(bundleKey);
@@ -157,20 +119,17 @@ public class LFSDownloader : MonoBehaviour
         return File.Exists(localPath);
     }
 
-    /// Returns the local file path for a downloaded bundle
     public string GetLocalBundlePath(string bundleKey)
     {
         string fileName = GetFileNameFromKey(bundleKey);
         return Path.Combine(BundleStoragePath, fileName + ".bundle");
     }
 
-    /// Converts "artifacts/bolo_knife" → "artifacts_bolo_knife"
     private string GetFileNameFromKey(string bundleKey)
     {
         return bundleKey.Replace("/", "_");
     }
 
-    /// Returns total size of all downloaded bundles in MB
     public float GetDownloadedSizeMB()
     {
         if (!Directory.Exists(BundleStoragePath)) return 0f;

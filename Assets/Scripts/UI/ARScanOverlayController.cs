@@ -1,10 +1,3 @@
-// ============================================================
-// ARScanOverlayController.cs
-// Location: Assets/Scripts/UI/ARScanOverlayController.cs
-// Mt. Samat AR — AR Scan screen overlay.
-// All references are [SerializeField] — wire in Prefab Editor.
-// ============================================================
-
 using System.Collections;
 using TMPro;
 using UnityEngine;

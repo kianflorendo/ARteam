@@ -1,16 +1,3 @@
-// ============================================================
-// ProfileScreenController.cs
-// Location: Assets/Scripts/UI/ProfileScreenController.cs
-// Mt. Samat AR — Profile screen.
-//
-// Figma (302:110):
-//   - Custom header "MT. SAMAT AR" + gear icon → Settings
-//   - Single combined label: "BOLD NAME • @username"
-//   - Progress bar + Resume Journey
-//
-// All references are [SerializeField] — wire in Prefab Editor.
-// ============================================================
-
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,7 +39,6 @@ public class ProfileScreenController : MonoBehaviour
         string displayName = string.IsNullOrEmpty(name) ? "PLAYER" : name.ToUpper();
         string displayUser = string.IsNullOrEmpty(user) ? "@player" : "@" + user.ToLower();
 
-        // Figma: bold name + lighter username on same line
         _nameAndUsernameLabel.text =
             $"<b>{displayName}</b> <color=#888888>• {displayUser}</color>";
     }

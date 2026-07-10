@@ -2,11 +2,6 @@ using System;
 using System.IO;
 using UnityEngine;
 
-/// <summary>
-/// Persists offline route state across app sessions.
-/// The route uses GPS only to establish the starting origin.
-/// After that, segment progression is measured in AR world meters.
-/// </summary>
 [DefaultExecutionOrder(-140)]
 public class GPSRouteStateStore : MonoBehaviour
 {
@@ -76,11 +71,11 @@ public class GPSRouteStateStore : MonoBehaviour
 
             // Reset session-specific state on every launch.
             // active_artifact_id: the spawned anchor is gone after restart; re-spawn on first tick.
-            // next_sequence_index: reset to 1; ReconcileProgressWithInventory() will advance
-            //   it past already-collected artifacts, preserving legitimate progress.
+            // next_sequence_index: reset to 1; ReconcileProgressWithInventory advances it past
+            //   already-collected artifacts so legitimate progress is preserved.
             // has_origin is NOT reset: preserving it bypasses the GPS stabilisation wait on
-            //   relaunch. Indoors the GPS accuracy fluctuates above the stableFixAccuracyMeters
-            //   threshold, so resetting has_origin blocks the entire route indefinitely.
+            //   relaunch. Indoors, GPS accuracy fluctuates above stableFixAccuracyMeters, so
+            //   resetting has_origin would block the entire route indefinitely.
             State.active_artifact_id  = "";
             State.next_sequence_index = 1;
             Save();

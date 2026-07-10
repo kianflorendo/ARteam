@@ -1,10 +1,3 @@
-// ============================================================
-// ActiveSoldierManager.cs
-// Location: Assets/Scripts/Data/ActiveSoldierManager.cs
-// Mt. Samat AR — stores which soldier is currently selected.
-// Persists via PlayerPrefs. Defaults to Filipino (S-001).
-// ============================================================
-
 using UnityEngine;
 
 public class ActiveSoldierManager : MonoBehaviour
@@ -12,7 +5,7 @@ public class ActiveSoldierManager : MonoBehaviour
     public static ActiveSoldierManager Instance { get; private set; }
 
     private const string PREF_KEY        = "active_soldier_id";
-    private const string DEFAULT_SOLDIER = "S-001"; // Filipino always first
+    private const string DEFAULT_SOLDIER = "S-001";
 
     public string ActiveSoldierId { get; private set; }
 

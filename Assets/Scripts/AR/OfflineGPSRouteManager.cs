@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
-/// <summary>
-/// Offline route controller for GPS artifacts.
-/// GPS is used to lock the player's first route origin.
-/// The exact unlock distances are measured in AR world meters so the
-/// 1m / 5m / 10m thresholds are reliable without ARCore Geospatial.
-/// </summary>
+// GPS is used only to lock the route origin. Exact unlock distances are measured in
+// AR world meters so the per-segment thresholds are reliable without ARCore Geospatial.
 [DefaultExecutionOrder(-60)]
 public class OfflineGPSRouteManager : MonoBehaviour
 {
@@ -17,7 +13,7 @@ public class OfflineGPSRouteManager : MonoBehaviour
     [Header("Route Progression")]
     public float routeCheckInterval = 0.15f;
     public float defaultSpawnDistanceFromPlayer = 1f;
-    // Note: ArtifactSpawner.SPAWN_OFFSET adds +0.05m on top of this. Net GPS spawn = camera Y + 0.05m.
+    // ArtifactSpawner.SPAWN_OFFSET adds +0.05m on top of this. Net GPS spawn = camera Y + 0.05m.
     public float spawnHeightOffset = 0f;
 
     private readonly Dictionary<string, GameObject> _presentationAnchors = new Dictionary<string, GameObject>();
@@ -25,10 +21,11 @@ public class OfflineGPSRouteManager : MonoBehaviour
     private List<ArtifactData> _routeArtifacts = new List<ArtifactData>();
     private float _routeCheckTimer;
     private bool _routeLoaded;
-    private bool _inventoryCleared;   // tracks whether GPS artifact inventory was cleared this route cycle
+    private bool _inventoryCleared;
     private bool _hasSegmentStart;
     private Vector3 _segmentStartPosition;
     private float _currentSegmentDistance;
+
     public bool HasOrigin =>
         GPSRouteStateStore.Instance != null && GPSRouteStateStore.Instance.State.has_origin;
 
@@ -70,7 +67,6 @@ public class OfflineGPSRouteManager : MonoBehaviour
     {
         get
         {
-            // While an artifact is active, return the distance of the NEXT artifact after it.
             if (!string.IsNullOrEmpty(ActiveArtifactId))
             {
                 var active = ManifestLoader.Instance?.GetArtifact(ActiveArtifactId);
@@ -146,13 +142,13 @@ public class OfflineGPSRouteManager : MonoBehaviour
 
         // Deferred inventory clear: runs once per route-load cycle as soon as
         // InventoryManager is confirmed ready. Keeping this separate from
-        // ReloadRouteArtifacts() avoids the race where OnManifestLoaded fires
-        // before InventoryManager.Awake() completes, which would skip the clear
-        // and leave stale collected-artifact entries from previous sessions,
-        // causing the route to start from a mid-sequence artifact instead of Bolo.
+        // ReloadRouteArtifacts avoids the race where OnManifestLoaded fires before
+        // InventoryManager.Awake completes, which would skip the clear and leave
+        // stale collected-artifact entries from previous sessions — causing the
+        // route to start from a mid-sequence artifact instead of seq=1.
         if (!_inventoryCleared)
         {
-            var ids = new System.Collections.Generic.List<string>();
+            var ids = new List<string>();
             foreach (var a in _routeArtifacts) ids.Add(a.id);
             InventoryManager.Instance.RemoveCollectedArtifacts(ids);
             _inventoryCleared = true;
@@ -164,21 +160,19 @@ public class OfflineGPSRouteManager : MonoBehaviour
 
         ReconcileProgressWithInventory();
 
-        // If every route artifact has been seen (next_seq past the last one and no
-        // active artifact), auto-reset so the tester loops back to Bolo automatically
-        // without pressing the RESET button. has_origin is preserved so the GPS wait
-        // is NOT triggered again — the route restarts immediately.
+        // Auto-reset when every route artifact has been seen so the tester loops back
+        // to seq=1 without pressing RESET. has_origin is preserved so the GPS wait is
+        // NOT triggered again — the route restarts immediately.
         if (string.IsNullOrEmpty(ActiveArtifactId) && IsRouteComplete())
         {
             Debug.Log("[OfflineGPSRouteManager] All route artifacts done — auto-resetting for next loop.");
-            var ids = new System.Collections.Generic.List<string>();
+            var ids = new List<string>();
             foreach (var a in _routeArtifacts) ids.Add(a.id);
             InventoryManager.Instance?.RemoveCollectedArtifacts(ids);
 
             var st = GPSRouteStateStore.Instance.State;
             st.active_artifact_id  = "";
             st.next_sequence_index = 1;
-            // has_origin preserved so route starts immediately without GPS wait.
             GPSRouteStateStore.Instance.Save();
 
             _hasSegmentStart       = false;
@@ -192,15 +186,13 @@ public class OfflineGPSRouteManager : MonoBehaviour
         {
             EnsureActiveArtifactPresented();
 
-            // Even while an artifact is active (not yet collected), keep tracking
-            // distance so the next artifact can unlock automatically. This prevents
-            // the route from getting stuck when the player walks past without tapping
-            // the scroll's Collect button.
+            // Keep tracking distance even while an artifact is active (not yet collected)
+            // so the next artifact can unlock automatically. Prevents the route from
+            // getting stuck when the player walks past without tapping Collect.
             var activeArt = ManifestLoader.Instance?.GetArtifact(ActiveArtifactId);
             if (activeArt != null)
             {
-                // Find the next uncollected artifact after the active one.
-                // Uses min-sequence search so non-contiguous per-soldier routes work correctly.
+                // Min-sequence search so non-contiguous per-soldier routes work correctly.
                 ArtifactData nextAfterActive = null;
                 foreach (var _a in _routeArtifacts)
                 {
@@ -217,7 +209,6 @@ public class OfflineGPSRouteManager : MonoBehaviour
                         _currentSegmentDistance = GetDistanceFromSegmentStart();
                         if (_currentSegmentDistance >= nextAfterActive.distance_from_previous_meters)
                         {
-                            // Player walked far enough — auto-advance past the uncollected artifact.
                             ArtifactSpawner.Instance?.Despawn(ActiveArtifactId);
                             DestroyPresentationAnchor(ActiveArtifactId);
                             var st = GPSRouteStateStore.Instance.State;
@@ -232,11 +223,9 @@ public class OfflineGPSRouteManager : MonoBehaviour
                 else
                 {
                     // Active artifact is the LAST in the route (no seq+1 artifact exists).
-                    // Without this block the route gets permanently stuck: nextAfterActive is
-                    // always null, so auto-advance never fires, next_sequence_index never
-                    // advances past maxSeq, and IsRouteComplete() never returns true.
-                    // Once the player walks the standard distance, mark the route complete
-                    // so the auto-reset loop fires on the next tick.
+                    // Without this block the route gets permanently stuck: nextAfterActive
+                    // is always null, so auto-advance never fires, next_sequence_index never
+                    // advances past maxSeq, and IsRouteComplete never returns true.
                     if (EnsureSegmentStart())
                     {
                         _currentSegmentDistance = GetDistanceFromSegmentStart();
@@ -246,7 +235,7 @@ public class OfflineGPSRouteManager : MonoBehaviour
                             DestroyPresentationAnchor(ActiveArtifactId);
                             var st = GPSRouteStateStore.Instance.State;
                             st.active_artifact_id  = "";
-                            st.next_sequence_index = activeArt.sequence_index + 1; // exceeds maxSeq → triggers IsRouteComplete
+                            st.next_sequence_index = activeArt.sequence_index + 1;
                             GPSRouteStateStore.Instance.Save();
                             Debug.Log($"[OfflineGPSRouteManager] Last artifact {activeArt.id} passed — route complete, resetting for next loop.");
                         }
@@ -296,9 +285,8 @@ public class OfflineGPSRouteManager : MonoBehaviour
             ? ManifestLoader.Instance.GetGPSRouteArtifacts()
             : new List<ArtifactData>();
         _routeLoaded = true;
-        // _inventoryCleared stays false — the deferred clear in Update() will handle it
-        // once InventoryManager is confirmed ready. This avoids a timing issue where
-        // ManifestLoader.OnManifestLoaded fires before InventoryManager.Awake() completes.
+        // _inventoryCleared stays false — the deferred clear in Update handles it
+        // once InventoryManager is confirmed ready (avoids manifest/inventory awake race).
     }
 
     private bool EnsureOriginCaptured()
@@ -310,13 +298,14 @@ public class OfflineGPSRouteManager : MonoBehaviour
         if (!LocationServiceManager.Instance.HasStableFix)
             return false;
 
-        if (!LocationServiceManager.Instance.TryGetFilteredLocation(
-                out double lat,
-                out double lng,
-                out float accuracy))
-        {
-            return false;
-        }
+        // When forceStableFix is on, HasStableFix returns true but TryGetFilteredLocation
+        // may return (0,0) if no real GPS data arrived. That's fine — lat/lng are only
+        // metadata here. All unlock distances use AR world-space (camera position deltas),
+        // not haversine, so (0,0) origin never affects gameplay.
+        LocationServiceManager.Instance.TryGetFilteredLocation(
+            out double lat,
+            out double lng,
+            out float accuracy);
 
         state.origin_lat = lat;
         state.origin_lng = lng;
@@ -327,7 +316,10 @@ public class OfflineGPSRouteManager : MonoBehaviour
         GPSRouteStateStore.Instance.Save();
 
         SetSegmentStartFromCamera();
-        Debug.Log($"[OfflineGPSRouteManager] Route origin captured at {lat:F6}, {lng:F6} (+/-{accuracy:F1}m).");
+
+        bool forced = LocationServiceManager.Instance.forceStableFix;
+        Debug.Log($"[OfflineGPSRouteManager] Route origin captured at {lat:F6}, {lng:F6} " +
+                  $"(+/-{accuracy:F1}m){(forced ? " [FORCED — debug mode]" : "")}.");
         return true;
     }
 
@@ -344,7 +336,7 @@ public class OfflineGPSRouteManager : MonoBehaviour
         }
 
         // Forward pass: advance past any sequences that were explicitly collected.
-        // Uses min-sequence search so non-contiguous per-soldier routes (with gaps) work correctly.
+        // Min-sequence search handles non-contiguous per-soldier routes (with gaps).
         while (true)
         {
             ArtifactData next = null;
@@ -375,12 +367,9 @@ public class OfflineGPSRouteManager : MonoBehaviour
             return;
         }
 
-        // Guard against corrupted persisted state: if a predecessor is BOTH uncollected
-        // AND has not been passed yet (seq >= next_sequence_index), this artifact was
-        // promoted prematurely. Reset to that predecessor.
-        //
-        // IMPORTANT: an auto-advanced predecessor has seq < next_sequence_index and must
-        // NOT block the current artifact — only truly un-reached predecessors are blocked.
+        // Guard against corrupted persisted state: if a predecessor is uncollected AND not
+        // yet passed (seq >= next_sequence_index), this artifact was promoted prematurely.
+        // An auto-advanced predecessor has seq < next_sequence_index and must NOT block.
         int currentNextSeq = GPSRouteStateStore.Instance.State.next_sequence_index;
         foreach (var a in _routeArtifacts)
         {
@@ -388,7 +377,6 @@ public class OfflineGPSRouteManager : MonoBehaviour
                 && !InventoryManager.Instance.IsCollected(a.id)
                 && a.sequence_index >= currentNextSeq)
             {
-                // Despawn the prematurely promoted artifact before resetting state.
                 ArtifactSpawner.Instance?.Despawn(activeArtifact.id);
                 DestroyPresentationAnchor(activeArtifact.id);
                 var st = GPSRouteStateStore.Instance.State;
@@ -471,11 +459,10 @@ public class OfflineGPSRouteManager : MonoBehaviour
         if (Camera.main == null)
             return;
 
-        // Wait until ARCore is actively tracking before spawning.
-        // During SessionInitializing the camera sits at world origin (0,0,0) and
-        // the camera feed is not yet live. Spawning here places the artifact at
-        // the scene origin rather than in front of the player, making it impossible
-        // to find. We retry every routeCheckInterval until tracking is confirmed.
+        // Wait until ARCore is actively tracking before spawning. During SessionInitializing
+        // the camera sits at world origin (0,0,0) and the camera feed is not yet live;
+        // spawning here places the artifact at the scene origin rather than in front of
+        // the player. Retry every routeCheckInterval until tracking is confirmed.
         if (ARSession.state < ARSessionState.SessionTracking)
         {
             Debug.Log($"[OfflineGPSRouteManager] AR not tracking yet (state={ARSession.state}) — deferring spawn of {artifact.id}.");
@@ -510,9 +497,8 @@ public class OfflineGPSRouteManager : MonoBehaviour
         else
             flatForward.Normalize();
 
-        // Per-artifact height override: spawn_height_offset_meters in manifest lets
-        // individual artifacts sit lower or higher relative to camera eye level.
-        // Negative = below camera (more natural for ground-level objects like a bolo knife).
+        // Per-artifact height override: negative = below camera (more natural for
+        // ground-level objects like a bolo knife).
         float heightOffset = spawnHeightOffset + artifact.spawn_height_offset_meters;
 
         anchorObject.transform.position =
@@ -528,12 +514,10 @@ public class OfflineGPSRouteManager : MonoBehaviour
             0f);
 
         // Parent anchor to the AR scene root (XROrigin) via Camera.main's hierarchy root.
-        // When ARCore relocalization corrects the coordinate frame it moves XROrigin, so
-        // all children move with it — the anchor stays locked in physical space instead of
-        // drifting in random directions as tracking improves.
-        // worldPositionStays=true preserves the world position set above.
-        // Only parent if Camera.main is actually inside a hierarchy (has a parent); if it
-        // is a scene root itself, skip to avoid anchoring to the camera directly.
+        // When ARCore relocalization corrects the coordinate frame it moves XROrigin so all
+        // children move with it — the anchor stays locked in physical space instead of
+        // drifting as tracking improves. worldPositionStays=true preserves the world
+        // position set above. Skip if Camera.main is itself a scene root.
         var arSceneRoot = Camera.main.transform.root;
         if (arSceneRoot != Camera.main.transform)
             anchorObject.transform.SetParent(arSceneRoot, worldPositionStays: true);
@@ -543,11 +527,10 @@ public class OfflineGPSRouteManager : MonoBehaviour
 
     private void HandleArtifactModelVisible(string artifactId)
     {
-        // Only reset the segment start for the currently active artifact.
-        // The model was hidden during loading/auto-scale (up to 5s). Without this reset,
-        // auto-advance fires WHILE the model is still invisible because _currentSegmentDistance
-        // accumulated during that hidden window. Resetting here guarantees the player always
-        // gets a full distance_from_previous_meters of walking WITH the model visible.
+        // Only reset the segment start for the currently active artifact. The model was
+        // hidden during loading/auto-scale (up to 5s). Without this reset, auto-advance
+        // fires WHILE the model is still invisible because _currentSegmentDistance
+        // accumulated during that hidden window.
         if (artifactId != ActiveArtifactId) return;
 
         _hasSegmentStart = false;
@@ -596,8 +579,6 @@ public class OfflineGPSRouteManager : MonoBehaviour
         return new Vector3(position.x, 0f, position.z);
     }
 
-    /// Resets GPS route state and in-memory tracking for testing.
-    /// Call after clearing inventory GPS artifacts via InventoryManager.
     public void ResetForTesting()
     {
         if (GPSRouteStateStore.Instance != null)
@@ -613,11 +594,11 @@ public class OfflineGPSRouteManager : MonoBehaviour
             GPSRouteStateStore.Instance.Save();
         }
 
-        // Despawn ALL tracked GPS artifacts so ArtifactSpawner._spawnedArtifacts is
-        // fully cleared. Without this, stale dictionary entries from a previous session
-        // cause IsSpawned() to return true for artifacts that should spawn fresh,
-        // silently preventing GPS-TEST-002 / 003 from ever appearing.
-        foreach (var id in new System.Collections.Generic.List<string>(_presentationAnchors.Keys))
+        // Despawn ALL tracked GPS artifacts so ArtifactSpawner._spawnedArtifacts is fully
+        // cleared. Without this, stale dictionary entries from a previous session cause
+        // IsSpawned to return true for artifacts that should spawn fresh, silently
+        // preventing later sequence artifacts from ever appearing.
+        foreach (var id in new List<string>(_presentationAnchors.Keys))
             ArtifactSpawner.Instance?.Despawn(id);
 
         if (!string.IsNullOrEmpty(ActiveArtifactId))

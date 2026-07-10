@@ -1,10 +1,3 @@
-// ============================================================
-// HomeScreenController.cs
-// Location: Assets/Scripts/UI/HomeScreenController.cs
-// Mt. Samat AR — Home Dashboard screen.
-// All references are [SerializeField] — wire in Prefab Editor.
-// ============================================================
-
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -59,8 +52,6 @@ public class HomeScreenController : MonoBehaviour
         RefreshSoldierCards();
     }
 
-    // ── Progress bar ─────────────────────────────────────────
-
     private void RefreshProgress()
     {
         if (InventoryManager.Instance == null || ManifestLoader.Instance == null) return;
@@ -76,8 +67,6 @@ public class HomeScreenController : MonoBehaviour
         if (_progressBarFill != null)
             _progressBarFill.fillAmount = total > 0 ? (float)collected / total : 0f;
     }
-
-    // ── Soldier cards ────────────────────────────────────────
 
     private void RefreshSoldierCards()
     {
