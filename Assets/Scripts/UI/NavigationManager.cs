@@ -61,6 +61,9 @@ public class NavigationManager : MonoBehaviour
     {
         WireNavButtons();
 
+        // TEMP — remove before shipping. Forces registration flow so avatar picker can be tested.
+        PlayerPrefs.DeleteAll();
+
         bool registered = PlayerProfileManager.Instance != null
                           && PlayerProfileManager.Instance.IsRegistered;
 

@@ -9858,6 +9858,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 970391472}
     m_Modifications:
+    - target: {fileID: 1171812886983715216, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[0]'
+      value: 
+      objectReference: {fileID: 21300000, guid: 96ea8570862da554b87072492e8ad6a9, type: 3}
+    - target: {fileID: 1171812886983715216, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[1]'
+      value: 
+      objectReference: {fileID: 21300000, guid: 09e78718f638291459f949c45969dd10, type: 3}
+    - target: {fileID: 1171812886983715216, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[2]'
+      value: 
+      objectReference: {fileID: 21300000, guid: a1ebf4bea53471340bb87dcce4ac0c3e, type: 3}
+    - target: {fileID: 1171812886983715216, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[3]'
+      value: 
+      objectReference: {fileID: 21300000, guid: e0c0ddd2e6cc3f544902c3526ec7c8ec, type: 3}
+    - target: {fileID: 1171812886983715216, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[4]'
+      value: 
+      objectReference: {fileID: 21300000, guid: cb7f59cfde5fcdc4a80da0fb9642a7ba, type: 3}
+    - target: {fileID: 1171812886983715216, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[5]'
+      value: 
+      objectReference: {fileID: 21300000, guid: 153086fc1ab0bf94a9e37c5030e5aa00, type: 3}
+    - target: {fileID: 1171812886983715216, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[6]'
+      value: 
+      objectReference: {fileID: 21300000, guid: df72ee3990b703540a50bc772a5fcbb9, type: 3}
+    - target: {fileID: 1171812886983715216, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[7]'
+      value: 
+      objectReference: {fileID: 21300000, guid: 2d43ae108c99b9b40ac945db3fc70833, type: 3}
     - target: {fileID: 1936845610767380672, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -9938,6 +9970,46 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3811094196093669854, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: _playerNameLabel
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3811094196093669854, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: _playerAvatarImage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3811094196093669854, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[0]'
+      value: 
+      objectReference: {fileID: 21300000, guid: 96ea8570862da554b87072492e8ad6a9, type: 3}
+    - target: {fileID: 3811094196093669854, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[1]'
+      value: 
+      objectReference: {fileID: 21300000, guid: 09e78718f638291459f949c45969dd10, type: 3}
+    - target: {fileID: 3811094196093669854, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[2]'
+      value: 
+      objectReference: {fileID: 21300000, guid: a1ebf4bea53471340bb87dcce4ac0c3e, type: 3}
+    - target: {fileID: 3811094196093669854, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[3]'
+      value: 
+      objectReference: {fileID: 21300000, guid: e0c0ddd2e6cc3f544902c3526ec7c8ec, type: 3}
+    - target: {fileID: 3811094196093669854, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[4]'
+      value: 
+      objectReference: {fileID: 21300000, guid: cb7f59cfde5fcdc4a80da0fb9642a7ba, type: 3}
+    - target: {fileID: 3811094196093669854, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[5]'
+      value: 
+      objectReference: {fileID: 21300000, guid: 153086fc1ab0bf94a9e37c5030e5aa00, type: 3}
+    - target: {fileID: 3811094196093669854, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[6]'
+      value: 
+      objectReference: {fileID: 21300000, guid: df72ee3990b703540a50bc772a5fcbb9, type: 3}
+    - target: {fileID: 3811094196093669854, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      propertyPath: '_avatarSprites.Array.data[7]'
+      value: 
+      objectReference: {fileID: 21300000, guid: 2d43ae108c99b9b40ac945db3fc70833, type: 3}
     - target: {fileID: 6100820552555711125, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
       propertyPath: m_Name
       value: UI_Canvas
@@ -9945,7 +10017,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6050033661197893125, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4005828965890146581}
   m_SourcePrefab: {fileID: 100100000, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
 --- !u!224 &4005828965890146559 stripped
 RectTransform:
@@ -10077,6 +10152,27 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8705387729854351598, guid: f0c7cdc5359e06c449514681acfa9b57, type: 3}
   m_PrefabInstance: {fileID: 4005828965890146558}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4005828965890146581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4005828965890146575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf31a2b0407581742a8d0883cc41b841, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TopBarController
+  _avatarSprites:
+  - {fileID: 21300000, guid: 96ea8570862da554b87072492e8ad6a9, type: 3}
+  - {fileID: 21300000, guid: 09e78718f638291459f949c45969dd10, type: 3}
+  - {fileID: 21300000, guid: a1ebf4bea53471340bb87dcce4ac0c3e, type: 3}
+  - {fileID: 21300000, guid: e0c0ddd2e6cc3f544902c3526ec7c8ec, type: 3}
+  - {fileID: 21300000, guid: cb7f59cfde5fcdc4a80da0fb9642a7ba, type: 3}
+  - {fileID: 21300000, guid: 153086fc1ab0bf94a9e37c5030e5aa00, type: 3}
+  - {fileID: 21300000, guid: df72ee3990b703540a50bc772a5fcbb9, type: 3}
+  - {fileID: 21300000, guid: 2d43ae108c99b9b40ac945db3fc70833, type: 3}
 --- !u!1001 &5214591598045136834
 PrefabInstance:
   m_ObjectHideFlags: 0
