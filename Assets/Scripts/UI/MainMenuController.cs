@@ -32,7 +32,7 @@ public class MainMenuController : MonoBehaviour
 
     private void OnSettings()
     {
-        Debug.Log("[MainMenuController] Settings — coming soon.");
+        NavigationManager.Instance?.ShowPreLoginScreen("Settings");
     }
 
     private void OnExit()

@@ -33,15 +33,25 @@ public class UIHierarchySetup : MonoBehaviour
     [Tooltip("Tick to destroy and rebuild AR_DebugPanel, AR_ActionPanel, and AR_CollectBanner in place. " +
              "After rebuild, wire the new GameObjects to NavigationManager in the Inspector.")]
     public bool rebuildAROverlayPanels  = false;
+    [Tooltip("DOES NOT WORK — Unity blocks reparenting prefab-sourced children from a scene " +
+             "instance. Use Tools → Mt. Samat → Fix Aspect Ratio Centering (Prefab) instead, " +
+             "which edits the UI_Canvas prefab asset directly. Kept here only so old references " +
+             "to this field don't break.")]
+    public bool fixAspectRatioCentering = false;
 
-    private static readonly Color C_BLACK     = new Color(0.102f, 0.102f, 0.102f);
-    private static readonly Color C_GRAY_88   = new Color(0.533f, 0.533f, 0.533f);
-    private static readonly Color C_GRAY_AA   = new Color(0.667f, 0.667f, 0.667f);
-    private static readonly Color C_GRAY_CC   = new Color(0.800f, 0.800f, 0.800f);
-    private static readonly Color C_GRAY_D9   = new Color(0.851f, 0.851f, 0.851f);
-    private static readonly Color C_GRAY_E8   = new Color(0.910f, 0.910f, 0.910f);
-    private static readonly Color C_GRAY_F8   = new Color(0.973f, 0.973f, 0.973f);
-    private static readonly Color C_WHITE     = Color.white;
+    [Header("Fonts")]
+    [Tooltip("Generated via Tools → Mt. Samat → Generate Title Font Asset. Used for the Main Menu title/subtitle.")]
+    public TMP_FontAsset titleFont;
+
+    // Figma palette — Mt. Samat AR (hex reference in comments)
+    private static readonly Color C_BLACK     = new Color(0.102f, 0.102f, 0.102f); // #1A1A1A — primary buttons, active state
+    private static readonly Color C_GRAY_88   = new Color(0.529f, 0.365f, 0.216f); // #875D37 — brown accents, MainMenu buttons
+    private static readonly Color C_GRAY_AA   = new Color(0.796f, 0.725f, 0.643f); // #CBB9A4 — inactive/placeholder text
+    private static readonly Color C_GRAY_CC   = new Color(0.796f, 0.725f, 0.643f); // #CBB9A4 — decorative bars
+    private static readonly Color C_GRAY_D9   = new Color(0.796f, 0.725f, 0.643f); // #CBB9A4 — dividers, progress bg
+    private static readonly Color C_GRAY_E8   = new Color(0.796f, 0.725f, 0.643f); // #CBB9A4 — card borders, avatar circles, section labels
+    private static readonly Color C_GRAY_F8   = new Color(0.980f, 0.976f, 0.965f); // #FAF9F6 — all screen & panel backgrounds
+    private static readonly Color C_WHITE     = Color.white;                         // #FFFFFF — card fills, button text
     private static readonly Color C_CLEAR     = Color.clear;
 
     private void Update()
@@ -114,11 +124,25 @@ public class UIHierarchySetup : MonoBehaviour
             rebuildBottomNavBar = false;
             var canvas  = transform.Find("UI_Canvas");
             if (canvas == null) return;
-            var mainApp = canvas.Find("MainAppGroup");
+            var mainApp = ResolveContentRoot(canvas).Find("MainAppGroup");
             if (mainApp == null) return;
             var existing = mainApp.Find("BottomNavBar");
             if (existing != null) DestroyImmediate(existing.gameObject);
             BuildBottomNavBar(mainApp);
+            return;
+        }
+
+        if (fixAspectRatioCentering)
+        {
+            fixAspectRatioCentering = false;
+            // Unity refuses to reparent a GameObject that originates from a prefab while
+            // editing a scene INSTANCE of that prefab ("Setting the parent of a transform
+            // which resides in a Prefab instance is not possible") — this checkbox can
+            // never actually work against UI_Canvas. Use Tools → Mt. Samat → Fix Aspect
+            // Ratio Centering (Prefab) instead, which edits the prefab asset directly.
+            Debug.LogError("[UIHierarchySetup] This checkbox cannot reparent existing prefab-sourced " +
+                            "GameObjects (Unity restriction). Use Tools → Mt. Samat → Fix Aspect Ratio " +
+                            "Centering (Prefab) instead.");
             return;
         }
 
@@ -127,12 +151,13 @@ public class UIHierarchySetup : MonoBehaviour
             rebuildAROverlayPanels = false;
             var canvas = transform.Find("UI_Canvas");
             if (canvas == null) { Debug.LogError("[UIHierarchySetup] UI_Canvas not found."); return; }
-            var dp = canvas.Find("AR_DebugPanel");    if (dp != null) DestroyImmediate(dp.gameObject);
-            var ap = canvas.Find("AR_ActionPanel");   if (ap != null) DestroyImmediate(ap.gameObject);
-            var cb = canvas.Find("AR_CollectBanner"); if (cb != null) DestroyImmediate(cb.gameObject);
-            BuildDebugPanel(canvas);
-            BuildARActionPanel(canvas);
-            BuildARCollectBanner(canvas);
+            var designRoot = canvas.Find("DesignRoot") != null ? canvas.Find("DesignRoot") : canvas;
+            var dp = designRoot.Find("AR_DebugPanel");    if (dp != null) DestroyImmediate(dp.gameObject);
+            var ap = designRoot.Find("AR_ActionPanel");   if (ap != null) DestroyImmediate(ap.gameObject);
+            var cb = designRoot.Find("AR_CollectBanner"); if (cb != null) DestroyImmediate(cb.gameObject);
+            BuildDebugPanel(designRoot);
+            BuildARActionPanel(designRoot);
+            BuildARCollectBanner(designRoot);
             Debug.Log("[UIHierarchySetup] AR overlay panels rebuilt. Wire AR_ActionPanel and AR_CollectBanner to NavigationManager in the Inspector.");
             return;
         }
@@ -151,12 +176,21 @@ public class UIHierarchySetup : MonoBehaviour
         Generate();
     }
 
+    // DesignRoot is inserted between UI_Canvas and PreLoginGroup/MainAppGroup once
+    // fixAspectRatioCentering has run. Before that, or on a fresh project, those groups
+    // sit directly under canvas — check DesignRoot first, fall back to canvas itself.
+    private Transform ResolveContentRoot(Transform canvas)
+    {
+        var designRoot = canvas.Find("DesignRoot");
+        return designRoot != null ? designRoot : canvas;
+    }
+
     private void DoRebuildSoldierScreen()
     {
         var canvas = transform.Find("UI_Canvas");
         if (canvas == null) { Debug.LogError("[UIHierarchySetup] UI_Canvas not found on UIGenerator."); return; }
 
-        var screens = canvas.Find("MainAppGroup/Screens");
+        var screens = ResolveContentRoot(canvas).Find("MainAppGroup/Screens");
         if (screens == null) { Debug.LogError("[UIHierarchySetup] MainAppGroup/Screens not found."); return; }
 
         // Remember sibling index so SoldierScreen stays between HomeScreen and ARScanScreen
@@ -182,7 +216,7 @@ public class UIHierarchySetup : MonoBehaviour
         var canvas = transform.Find("UI_Canvas");
         if (canvas == null) { Debug.LogError("[UIHierarchySetup] UI_Canvas not found."); return; }
 
-        var screens = canvas.Find("MainAppGroup/Screens");
+        var screens = ResolveContentRoot(canvas).Find("MainAppGroup/Screens");
         if (screens == null) { Debug.LogError("[UIHierarchySetup] MainAppGroup/Screens not found."); return; }
 
         int sibling = defaultSiblingIndex;
@@ -207,7 +241,7 @@ public class UIHierarchySetup : MonoBehaviour
         var canvas = transform.Find("UI_Canvas");
         if (canvas == null) { Debug.LogError("[UIHierarchySetup] UI_Canvas not found."); return; }
 
-        var preLogin = canvas.Find("PreLoginGroup");
+        var preLogin = ResolveContentRoot(canvas).Find("PreLoginGroup");
         if (preLogin == null) { Debug.LogError("[UIHierarchySetup] PreLoginGroup not found."); return; }
 
         int sibling = defaultSiblingIndex;
@@ -235,14 +269,15 @@ public class UIHierarchySetup : MonoBehaviour
         EnsureComponent<ActiveSoldierManager>(gameObject);
         EnsureComponent<PlayerProfileManager>(gameObject);
 
-        var canvas = BuildCanvas();
+        var canvas     = BuildCanvas();
+        var designRoot = BuildOrGetDesignRoot(canvas.transform);
 
-        var preLogin = MakeGroup("PreLoginGroup", canvas.transform, C_CLEAR);
+        var preLogin = MakeGroup("PreLoginGroup", designRoot, C_CLEAR);
         BuildMainMenuScreen(preLogin.transform);
         BuildRegisterScreen(preLogin.transform);
         BuildHowToPlayScreen(preLogin.transform);
 
-        var mainApp = MakeGroup("MainAppGroup", canvas.transform, C_CLEAR);
+        var mainApp = MakeGroup("MainAppGroup", designRoot, C_CLEAR);
         mainApp.SetActive(false);
 
         var screens = MakeGroup("Screens", mainApp.transform, C_CLEAR);
@@ -264,9 +299,9 @@ public class UIHierarchySetup : MonoBehaviour
         BuildTopBar(mainApp.transform);
         BuildBottomNavBar(mainApp.transform);
 
-        BuildDebugPanel(canvas.transform);
-        BuildARActionPanel(canvas.transform);
-        BuildARCollectBanner(canvas.transform);
+        BuildDebugPanel(designRoot);
+        BuildARActionPanel(designRoot);
+        BuildARCollectBanner(designRoot);
 
         EnsureEventSystem();
 
@@ -292,6 +327,28 @@ public class UIHierarchySetup : MonoBehaviour
         return canvas;
     }
 
+    // CanvasScaler only matches height (matchWidthOrHeight = 1), so the actual usable
+    // width varies per device aspect ratio. Every screen positions content with fixed
+    // pixel coordinates calibrated for exactly 390px width, left-anchored — on a device
+    // with a different aspect ratio, content stays flush-left with empty space on the
+    // right instead of appearing centered. DesignRoot fixes this: a 390-wide, screen-
+    // centered container that every screen lives inside, so extra device width becomes
+    // symmetric letterbox margins instead of an asymmetric right-side gap.
+    private const float DESIGN_WIDTH = 390f;
+
+    private Transform BuildOrGetDesignRoot(Transform canvas)
+    {
+        var existing = canvas.Find("DesignRoot");
+        if (existing != null) return existing;
+
+        var go = MakeRect("DesignRoot", canvas);
+        Anchor(go, 0.5f, 0f, 0.5f, 1f); // horizontal center, full vertical stretch
+        SetPivot(go, 0.5f, 0.5f);
+        go.GetComponent<RectTransform>().sizeDelta = new Vector2(DESIGN_WIDTH, 0f);
+        go.transform.SetAsFirstSibling(); // stays behind AR overlay panels etc.
+        return go.transform;
+    }
+
     private void BuildTopBar(Transform parent)
     {
         var bar = MakeRect("TopBar", parent);
@@ -300,7 +357,7 @@ public class UIHierarchySetup : MonoBehaviour
         bar.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 65);
 
         var bg = bar.AddComponent<Image>();
-        bg.color = C_WHITE;
+        bg.color = C_GRAY_F8;
 
         var div = MakeRect("Divider", bar.transform);
         Anchor(div, 0, 0, 1, 0);
@@ -336,7 +393,7 @@ public class UIHierarchySetup : MonoBehaviour
         xpRT.sizeDelta        = new Vector2(68, 22);
         xpRT.anchoredPosition = new Vector2(-20, 0);
         var xpBg = xpPill.AddComponent<Image>();
-        xpBg.color = C_GRAY_F8;
+        xpBg.color = C_GRAY_E8; // #CBB9A4 tan pill
 
         var xpLbl = MakeRect("XPLabel", xpPill.transform);
         SetFullScreen(xpLbl);
@@ -344,7 +401,7 @@ public class UIHierarchySetup : MonoBehaviour
         xpTmp.text      = "0 XP";
         xpTmp.fontSize  = 13;
         xpTmp.fontStyle = FontStyles.Bold;
-        xpTmp.color     = C_GRAY_88;
+        xpTmp.color     = C_WHITE;
         xpTmp.alignment = TextAlignmentOptions.Center;
     }
 
@@ -356,7 +413,7 @@ public class UIHierarchySetup : MonoBehaviour
         nav.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 65);
 
         var bg = nav.AddComponent<Image>();
-        bg.color = C_WHITE;
+        bg.color = C_GRAY_F8;
 
         var hlg = nav.AddComponent<HorizontalLayoutGroup>();
         hlg.childAlignment        = TextAnchor.MiddleCenter;
@@ -394,69 +451,119 @@ public class UIHierarchySetup : MonoBehaviour
         // Icon: explicit 24×24 — immune to sprite native size
         var iconGo = MakeRect("Icon", tab.transform);
         iconGo.GetComponent<RectTransform>().sizeDelta = new Vector2(24f, 24f);
-        iconGo.AddComponent<Image>().color = C_GRAY_88;
+        iconGo.AddComponent<Image>().color = C_GRAY_E8;
 
         var lblGo = MakeRect("Label", tab.transform);
         lblGo.GetComponent<RectTransform>().sizeDelta = new Vector2(70f, 13f);
         var lbl = lblGo.AddComponent<TextMeshProUGUI>();
         lbl.text      = labelText;
         lbl.fontSize  = 10;
-        lbl.color     = C_GRAY_88;
+        lbl.color     = C_GRAY_E8;
         lbl.alignment = TextAlignmentOptions.Center;
     }
 
     private void BuildMainMenuScreen(Transform parent)
     {
-        var screen = MakeScreen("MainMenuScreen", parent, C_WHITE);
+        var screen = MakeScreen("MainMenuScreen", parent, C_GRAY_F8);
         screen.AddComponent<MainMenuController>();
 
+        // Background illustration — top-anchored, non-stretching. MainMenuBgPanner resizes
+        // this at runtime to the sprite's real aspect ratio so it always covers the
+        // screen + pan travel without distortion, leaving a cream margin at the very
+        // top instead of filling all the way to the screen edge. Assign the sprite
+        // in the Inspector.
+        var bgImg = MakeRect("BackgroundImage", screen.transform);
+        Anchor(bgImg, 0.5f, 1f, 0.5f, 1f);
+        SetPivot(bgImg, 0.5f, 1f);
+        bgImg.GetComponent<RectTransform>().sizeDelta = new Vector2(600f, 714f); // placeholder until MainMenuBgPanner re-fits it
+        bgImg.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, -130f);
+        var bgImage = bgImg.AddComponent<Image>();
+        bgImage.color = Color.white; // fully opaque — no tint, full illustration color
+        bgImg.AddComponent<MainMenuBgPanner>();
+
+        // Dark warm-brown, slightly translucent — lets the bright sky blend through
+        // the letterforms like the reference poster treatment, instead of flat white.
+        var C_TITLE_BROWN = new Color(0.204f, 0.114f, 0.075f, 0.88f); // ~#341D13 @ 88%
+
         var title = MakeRect("Title", screen.transform);
-        AbsCenterH(title, 3.5f, 203f, 285f, 68f);
+        AbsCenterH(title, 0.5f, 365f, 285f, 68f);
         var tt = title.AddComponent<TextMeshProUGUI>();
         tt.text = "MT. SAMAT"; tt.fontSize = 50; tt.fontStyle = FontStyles.Bold;
-        tt.color = C_BLACK; tt.alignment = TextAlignmentOptions.Center;
+        tt.color = C_TITLE_BROWN; tt.alignment = TextAlignmentOptions.Center;
+        tt.characterSpacing = 1f;
         tt.enableWordWrapping = false;
+        if (titleFont != null) tt.font = titleFont;
+        ApplyLegibilityOutline(tt);
 
         var sub = MakeRect("Subtitle", screen.transform);
-        AbsCenterH(sub, 0f, 268f, 220f, 22f);
+        AbsCenterH(sub, 0f, 430f, 220f, 22f);
         var st = sub.AddComponent<TextMeshProUGUI>();
-        st.text = "MT. SAMAT AR QUEST"; st.fontSize = 15;
-        st.color = C_GRAY_88; st.alignment = TextAlignmentOptions.Center;
+        st.text = "MT. SAMAT AR QUEST"; st.fontSize = 15; st.fontStyle = FontStyles.Bold;
+        st.color = C_TITLE_BROWN; st.alignment = TextAlignmentOptions.Center;
+        st.characterSpacing = 2f;
         st.enableWordWrapping = false;
+        if (titleFont != null) st.font = titleFont;
+        ApplyLegibilityOutline(st);
 
         var div = MakeRect("Divider", screen.transform);
-        AbsPos(div, 131f, 300f, 128f, 4f);
-        div.AddComponent<Image>().color = C_GRAY_D9;
+        AbsPos(div, 131f, 454f, 128f, 2f);
+        div.AddComponent<Image>().color = C_WHITE;
 
+        // START MISSION — solid brown #875D37
         var startBtn = MakeRect("StartMissionBtn", screen.transform);
-        AbsStretchH(startBtn, 41f, 40f, 349f, 57f);
-        startBtn.AddComponent<Image>().color = C_BLACK;
+        AbsStretchH(startBtn, 41f, 40f, 485f, 57f);
+        startBtn.AddComponent<Image>().color = C_GRAY_88;
         startBtn.AddComponent<Button>();
-        var startTxt = MakeRect("Text", startBtn.transform);
-        SetFullScreen(startTxt);
-        var smt = startTxt.AddComponent<TextMeshProUGUI>();
+        var startTxtGo = MakeRect("Text", startBtn.transform);
+        SetFullScreen(startTxtGo);
+        var smt = startTxtGo.AddComponent<TextMeshProUGUI>();
         smt.text = "START MISSION"; smt.fontSize = 17; smt.fontStyle = FontStyles.Bold;
-        smt.color = C_WHITE; smt.alignment = TextAlignmentOptions.Center;
+        smt.color = C_GRAY_F8; smt.alignment = TextAlignmentOptions.Center;
 
-        BuildAbsFigmaBtn("HowToPlayBtn", screen.transform, "HOW TO PLAY", 40f, 41f, 412f, 57f);
+        // HOW TO PLAY — solid #A48D78
+        var C_TAN_MID = new Color(0.643f, 0.553f, 0.471f); // #A48D78
+        var howBtn = MakeRect("HowToPlayBtn", screen.transform);
+        AbsStretchH(howBtn, 40f, 41f, 548f, 57f);
+        howBtn.AddComponent<Image>().color = C_TAN_MID;
+        howBtn.AddComponent<Button>();
+        var howTxtGo = MakeRect("Text", howBtn.transform);
+        SetFullScreen(howTxtGo);
+        var ht = howTxtGo.AddComponent<TextMeshProUGUI>();
+        ht.text = "HOW TO PLAY"; ht.fontSize = 15; ht.fontStyle = FontStyles.Bold;
+        ht.color = C_GRAY_F8; ht.alignment = TextAlignmentOptions.Center;
 
-        BuildAbsFigmaBtn("SettingsBtn",  screen.transform, "SETTINGS",    40f, 41f, 475f, 57f);
+        // SETTINGS — same style as HOW TO PLAY
+        var setBtn = MakeRect("SettingsBtn", screen.transform);
+        AbsStretchH(setBtn, 40f, 41f, 611f, 57f);
+        setBtn.AddComponent<Image>().color = C_TAN_MID;
+        setBtn.AddComponent<Button>();
+        var setTxtGo = MakeRect("Text", setBtn.transform);
+        SetFullScreen(setTxtGo);
+        var sett = setTxtGo.AddComponent<TextMeshProUGUI>();
+        sett.text = "SETTINGS"; sett.fontSize = 15; sett.fontStyle = FontStyles.Bold;
+        sett.color = C_GRAY_F8; sett.alignment = TextAlignmentOptions.Center;
 
-        var exitBtn = MakeRect("ExitBtn", screen.transform);
-        AbsCenterH(exitBtn, 0f, 555f, 100f, 24f);
-        exitBtn.AddComponent<Image>().color = C_CLEAR;
-        exitBtn.AddComponent<Button>();
-        var exitTxtGo = MakeRect("Text", exitBtn.transform);
+        // EXIT — brown border, semi-transparent white fill
+        var exitOuter = MakeRect("ExitBtn", screen.transform);
+        AbsStretchH(exitOuter, 40f, 41f, 674f, 57f);
+        exitOuter.AddComponent<Image>().color = C_GRAY_88;
+        exitOuter.AddComponent<Button>();
+        var exitInner = MakeRect("Fill", exitOuter.transform);
+        Anchor(exitInner, 0f, 0f, 1f, 1f);
+        exitInner.GetComponent<RectTransform>().offsetMin = new Vector2(1f, 1f);
+        exitInner.GetComponent<RectTransform>().offsetMax = new Vector2(-1f, -1f);
+        exitInner.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.25f);
+        var exitTxtGo = MakeRect("Text", exitOuter.transform);
         SetFullScreen(exitTxtGo);
         var et = exitTxtGo.AddComponent<TextMeshProUGUI>();
-        et.text = "EXIT"; et.fontSize = 15;
-        et.color = C_GRAY_AA; et.alignment = TextAlignmentOptions.Center;
+        et.text = "EXIT"; et.fontSize = 15; et.fontStyle = FontStyles.Bold;
+        et.color = C_WHITE; et.alignment = TextAlignmentOptions.Center;
 
         var ver = MakeRect("VersionLabel", screen.transform);
         AbsBottom(ver, 0f, 54f, 166f, 14f);
         var vt = ver.AddComponent<TextMeshProUGUI>();
         vt.text = "v1.2.0 · CLASSIFIED"; vt.fontSize = 10;
-        vt.color = C_GRAY_AA; vt.alignment = TextAlignmentOptions.Center;
+        vt.color = C_BLACK; vt.alignment = TextAlignmentOptions.Center;
     }
 
     // Outline button with exact Figma absolute position + 1px border effect
@@ -484,7 +591,7 @@ public class UIHierarchySetup : MonoBehaviour
 
     private void BuildRegisterScreen(Transform parent)
     {
-        var screen = MakeScreen("RegisterScreen", parent, C_WHITE);
+        var screen = MakeScreen("RegisterScreen", parent, C_GRAY_F8);
         screen.SetActive(false);
         screen.AddComponent<RegisterController>();
 
@@ -513,14 +620,14 @@ public class UIHierarchySetup : MonoBehaviour
         AbsCenterH(sub, -50.5f, 133f, 270f, 22f);
         var st = sub.AddComponent<TextMeshProUGUI>();
         st.text = "Register to begin your mission"; st.fontSize = 15;
-        st.color = C_GRAY_88; st.alignment = TextAlignmentOptions.Center;
+        st.color = C_BLACK; st.alignment = TextAlignmentOptions.Center;
         st.enableWordWrapping = false;
 
         var fullNameLbl = MakeRect("FullNameLabel", screen.transform);
         AbsPos(fullNameLbl, 41f, 179f, 100f, 20f);
         var fnl = fullNameLbl.AddComponent<TextMeshProUGUI>();
         fnl.text = "FULL NAME"; fnl.fontSize = 15; fnl.fontStyle = FontStyles.Bold;
-        fnl.color = C_GRAY_88; fnl.alignment = TextAlignmentOptions.MidlineLeft;
+        fnl.color = C_BLACK; fnl.alignment = TextAlignmentOptions.MidlineLeft;
 
         BuildAbsInputField("FullNameInput", screen.transform, 38f, 204f, 309f, 44f, "Juan dela Cruz");
 
@@ -534,7 +641,7 @@ public class UIHierarchySetup : MonoBehaviour
         AbsPos(userLbl, 41f, 289f, 100f, 20f);
         var ul = userLbl.AddComponent<TextMeshProUGUI>();
         ul.text = "USERNAME"; ul.fontSize = 15; ul.fontStyle = FontStyles.Bold;
-        ul.color = C_GRAY_88; ul.alignment = TextAlignmentOptions.MidlineLeft;
+        ul.color = C_BLACK; ul.alignment = TextAlignmentOptions.MidlineLeft;
 
         BuildAbsInputField("UsernameInput", screen.transform, 38f, 314f, 309f, 44f, "Cutie_JDC");
 
@@ -548,7 +655,7 @@ public class UIHierarchySetup : MonoBehaviour
         AbsPos(avLbl, 41f, 407f, 150f, 20f);
         var avl = avLbl.AddComponent<TextMeshProUGUI>();
         avl.text = "CHOOSE AVATAR"; avl.fontSize = 15; avl.fontStyle = FontStyles.Bold;
-        avl.color = C_GRAY_88; avl.alignment = TextAlignmentOptions.MidlineLeft;
+        avl.color = C_BLACK; avl.alignment = TextAlignmentOptions.MidlineLeft;
 
         float[] avCols = { 37f, 115f, 197f, 277f };
         float[] avRows = { 444f, 528f };
@@ -624,7 +731,7 @@ public class UIHierarchySetup : MonoBehaviour
 
     private void BuildHowToPlayScreen(Transform parent)
     {
-        var screen = MakeScreen("HowToPlayScreen", parent, C_WHITE);
+        var screen = MakeScreen("HowToPlayScreen", parent, C_GRAY_F8);
         screen.SetActive(false);
         screen.AddComponent<HowToPlayController>();
 
@@ -736,7 +843,7 @@ public class UIHierarchySetup : MonoBehaviour
 
     private void BuildHomeScreen(Transform parent)
     {
-        var screen = MakeScreen("HomeScreen", parent, C_WHITE);
+        var screen = MakeScreen("HomeScreen", parent, C_GRAY_F8);
         screen.SetActive(false);
         screen.AddComponent<HomeScreenController>();
 
@@ -744,37 +851,36 @@ public class UIHierarchySetup : MonoBehaviour
         AbsPos(progLbl, 41f, 86f, 165f, 24f);
         var plt = progLbl.AddComponent<TextMeshProUGUI>();
         plt.text = "CURRENT PROGRESS"; plt.fontSize = 18; plt.fontStyle = FontStyles.Bold;
-        plt.color = C_GRAY_88; plt.enableWordWrapping = false;
+        plt.color = C_GRAY_E8; plt.enableWordWrapping = false;
 
+        // Solid tan card — no inner white "Fill" cutout here (that border-effect pattern
+        // is for input fields elsewhere; on this card it covered 98% of the tan background
+        // with near-white, making white text on top of it effectively invisible).
         var pcOuter = MakeRect("ProgressCard", screen.transform);
         AbsPos(pcOuter, 30f, 119f, 329f, 84f);
         pcOuter.AddComponent<Image>().color = C_GRAY_E8;
-        var pcInner = MakeRect("Fill", pcOuter.transform);
-        Anchor(pcInner, 0f, 0f, 1f, 1f);
-        pcInner.GetComponent<RectTransform>().offsetMin = new Vector2(1f,  1f);
-        pcInner.GetComponent<RectTransform>().offsetMax = new Vector2(-1f, -1f);
-        pcInner.AddComponent<Image>().color = C_GRAY_F8;
 
         var missionLbl = MakeRect("MissionLabel", screen.transform);
         AbsPos(missionLbl, 41f, 135f, 248f, 20f);
         var ml = missionLbl.AddComponent<TextMeshProUGUI>();
         ml.text = "Mission Progress: Gear Collection"; ml.fontSize = 14;
-        ml.color = C_GRAY_88; ml.enableWordWrapping = false;
+        ml.color = C_WHITE; ml.enableWordWrapping = false;
 
         var countLbl = MakeRect("ProgressCountLabel", screen.transform);
         AbsPos(countLbl, 305f, 138f, 54f, 22f);
         var pct = countLbl.AddComponent<TextMeshProUGUI>();
         pct.text = "0/0"; pct.fontSize = 13; pct.fontStyle = FontStyles.Bold;
-        pct.color = C_GRAY_88; pct.alignment = TextAlignmentOptions.MidlineRight;
+        pct.color = C_WHITE; pct.alignment = TextAlignmentOptions.MidlineRight;
 
         var barBG = MakeRect("ProgressBarBG", screen.transform);
         AbsPos(barBG, 47f, 173f, 297f, 9f);
-        barBG.AddComponent<Image>().color = C_GRAY_D9;
+        barBG.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.15f); // recessed track over the tan card
 
         var barFill = MakeRect("ProgressBarFill", barBG.transform);
         SetFullScreen(barFill);
         var fi = barFill.AddComponent<Image>();
-        fi.color = C_BLACK; fi.type = Image.Type.Filled;
+        fi.color = C_BLACK; // matches Figma reference exactly
+        fi.type = Image.Type.Filled;
         fi.fillMethod = Image.FillMethod.Horizontal;
         fi.fillOrigin = (int)Image.OriginHorizontal.Left;
         fi.fillAmount = 0f;
@@ -783,7 +889,7 @@ public class UIHierarchySetup : MonoBehaviour
         AbsPos(awardLbl, 30f, 220f, 135f, 24f);
         var alt = awardLbl.AddComponent<TextMeshProUGUI>();
         alt.text = "AWARD PANEL"; alt.fontSize = 18; alt.fontStyle = FontStyles.Bold;
-        alt.color = C_GRAY_88; alt.enableWordWrapping = false;
+        alt.color = C_GRAY_E8; alt.enableWordWrapping = false;
 
         var awardOuter = MakeRect("AwardPanelCard", screen.transform);
         AbsPos(awardOuter, 29f, 273f, 330f, 225f);
@@ -834,7 +940,7 @@ public class UIHierarchySetup : MonoBehaviour
         AbsPos(soldierLbl, 30f, 511f, 220f, 24f);
         var slt = soldierLbl.AddComponent<TextMeshProUGUI>();
         slt.text = "CHOOSE YOUR SOLDIER"; slt.fontSize = 18; slt.fontStyle = FontStyles.Bold;
-        slt.color = C_GRAY_88; slt.enableWordWrapping = false;
+        slt.color = C_GRAY_E8; slt.enableWordWrapping = false;
 
         var sb1 = MakeRect("SoldierInfoBar1", screen.transform);
         AbsPos(sb1, 30f, 539f, 327f, 13f);
@@ -880,13 +986,15 @@ public class UIHierarchySetup : MonoBehaviour
 
         var av = MakeRect("AvatarCircle", card.transform);
         AbsPos(av, avRelX, avRelY, avSize, avSize);
-        av.AddComponent<Image>().color = C_GRAY_E8;
+        var avImg = av.AddComponent<Image>();
+        avImg.color = C_GRAY_E8; // placeholder tan — replace by dragging a sprite onto Source Image
+        avImg.preserveAspect = true; // keeps assigned portraits from stretching to fill the square
 
         var codeGo = MakeRect("CodeLabel", card.transform);
         AbsCenterH(codeGo, codeRelCX - cw * 0.5f, codeRelY, 40f, 16f);
         var ct = codeGo.AddComponent<TextMeshProUGUI>();
         ct.text = code; ct.fontSize = 10; ct.fontStyle = FontStyles.Bold;
-        ct.color = C_GRAY_88; ct.alignment = TextAlignmentOptions.Center;
+        ct.color = C_WHITE; ct.alignment = TextAlignmentOptions.Center;
 
         var natGo = MakeRect("NatLabel", card.transform);
         AbsCenterH(natGo, natRelCX - cw * 0.5f, natRelY, 90f, 20f);
@@ -908,7 +1016,7 @@ public class UIHierarchySetup : MonoBehaviour
         const float BTN_H    =  47f;
         const float CANVAS_H = 844f;
 
-        var screen = MakeScreen("SoldierScreen", parent, C_WHITE);
+        var screen = MakeScreen("SoldierScreen", parent, C_GRAY_F8);
         screen.SetActive(false);
         screen.AddComponent<SoldierScreenController>();
 
@@ -1023,8 +1131,9 @@ public class UIHierarchySetup : MonoBehaviour
         content.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
         var cVlg = content.AddComponent<VerticalLayoutGroup>();
         cVlg.childAlignment = TextAnchor.UpperCenter;
-        cVlg.childControlWidth = true; cVlg.childControlHeight = false;
-        cVlg.childForceExpandWidth = true; cVlg.spacing = 0;
+        cVlg.childControlWidth = true; cVlg.childControlHeight = true;
+        cVlg.childForceExpandWidth = true; cVlg.childForceExpandHeight = false;
+        cVlg.spacing = 0;
         var csf = content.AddComponent<ContentSizeFitter>();
         csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
@@ -1069,7 +1178,7 @@ public class UIHierarchySetup : MonoBehaviour
         Anchor(header, 0, 1, 1, 1);
         SetPivot(header, 0.5f, 1f);
         header.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 65);
-        header.AddComponent<Image>().color = C_WHITE;
+        header.AddComponent<Image>().color = C_GRAY_F8;
 
         var pill = MakeRect("ScanningPill", header.transform);
         Anchor(pill, 0, 0.5f, 0, 0.5f);
@@ -1163,14 +1272,14 @@ public class UIHierarchySetup : MonoBehaviour
     {
         const float CONTENT_H = 1870f;
 
-        var screen = MakeScreen("SettingsScreen", parent, C_WHITE);
+        var screen = MakeScreen("SettingsScreen", parent, C_GRAY_F8);
         screen.SetActive(false);
         screen.AddComponent<SettingsScreenController>();
 
         var header = MakeRect("SettingsHeader", screen.transform);
         Anchor(header, 0, 1, 1, 1); SetPivot(header, 0.5f, 1f);
         header.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 50);
-        header.AddComponent<Image>().color = C_WHITE;
+        header.AddComponent<Image>().color = C_GRAY_F8;
         var headerDiv = MakeRect("Divider", header.transform);
         Anchor(headerDiv, 0, 0, 1, 0); SetPivot(headerDiv, 0.5f, 0f);
         headerDiv.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 1);
@@ -1339,7 +1448,7 @@ public class UIHierarchySetup : MonoBehaviour
 
     private void BuildAwardsScreen(Transform parent)
     {
-        var screen = MakeScreen("AwardsScreen", parent, C_WHITE);
+        var screen = MakeScreen("AwardsScreen", parent, C_GRAY_F8);
         screen.SetActive(false);
         screen.AddComponent<AwardsScreenController>();
 
@@ -1371,8 +1480,8 @@ public class UIHierarchySetup : MonoBehaviour
         list.AddComponent<LayoutElement>().preferredHeight = 860; // 10×68 + 9×20
         var lVlg = list.AddComponent<VerticalLayoutGroup>();
         lVlg.spacing = 20;
-        lVlg.childControlWidth = true; lVlg.childControlHeight = false;
-        lVlg.childForceExpandWidth = true;
+        lVlg.childControlWidth = true; lVlg.childControlHeight = true;
+        lVlg.childForceExpandWidth = true; lVlg.childForceExpandHeight = false;
         lVlg.padding = new RectOffset(29, 29, 0, 0);
 
         for (int i = 0; i < 10; i++)
@@ -1430,13 +1539,13 @@ public class UIHierarchySetup : MonoBehaviour
 
     private void BuildProfileScreen(Transform parent)
     {
-        var screen = MakeScreen("ProfileScreen", parent, C_WHITE);
+        var screen = MakeScreen("ProfileScreen", parent, C_GRAY_F8);
         screen.SetActive(false);
         screen.AddComponent<ProfileScreenController>();
 
         var header = MakeRect("ProfileHeader", screen.transform);
         AbsStretchH(header, 0f, 0f, 0f, 65f);
-        header.AddComponent<Image>().color = C_WHITE;
+        header.AddComponent<Image>().color = C_GRAY_F8;
 
         var headerDiv = MakeRect("Divider", header.transform);
         Anchor(headerDiv, 0f, 0f, 1f, 0f); SetPivot(headerDiv, 0.5f, 0f);
@@ -1466,6 +1575,14 @@ public class UIHierarchySetup : MonoBehaviour
         sv.GetComponent<RectTransform>().offsetMax = new Vector2(0f, -65f);
 
         var content = sv.transform.Find("Viewport/Content");
+
+        // BuildScrollView's Content has 30px horizontal padding baked in (for Awards'
+        // layout-group-driven rows). ProfileContentArea below uses raw AbsPos values
+        // calibrated for a full-width canvas with no padding — leaving the shared
+        // padding in place here shifts everything ~30px right and overflows the
+        // right edge, producing visibly inconsistent margins vs. the header above.
+        var contentVlg = content.GetComponent<VerticalLayoutGroup>();
+        if (contentVlg != null) contentVlg.padding = new RectOffset(0, 0, 0, 0);
 
         var area = MakeRect("ProfileContentArea", content);
         area.AddComponent<LayoutElement>().preferredHeight = 1071f;
@@ -1840,12 +1957,13 @@ public class UIHierarchySetup : MonoBehaviour
         content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
 
         var vlg = content.AddComponent<VerticalLayoutGroup>();
-        vlg.childAlignment        = TextAnchor.UpperCenter;
-        vlg.childControlWidth     = true;
-        vlg.childControlHeight    = false;
-        vlg.childForceExpandWidth = true;
-        vlg.padding               = new RectOffset(30, 30, 0, 0);
-        vlg.spacing               = 10;
+        vlg.childAlignment         = TextAnchor.UpperCenter;
+        vlg.childControlWidth      = true;
+        vlg.childControlHeight     = true;
+        vlg.childForceExpandWidth  = true;
+        vlg.childForceExpandHeight = false;
+        vlg.padding                = new RectOffset(30, 30, 0, 0);
+        vlg.spacing                = 10;
 
         var csf = content.AddComponent<ContentSizeFitter>();
         csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -2012,6 +2130,17 @@ public class UIHierarchySetup : MonoBehaviour
         rt.pivot     = new Vector2(0.5f, 0f);
         rt.sizeDelta = new Vector2(w, h);
         rt.anchoredPosition = new Vector2(xOffset, fromBottom);
+    }
+
+    // Light cream halo around dark text so it stays legible over a moving/busy
+    // background — without this, dark text can blend invisibly into dark art
+    // (e.g. the cross silhouette) as the Main Menu background pans underneath it.
+    private static void ApplyLegibilityOutline(TextMeshProUGUI tmp)
+    {
+        var mat = tmp.fontMaterial;
+        mat.SetColor(ShaderUtilities.ID_OutlineColor, C_GRAY_F8);
+        mat.SetFloat(ShaderUtilities.ID_OutlineWidth, 0.15f);
+        tmp.fontMaterial = mat;
     }
 
     private static void Anchor(GameObject go, float minX, float minY, float maxX, float maxY)

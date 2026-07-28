@@ -9,12 +9,21 @@ public class ARScanOverlayController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _targetLabel;
     [SerializeField] private Image           _scanDot;
 
+    [Header("Geofence Out-Of-Range Overlay")]
+    [SerializeField] private GameObject _geofenceOutOfRangePanel;
+
     private Coroutine _pulseCoroutine;
 
     private void OnEnable()
     {
         RefreshTarget();
         ManifestLoader.OnManifestLoaded += RefreshTarget;
+        GeofenceGuard.OnGeofenceStatusChanged += OnGeofenceChanged;
+
+        // Set initial geofence overlay state.
+        bool inside = GeofenceGuard.Instance == null || GeofenceGuard.Instance.IsInsideGeofence;
+        SetGeofencePanel(!inside);
+
         if (_scanDot != null && _pulseCoroutine == null)
             _pulseCoroutine = StartCoroutine(PulseDot());
     }
@@ -22,11 +31,20 @@ public class ARScanOverlayController : MonoBehaviour
     private void OnDisable()
     {
         ManifestLoader.OnManifestLoaded -= RefreshTarget;
+        GeofenceGuard.OnGeofenceStatusChanged -= OnGeofenceChanged;
         if (_pulseCoroutine != null)
         {
             StopCoroutine(_pulseCoroutine);
             _pulseCoroutine = null;
         }
+    }
+
+    private void OnGeofenceChanged(bool isInside) => SetGeofencePanel(!isInside);
+
+    private void SetGeofencePanel(bool visible)
+    {
+        if (_geofenceOutOfRangePanel != null)
+            _geofenceOutOfRangePanel.SetActive(visible);
     }
 
     private void RefreshTarget()

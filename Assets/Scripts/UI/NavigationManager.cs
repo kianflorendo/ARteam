@@ -48,8 +48,8 @@ public class NavigationManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _awardsTabLabel;
     [SerializeField] private TextMeshProUGUI _profileTabLabel;
 
-    private static readonly Color TAB_ACTIVE   = new Color(0.102f, 0.102f, 0.102f);
-    private static readonly Color TAB_INACTIVE = new Color(0.471f, 0.443f, 0.424f);
+    private static readonly Color TAB_ACTIVE   = new Color(0.102f, 0.102f, 0.102f); // #1A1A1A
+    private static readonly Color TAB_INACTIVE = new Color(0.796f, 0.725f, 0.643f); // #CBB9A4
 
     private void Awake()
     {
@@ -61,16 +61,9 @@ public class NavigationManager : MonoBehaviour
     {
         WireNavButtons();
 
-        // TEMP — remove before shipping. Forces registration flow so avatar picker can be tested.
-        PlayerPrefs.DeleteAll();
-
-        bool registered = PlayerProfileManager.Instance != null
-                          && PlayerProfileManager.Instance.IsRegistered;
-
-        if (registered)
-            SwitchToMainApp();
-        else
-            ShowPreLoginScreen("MainMenu");
+        // Always land on Main Menu first — MainMenuController.OnStartMission()
+        // routes already-registered users straight to Home, unregistered to Register.
+        ShowPreLoginScreen("MainMenu");
     }
 
     private void WireNavButtons()

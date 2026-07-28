@@ -8,10 +8,10 @@
             "type": "info_only",
             "anchor_mode": "image",
             "marker_name": "test_image_1",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 0.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
             "soldier_id": "",
             "division_id": "",
             "bundle_key": "",
@@ -19,12 +19,21 @@
             "scroll": {
                 "title": "Test Image 1 - Info Only",
                 "category": "Image Tracking Test",
-                "description": "This is test image 1 for info-only image tracking. No 3D model appears - only this scroll. You can trigger this multiple times by pointing your camera at test image 1!",
+                "description": "This is test image 1 for info-only image tracking.",
                 "location": "Test Location 1",
                 "specs": [
-                    {"key": "Test Number", "value": "1"},
-                    {"key": "Artifact Type", "value": "Info Only"},
-                    {"key": "Anchor Mode", "value": "Image Tracking"}
+                    {
+                        "key": "Test Number",
+                        "value": "1"
+                    },
+                    {
+                        "key": "Artifact Type",
+                        "value": "Info Only"
+                    },
+                    {
+                        "key": "Anchor Mode",
+                        "value": "Image Tracking"
+                    }
                 ]
             }
         },
@@ -34,10 +43,10 @@
             "type": "info_only",
             "anchor_mode": "image",
             "marker_name": "test_image_2",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 0.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
             "soldier_id": "",
             "division_id": "",
             "bundle_key": "",
@@ -45,12 +54,21 @@
             "scroll": {
                 "title": "Test Image 2 - Info Only",
                 "category": "Image Tracking Test",
-                "description": "This is test image 2 for info-only image tracking. Point your camera at different test images to see different scrolls appear in AR!",
+                "description": "This is test image 2 for info-only image tracking.",
                 "location": "Test Location 2",
                 "specs": [
-                    {"key": "Test Number", "value": "2"},
-                    {"key": "Artifact Type", "value": "Info Only"},
-                    {"key": "Anchor Mode", "value": "Image Tracking"}
+                    {
+                        "key": "Test Number",
+                        "value": "2"
+                    },
+                    {
+                        "key": "Artifact Type",
+                        "value": "Info Only"
+                    },
+                    {
+                        "key": "Anchor Mode",
+                        "value": "Image Tracking"
+                    }
                 ]
             }
         },
@@ -60,10 +78,10 @@
             "type": "info_only",
             "anchor_mode": "image",
             "marker_name": "test_image_3",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 0.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
             "soldier_id": "",
             "division_id": "",
             "bundle_key": "",
@@ -71,12 +89,21 @@
             "scroll": {
                 "title": "Test Image 3 - Info Only",
                 "category": "Image Tracking Test",
-                "description": "This is test image 3 for info-only image tracking. Each test image shows a different scroll to verify image tracking is working correctly!",
+                "description": "This is test image 3 for info-only image tracking.",
                 "location": "Test Location 3",
                 "specs": [
-                    {"key": "Test Number", "value": "3"},
-                    {"key": "Artifact Type", "value": "Info Only"},
-                    {"key": "Anchor Mode", "value": "Image Tracking"}
+                    {
+                        "key": "Test Number",
+                        "value": "3"
+                    },
+                    {
+                        "key": "Artifact Type",
+                        "value": "Info Only"
+                    },
+                    {
+                        "key": "Anchor Mode",
+                        "value": "Image Tracking"
+                    }
                 ]
             }
         },
@@ -86,10 +113,10 @@
             "type": "info_only",
             "anchor_mode": "image",
             "marker_name": "test_image_4",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 0.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
             "soldier_id": "",
             "division_id": "",
             "bundle_key": "",
@@ -97,12 +124,21 @@
             "scroll": {
                 "title": "Test Image 4 - Info Only",
                 "category": "Image Tracking Test",
-                "description": "This is test image 4 for info-only image tracking. Testing that ScrollUIManager correctly displays different content for different images!",
+                "description": "This is test image 4 for info-only image tracking.",
                 "location": "Test Location 4",
                 "specs": [
-                    {"key": "Test Number", "value": "4"},
-                    {"key": "Artifact Type", "value": "Info Only"},
-                    {"key": "Anchor Mode", "value": "Image Tracking"}
+                    {
+                        "key": "Test Number",
+                        "value": "4"
+                    },
+                    {
+                        "key": "Artifact Type",
+                        "value": "Info Only"
+                    },
+                    {
+                        "key": "Anchor Mode",
+                        "value": "Image Tracking"
+                    }
                 ]
             }
         },
@@ -112,10 +148,10 @@
             "type": "info_only",
             "anchor_mode": "image",
             "marker_name": "test_image_5",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 0.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
             "soldier_id": "",
             "division_id": "",
             "bundle_key": "",
@@ -123,12 +159,21 @@
             "scroll": {
                 "title": "Test Image 5 - Info Only",
                 "category": "Image Tracking Test",
-                "description": "This is test image 5 for info-only image tracking. Final test image to verify all 5 image anchors work independently in AR!",
+                "description": "This is test image 5 for info-only image tracking.",
                 "location": "Test Location 5",
                 "specs": [
-                    {"key": "Test Number", "value": "5"},
-                    {"key": "Artifact Type", "value": "Info Only"},
-                    {"key": "Anchor Mode", "value": "Image Tracking"}
+                    {
+                        "key": "Test Number",
+                        "value": "5"
+                    },
+                    {
+                        "key": "Artifact Type",
+                        "value": "Info Only"
+                    },
+                    {
+                        "key": "Anchor Mode",
+                        "value": "Image Tracking"
+                    }
                 ]
             }
         },
@@ -139,15 +184,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 1,
-            "distance_from_previous_meters": 0.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 0,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
             "gps_lat": 14.59866,
             "gps_lng": 121.011841,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 25.0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 25,
             "soldier_id": "S-001",
             "division_id": "D-21",
             "bundle_key": "artifacts/bolo_knife",
@@ -155,13 +200,25 @@
             "scroll": {
                 "title": "Bolo Knife",
                 "category": "Filipino Infantry Weapon",
-                "description": "Standard-issue weapon of Filipino guerrilla fighters during the Battle of Bataan, 1942. Used by soldiers of the USAFFE Philippine Army in close-combat situations across the jungle terrain of Bataan.",
+                "description": "Standard-issue weapon of Filipino guerrilla fighters during the Battle of Bataan, 1942.",
                 "location": "GPS Test Location 1",
                 "specs": [
-                    {"key": "Blade Length", "value": "45 cm"},
-                    {"key": "Origin", "value": "Philippines"},
-                    {"key": "Year Used", "value": "1941-1942"},
-                    {"key": "Test Mode", "value": "GPS Collectible"}
+                    {
+                        "key": "Blade Length",
+                        "value": "45 cm"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "Philippines"
+                    },
+                    {
+                        "key": "Year Used",
+                        "value": "1941-1942"
+                    },
+                    {
+                        "key": "Test Mode",
+                        "value": "GPS Collectible"
+                    }
                 ]
             }
         },
@@ -172,15 +229,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 2,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
             "gps_lat": 14.598518,
             "gps_lng": 121.011664,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/mortar",
@@ -188,14 +245,29 @@
             "scroll": {
                 "title": "M2 60mm Mortar",
                 "category": "Artillery Weapon",
-                "description": "The M2 60mm Mortar was a light infantry mortar used by American and Filipino forces during the Battle of Bataan. It provided crucial fire support for defensive positions across the peninsula.",
+                "description": "The M2 60mm Mortar was a light infantry mortar used by American and Filipino forces during the Battle of Bataan.",
                 "location": "GPS Test Location 2",
                 "specs": [
-                    {"key": "Caliber", "value": "60mm"},
-                    {"key": "Range", "value": "1,815 meters"},
-                    {"key": "Weight", "value": "19.1 kg"},
-                    {"key": "Origin", "value": "United States"},
-                    {"key": "Test Mode", "value": "GPS Collectible"}
+                    {
+                        "key": "Caliber",
+                        "value": "60mm"
+                    },
+                    {
+                        "key": "Range",
+                        "value": "1,815 meters"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "19.1 kg"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    },
+                    {
+                        "key": "Test Mode",
+                        "value": "GPS Collectible"
+                    }
                 ]
             }
         },
@@ -206,15 +278,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 3,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
             "gps_lat": 14.598205,
             "gps_lng": 121.011665,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/thompson",
@@ -222,14 +294,29 @@
             "scroll": {
                 "title": "Thompson Submachine Gun",
                 "category": "American Infantry Weapon",
-                "description": "The Thompson Submachine Gun, known as the Tommy Gun, was widely used by American forces during World War II. USAFFE soldiers carried this weapon during the defense of Bataan in 1942.",
+                "description": "The Thompson Submachine Gun, known as the Tommy Gun, was widely used by American forces during World War II.",
                 "location": "GPS Test Location 3",
                 "specs": [
-                    {"key": "Caliber", "value": ".45 ACP"},
-                    {"key": "Rate of Fire", "value": "700 rpm"},
-                    {"key": "Weight", "value": "4.8 kg"},
-                    {"key": "Origin", "value": "United States"},
-                    {"key": "Test Mode", "value": "GPS Collectible"}
+                    {
+                        "key": "Caliber",
+                        "value": ".45 ACP"
+                    },
+                    {
+                        "key": "Rate of Fire",
+                        "value": "700 rpm"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "4.8 kg"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    },
+                    {
+                        "key": "Test Mode",
+                        "value": "GPS Collectible"
+                    }
                 ]
             }
         },
@@ -240,15 +327,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 4,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/helmet",
@@ -256,13 +343,25 @@
             "scroll": {
                 "title": "M1 Steel Helmet",
                 "category": "USAFFE Protective Equipment",
-                "description": "The M1 steel helmet was standard headgear for American and Filipino USAFFE soldiers throughout the Battle of Bataan (January-April 1942). Adopted just months before the Pacific War began, it offered far superior shrapnel protection over earlier designs. During the grueling four-month siege, soldiers repurposed their helmets as cooking pots and water vessels when supplies ran critically low.",
+                "description": "The M1 steel helmet was standard headgear for American and Filipino USAFFE soldiers throughout the Battle of Bataan (January-April 1942).",
                 "location": "Weapons & Equipment Hall — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Material", "value": "Manganese steel"},
-                    {"key": "Weight", "value": "0.73 kg"},
-                    {"key": "Origin", "value": "United States"},
-                    {"key": "Year Adopted", "value": "1941"}
+                    {
+                        "key": "Material",
+                        "value": "Manganese steel"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "0.73 kg"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    },
+                    {
+                        "key": "Year Adopted",
+                        "value": "1941"
+                    }
                 ]
             }
         },
@@ -273,30 +372,44 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 5,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-001",
-            "shared_soldier_ids": ["S-003"],
+            "shared_soldier_ids": [
+                "S-003"
+            ],
             "division_id": "D-21",
             "bundle_key": "artifacts/automata",
             "tracking_lost_behavior": "freeze",
             "scroll": {
                 "title": "M1911A1 Automatic Pistol",
                 "category": "USAFFE Sidearm",
-                "description": "The Colt M1911A1 .45 caliber automatic pistol was the standard sidearm of American officers and senior non-commissioned officers defending Bataan. Its powerful .45 ACP cartridge and dependable operation in the punishing jungle heat made it a trusted last-resort weapon. When ammunition ran out in the final days of Bataan's fall, many officers destroyed their M1911s rather than allow them to fall into Japanese hands.",
+                "description": "The Colt M1911A1 .45 caliber automatic pistol was the standard sidearm of American officers and senior non-commissioned officers defending Bataan.",
                 "location": "Officers' Armory Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Caliber", "value": ".45 ACP"},
-                    {"key": "Capacity", "value": "7+1 rounds"},
-                    {"key": "Weight", "value": "1.13 kg"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Caliber",
+                        "value": ".45 ACP"
+                    },
+                    {
+                        "key": "Capacity",
+                        "value": "7+1 rounds"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "1.13 kg"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -307,15 +420,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 6,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/browning",
@@ -323,13 +436,25 @@
             "scroll": {
                 "title": "M1918A2 Browning Automatic Rifle",
                 "category": "USAFFE Squad Automatic Weapon",
-                "description": "The Browning Automatic Rifle M1918A2 was the backbone of automatic firepower for USAFFE rifle squads during the Battle of Bataan. Capable of delivering sustained fire at up to 650 rounds per minute, each squad's BAR team suppressed Japanese infantry assaults through the dense Bataan jungle. Its reliability under tropical conditions made it one of the most valued weapons of the Bataan campaign.",
+                "description": "The Browning Automatic Rifle M1918A2 was the backbone of automatic firepower for USAFFE rifle squads during the Battle of Bataan.",
                 "location": "Heavy Weapons Gallery — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Caliber", "value": ".30-06 Springfield"},
-                    {"key": "Rate of Fire", "value": "300-650 rpm"},
-                    {"key": "Weight", "value": "8.8 kg"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Caliber",
+                        "value": ".30-06 Springfield"
+                    },
+                    {
+                        "key": "Rate of Fire",
+                        "value": "300-650 rpm"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "8.8 kg"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -340,15 +465,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 7,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-001",
             "division_id": "D-21",
             "bundle_key": "artifacts/springfield_bol",
@@ -356,14 +481,29 @@
             "scroll": {
                 "title": "M1903 Springfield Bolt-Action Rifle",
                 "category": "Filipino Infantry Weapon",
-                "description": "The M1903 Springfield was the primary service rifle of both Filipino and American USAFFE infantry at the outbreak of WWII. Chambered in .30-06 Springfield, this bolt-action rifle was accurate and reliable in Bataan's tropical jungle. Filipino soldiers of the Philippine Army, hastily mobilized in 1941, were issued the M1903 alongside the M1917 Enfield. Despite supply shortages throughout the siege, the Springfield remained a dependable weapon during the four-month Bataan defense.",
+                "description": "The M1903 Springfield was the primary service rifle of both Filipino and American USAFFE infantry at the outbreak of WWII.",
                 "location": "Weapons Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Caliber", "value": ".30-06 Springfield"},
-                    {"key": "Action", "value": "Bolt-action"},
-                    {"key": "Weight", "value": "3.94 kg"},
-                    {"key": "Effective Range", "value": "914 m"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Caliber",
+                        "value": ".30-06 Springfield"
+                    },
+                    {
+                        "key": "Action",
+                        "value": "Bolt-action"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "3.94 kg"
+                    },
+                    {
+                        "key": "Effective Range",
+                        "value": "914 m"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -374,15 +514,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 8,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-001",
             "division_id": "D-21",
             "bundle_key": "artifacts/enfield",
@@ -390,14 +530,29 @@
             "scroll": {
                 "title": "M1917 Enfield Rifle",
                 "category": "Filipino Infantry Weapon",
-                "description": "The M1917 Enfield, a WWI-era bolt-action rifle rechambered for .30-06 Springfield, was reissued to Philippine Army troops in 1941 to supplement the limited M1903 Springfield supply. Produced in large numbers during WWI, it was distributed widely among the Filipino reserve divisions activated just months before the Japanese invasion. Despite its bulk, it proved a rugged and reliable weapon throughout the Bataan campaign.",
+                "description": "A WWI-era bolt-action rifle reissued to Philippine Army troops in 1941 to supplement limited M1903 Springfield supplies.",
                 "location": "Weapons Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Caliber", "value": ".30-06 Springfield"},
-                    {"key": "Action", "value": "Bolt-action"},
-                    {"key": "Weight", "value": "4.17 kg"},
-                    {"key": "Effective Range", "value": "823 m"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Caliber",
+                        "value": ".30-06 Springfield"
+                    },
+                    {
+                        "key": "Action",
+                        "value": "Bolt-action"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "4.17 kg"
+                    },
+                    {
+                        "key": "Effective Range",
+                        "value": "823 m"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -408,31 +563,48 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 9,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-001",
-            "shared_soldier_ids": ["S-003"],
+            "shared_soldier_ids": [
+                "S-003"
+            ],
             "division_id": "D-21",
             "bundle_key": "artifacts/colt_45_pist",
             "tracking_lost_behavior": "freeze",
             "scroll": {
                 "title": "M1911A1 Colt .45 Pistol",
                 "category": "Filipino / American Sidearm",
-                "description": "The M1911A1 semi-automatic pistol was the standard sidearm issued to USAFFE officers, NCOs, and crew-served weapon teams during the Battle of Bataan. Its powerful .45 ACP cartridge delivered reliable stopping power in close-range jungle encounters. Both American and Filipino officers carried the Colt .45 as a symbol of rank and a last-resort weapon throughout the desperate four-month siege.",
+                "description": "The M1911A1 semi-automatic pistol was the standard sidearm issued to USAFFE officers, NCOs, and crew-served weapon teams during the Battle of Bataan.",
                 "location": "Officers' Armory Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Caliber", "value": ".45 ACP"},
-                    {"key": "Capacity", "value": "7+1 rounds"},
-                    {"key": "Weight", "value": "1.13 kg"},
-                    {"key": "Action", "value": "Semi-automatic"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Caliber",
+                        "value": ".45 ACP"
+                    },
+                    {
+                        "key": "Capacity",
+                        "value": "7+1 rounds"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "1.13 kg"
+                    },
+                    {
+                        "key": "Action",
+                        "value": "Semi-automatic"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -443,31 +615,48 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 10,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-001",
-            "shared_soldier_ids": ["S-003"],
+            "shared_soldier_ids": [
+                "S-003"
+            ],
             "division_id": "D-21",
             "bundle_key": "artifacts/bayonet",
             "tracking_lost_behavior": "freeze",
             "scroll": {
                 "title": "M1905/M1 Bayonet",
                 "category": "USAFFE Close-Combat Weapon",
-                "description": "The M1905 bayonet, designed for mounting on the M1903 Springfield rifle, featured a 40.6 cm blade for close-quarters combat. In the desperate final stages of the Battle of Bataan, when ammunition supplies were nearly exhausted, USAFFE officers ordered bayonet charges against advancing Japanese forces. The bayonet became a symbol of the defenders' grim determination to hold the line at all costs.",
+                "description": "The M1905 bayonet, designed for mounting on the M1903 Springfield rifle, featured a 40.6 cm blade for close-quarters combat.",
                 "location": "Weapons Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Blade Length", "value": "40.6 cm (M1905)"},
-                    {"key": "Weight", "value": "0.45 kg"},
-                    {"key": "Material", "value": "Carbon steel blade"},
-                    {"key": "Compatible", "value": "M1903 Springfield, M1 Garand"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Blade Length",
+                        "value": "40.6 cm (M1905)"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "0.45 kg"
+                    },
+                    {
+                        "key": "Material",
+                        "value": "Carbon steel blade"
+                    },
+                    {
+                        "key": "Compatible",
+                        "value": "M1903 Springfield, M1 Garand"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -478,31 +667,48 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 11,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-001",
-            "shared_soldier_ids": ["S-003"],
+            "shared_soldier_ids": [
+                "S-003"
+            ],
             "division_id": "D-21",
             "bundle_key": "artifacts/pineapple_grenade",
             "tracking_lost_behavior": "freeze",
             "scroll": {
                 "title": "Mk 2 \"Pineapple\" Fragmentation Grenade",
                 "category": "USAFFE Infantry Explosive",
-                "description": "The Mk 2 fragmentation grenade, nicknamed the \"Pineapple\" for its segmented cast-iron body, was standard issue for USAFFE infantry at Bataan. Filled with 57g of TNT with a 4-5 second delay fuse, soldiers used it to break up Japanese banzai charges and clear fortified positions in the dense jungle. As the siege deepened, every remaining grenade was carefully rationed for the most critical defensive moments.",
+                "description": "The Mk 2 fragmentation grenade, nicknamed the \"Pineapple\" for its segmented cast-iron body, was standard issue for USAFFE infantry at Bataan.",
                 "location": "Ordnance Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Weight", "value": "595 g"},
-                    {"key": "Filler", "value": "57 g TNT"},
-                    {"key": "Fuse Delay", "value": "4-5 seconds"},
-                    {"key": "Casualty Radius", "value": "5-15 m"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Weight",
+                        "value": "595 g"
+                    },
+                    {
+                        "key": "Filler",
+                        "value": "57 g TNT"
+                    },
+                    {
+                        "key": "Fuse Delay",
+                        "value": "4-5 seconds"
+                    },
+                    {
+                        "key": "Casualty Radius",
+                        "value": "5-15 m"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -513,30 +719,44 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 12,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-001",
-            "shared_soldier_ids": ["S-003"],
+            "shared_soldier_ids": [
+                "S-003"
+            ],
             "division_id": "D-21",
             "bundle_key": "artifacts/cartridge_belt",
             "tracking_lost_behavior": "freeze",
             "scroll": {
                 "title": "M1923 Cartridge Belt",
                 "category": "USAFFE Load-Bearing Equipment",
-                "description": "The M1923 Dismounted Cartridge Belt held ten five-round clips of .30-06 Springfield ammunition, giving each rifleman immediate access to 50 rounds. Standard issue for both Filipino and American USAFFE infantry at Bataan, this web cotton belt kept vital ammunition organized and accessible during intense jungle fighting. As the siege lengthened and resupply was blocked by Japanese naval patrols, ammunition conservation became critical for every soldier.",
+                "description": "The M1923 Dismounted Cartridge Belt held ten five-round clips of .30-06 Springfield ammunition, giving each rifleman immediate access to 50 rounds.",
                 "location": "Equipment Hall — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Capacity", "value": "50 rounds (.30-06)"},
-                    {"key": "Pockets", "value": "10 clip pockets"},
-                    {"key": "Material", "value": "Web cotton"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Capacity",
+                        "value": "50 rounds (.30-06)"
+                    },
+                    {
+                        "key": "Pockets",
+                        "value": "10 clip pockets"
+                    },
+                    {
+                        "key": "Material",
+                        "value": "Web cotton"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -547,31 +767,48 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 13,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-001",
-            "shared_soldier_ids": ["S-003"],
+            "shared_soldier_ids": [
+                "S-003"
+            ],
             "division_id": "D-21",
             "bundle_key": "artifacts/machine_gun",
             "tracking_lost_behavior": "freeze",
             "scroll": {
                 "title": "M1919A4 Browning .30 Cal Machine Gun",
                 "category": "USAFFE Support Weapon",
-                "description": "The M1919A4 Browning .30 caliber air-cooled machine gun was the primary medium support weapon of USAFFE infantry during the Battle of Bataan. Belt-fed and capable of 400-600 rounds per minute, Browning machine gun teams anchored defensive perimeters along the Abucay Hacienda line and the Orion-Bagac road, exacting a heavy toll on Japanese infantry assaults until the final capitulation in April 1942.",
+                "description": "The M1919A4 Browning .30 caliber air-cooled machine gun was the primary medium support weapon of USAFFE infantry during the Battle of Bataan.",
                 "location": "Heavy Weapons Gallery — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Caliber", "value": ".30-06 Springfield"},
-                    {"key": "Rate of Fire", "value": "400-600 rpm"},
-                    {"key": "Weight", "value": "14.1 kg"},
-                    {"key": "Feed", "value": "Belt-fed"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Caliber",
+                        "value": ".30-06 Springfield"
+                    },
+                    {
+                        "key": "Rate of Fire",
+                        "value": "400-600 rpm"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "14.1 kg"
+                    },
+                    {
+                        "key": "Feed",
+                        "value": "Belt-fed"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -582,30 +819,44 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 14,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-001",
-            "shared_soldier_ids": ["S-003"],
+            "shared_soldier_ids": [
+                "S-003"
+            ],
             "division_id": "D-21",
             "bundle_key": "artifacts/canteen",
             "tracking_lost_behavior": "freeze",
             "scroll": {
                 "title": "M1910 Canteen with Cup & Cover",
                 "category": "USAFFE Field Survival Equipment",
-                "description": "The M1910 canteen and its aluminum cup were indispensable survival items for every USAFFE soldier at Bataan. In the oppressive tropical heat, dehydration, dysentery, and malaria were constant threats alongside Japanese bullets. Soldiers boiled contaminated water from jungle streams in their canteen cups when purification tablets ran out. As the siege deepened, clean drinking water became as critical to survival as ammunition.",
+                "description": "The M1910 canteen and its aluminum cup were indispensable survival items for every USAFFE soldier at Bataan.",
                 "location": "Field Equipment Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Capacity", "value": "1 quart (0.95 L)"},
-                    {"key": "Material", "value": "Aluminum"},
-                    {"key": "Cover", "value": "Olive drab wool felt"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Capacity",
+                        "value": "1 quart (0.95 L)"
+                    },
+                    {
+                        "key": "Material",
+                        "value": "Aluminum"
+                    },
+                    {
+                        "key": "Cover",
+                        "value": "Olive drab wool felt"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -616,15 +867,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 15,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-001",
             "division_id": "D-21",
             "bundle_key": "artifacts/bamboo_stretcher",
@@ -632,13 +883,25 @@
             "scroll": {
                 "title": "Bamboo Stretcher",
                 "category": "Filipino Improvised Medical Equipment",
-                "description": "The bamboo stretcher was a vital piece of improvised medical equipment used by Filipino medics and soldiers during the Battle of Bataan. When standard canvas-and-pole litters were unavailable, Bataan's abundant bamboo was fashioned into stretchers to evacuate the wounded through dense jungle terrain. Field hospitals at Limay and Little Baguio were overwhelmed with casualties, and these improvised bamboo stretchers were essential for saving lives.",
+                "description": "The bamboo stretcher was a vital piece of improvised medical equipment used by Filipino medics and soldiers during the Battle of Bataan.",
                 "location": "Medical Equipment Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Material", "value": "Local bamboo"},
-                    {"key": "Construction", "value": "Field-improvised"},
-                    {"key": "Origin", "value": "Philippines"},
-                    {"key": "Year Used", "value": "1942"}
+                    {
+                        "key": "Material",
+                        "value": "Local bamboo"
+                    },
+                    {
+                        "key": "Construction",
+                        "value": "Field-improvised"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "Philippines"
+                    },
+                    {
+                        "key": "Year Used",
+                        "value": "1942"
+                    }
                 ]
             }
         },
@@ -649,15 +912,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 16,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-002",
             "division_id": "D-31",
             "bundle_key": "artifacts/type_38_arisaka",
@@ -665,14 +928,29 @@
             "scroll": {
                 "title": "Type 38 Arisaka Rifle",
                 "category": "Imperial Japanese Infantry Weapon",
-                "description": "The Type 38 Arisaka was the primary bolt-action infantry rifle of the Imperial Japanese Army during the assault on the Philippines and the Battle of Bataan. Notable for its unusual length of 127 cm, designed to compensate for the shorter stature of Japanese soldiers in bayonet combat, it was accurate and dependable in tropical conditions. Japanese soldiers of General Homma's 14th Army carried the Type 38 during relentless assaults on USAFFE defensive lines.",
+                "description": "The Type 38 Arisaka was the primary bolt-action infantry rifle of the Imperial Japanese Army during the assault on the Philippines and the Battle of Bataan.",
                 "location": "Enemy Forces Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Caliber", "value": "6.5x50mmSR"},
-                    {"key": "Action", "value": "Bolt-action"},
-                    {"key": "Weight", "value": "3.95 kg"},
-                    {"key": "Length", "value": "127 cm"},
-                    {"key": "Origin", "value": "Empire of Japan"}
+                    {
+                        "key": "Caliber",
+                        "value": "6.5x50mmSR"
+                    },
+                    {
+                        "key": "Action",
+                        "value": "Bolt-action"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "3.95 kg"
+                    },
+                    {
+                        "key": "Length",
+                        "value": "127 cm"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "Empire of Japan"
+                    }
                 ]
             }
         },
@@ -683,15 +961,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 17,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-002",
             "division_id": "D-31",
             "bundle_key": "artifacts/type_96_light_machine_gun",
@@ -699,14 +977,29 @@
             "scroll": {
                 "title": "Type 96 Light Machine Gun",
                 "category": "Imperial Japanese Support Weapon",
-                "description": "The Type 96 Light Machine Gun was the standard squad automatic weapon of Japanese infantry during the Battle of Bataan. Fed by a 30-round top-mounted magazine and chambered in 6.5x50mm Arisaka, it gave Japanese squads effective mobile fire support during assaults on USAFFE defensive positions. Its optical sight provided superior accuracy in jungle engagements along the Abucay line and during the brutal battles for the East and West Roads of Bataan.",
+                "description": "The Type 96 Light Machine Gun was the standard squad automatic weapon of Japanese infantry during the Battle of Bataan.",
                 "location": "Enemy Forces Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Caliber", "value": "6.5x50mmSR"},
-                    {"key": "Capacity", "value": "30-round magazine"},
-                    {"key": "Rate of Fire", "value": "550 rpm"},
-                    {"key": "Weight", "value": "9 kg"},
-                    {"key": "Origin", "value": "Empire of Japan"}
+                    {
+                        "key": "Caliber",
+                        "value": "6.5x50mmSR"
+                    },
+                    {
+                        "key": "Capacity",
+                        "value": "30-round magazine"
+                    },
+                    {
+                        "key": "Rate of Fire",
+                        "value": "550 rpm"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "9 kg"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "Empire of Japan"
+                    }
                 ]
             }
         },
@@ -717,15 +1010,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 18,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-002",
             "division_id": "D-31",
             "bundle_key": "artifacts/type_89_knee_mortar",
@@ -733,13 +1026,25 @@
             "scroll": {
                 "title": "Type 89 Grenade Discharger",
                 "category": "Imperial Japanese Infantry Weapon",
-                "description": "The Type 89 Grenade Discharger, misnamed the \"knee mortar\" by Allied soldiers, was an extremely versatile and feared weapon of Japanese infantry squads at Bataan. Capable of launching grenade shells, 50mm mortar rounds, and smoke projectiles, it gave Japanese squads organic indirect-fire capability at the squad level. USAFFE soldiers found it particularly dangerous in dense jungle where its high-angle trajectories reached defenders behind cover.",
+                "description": "The Type 89 Grenade Discharger, misnamed the \"knee mortar\" by Allied soldiers, was an extremely versatile and feared weapon of Japanese infantry squads at Bataan.",
                 "location": "Enemy Forces Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Caliber", "value": "50mm"},
-                    {"key": "Range", "value": "50-650 m"},
-                    {"key": "Weight", "value": "4.7 kg"},
-                    {"key": "Origin", "value": "Empire of Japan"}
+                    {
+                        "key": "Caliber",
+                        "value": "50mm"
+                    },
+                    {
+                        "key": "Range",
+                        "value": "50-650 m"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "4.7 kg"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "Empire of Japan"
+                    }
                 ]
             }
         },
@@ -750,15 +1055,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 19,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-002",
             "division_id": "D-31",
             "bundle_key": "artifacts/rice_ration_sack",
@@ -766,12 +1071,21 @@
             "scroll": {
                 "title": "Japanese Rice Ration Sack",
                 "category": "Imperial Japanese Field Equipment",
-                "description": "The rice ration sack was a fundamental part of the Imperial Japanese soldier's field kit during the Bataan campaign. Japanese soldiers were trained to subsist largely on locally procured rice, reflecting Japanese military doctrine of field self-sufficiency. This relative self-sufficiency contrasted sharply with the catastrophic food crisis faced by USAFFE defenders, whose supply lines were cut by January 1942, reducing rations to a quarter of the standard daily allowance.",
+                "description": "The rice ration sack was a fundamental part of the Imperial Japanese soldier's field kit during the Bataan campaign.",
                 "location": "Japanese Forces Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Material", "value": "Cotton / Jute weave"},
-                    {"key": "Capacity", "value": "Approx. 3-day rice supply"},
-                    {"key": "Origin", "value": "Empire of Japan"}
+                    {
+                        "key": "Material",
+                        "value": "Cotton / Jute weave"
+                    },
+                    {
+                        "key": "Capacity",
+                        "value": "Approx. 3-day rice supply"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "Empire of Japan"
+                    }
                 ]
             }
         },
@@ -782,15 +1096,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 20,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-002",
             "division_id": "D-31",
             "bundle_key": "artifacts/japanese_propaganda",
@@ -798,13 +1112,25 @@
             "scroll": {
                 "title": "Japanese Propaganda Leaflet",
                 "category": "Imperial Japanese Psychological Warfare",
-                "description": "Imperial Japanese forces dropped propaganda leaflets over Bataan by aircraft and fired them in artillery shells as a psychological warfare tool. These leaflets urged Filipino soldiers to abandon their American commanders, appealing to pan-Asian solidarity and promising good treatment as prisoners. Despite the desperate situation at Bataan, the vast majority of Filipino and American defenders rejected surrender appeals and continued fighting until General King's capitulation on April 9, 1942.",
+                "description": "Imperial Japanese forces dropped propaganda leaflets over Bataan by aircraft and fired them in artillery shells as a psychological warfare tool.",
                 "location": "Historical Documents — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Material", "value": "Printed paper"},
-                    {"key": "Delivery", "value": "Aerial / Artillery shell"},
-                    {"key": "Language", "value": "English and Tagalog"},
-                    {"key": "Origin", "value": "Empire of Japan"}
+                    {
+                        "key": "Material",
+                        "value": "Printed paper"
+                    },
+                    {
+                        "key": "Delivery",
+                        "value": "Aerial / Artillery shell"
+                    },
+                    {
+                        "key": "Language",
+                        "value": "English and Tagalog"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "Empire of Japan"
+                    }
                 ]
             }
         },
@@ -815,15 +1141,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 21,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/60mm_mortar",
@@ -831,14 +1157,29 @@
             "scroll": {
                 "title": "M1 81mm Mortar",
                 "category": "American Artillery Weapon",
-                "description": "The M1 81mm Mortar provided USAFFE forces at Bataan with crucial medium indirect-fire support at the battalion level. Heavier and longer-ranged than the M2 60mm mortar, its powerful shells could destroy Japanese field fortifications and disrupt troop concentrations beyond the range of infantry weapons. During the defense of Bataan's I Corps and II Corps sectors, M1 81mm mortar crews played a vital role in blunting Japanese breakthrough attempts along the main battle line.",
+                "description": "The M1 81mm Mortar provided USAFFE forces at Bataan with crucial medium indirect-fire support at the battalion level.",
                 "location": "Artillery Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Caliber", "value": "81mm"},
-                    {"key": "Maximum Range", "value": "2,560 m"},
-                    {"key": "Weight", "value": "61.5 kg"},
-                    {"key": "Shell Weight", "value": "3.12 kg"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Caliber",
+                        "value": "81mm"
+                    },
+                    {
+                        "key": "Maximum Range",
+                        "value": "2,560 m"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "61.5 kg"
+                    },
+                    {
+                        "key": "Shell Weight",
+                        "value": "3.12 kg"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -849,15 +1190,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 22,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/herringbone",
@@ -865,13 +1206,25 @@
             "scroll": {
                 "title": "HBT Herringbone Twill Fatigue Uniform",
                 "category": "American Uniform",
-                "description": "The Herringbone Twill (HBT) two-piece fatigue uniform was the working and combat dress of American soldiers in the Pacific Theater during WWII. Made from durable twill-weave olive drab cotton, it was designed for tropical conditions. American soldiers of the USAFFE wore the HBT throughout the Battle of Bataan, and by the end of the four-month siege, many uniforms were in tatters from the relentless jungle fighting.",
+                "description": "The Herringbone Twill (HBT) two-piece fatigue uniform was the working and combat dress of American soldiers in the Pacific Theater during WWII.",
                 "location": "Uniforms & Equipment Hall — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Material", "value": "Herringbone Twill cotton"},
-                    {"key": "Color", "value": "Olive Drab"},
-                    {"key": "Type", "value": "Two-piece (jacket and trousers)"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Material",
+                        "value": "Herringbone Twill cotton"
+                    },
+                    {
+                        "key": "Color",
+                        "value": "Olive Drab"
+                    },
+                    {
+                        "key": "Type",
+                        "value": "Two-piece (jacket and trousers)"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -882,15 +1235,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 23,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/canvas",
@@ -898,12 +1251,21 @@
             "scroll": {
                 "title": "M1938 Canvas Leggings",
                 "category": "American Uniform Equipment",
-                "description": "The M1938 Canvas Leggings were worn over the lower leg and boot by American soldiers at Bataan. Made from olive drab canvas secured with metal hooks, they protected legs from thorns, insects, leeches, and mud during operations in the dense Bataan jungle. Filipino USAFFE soldiers also received canvas leggings as part of their standard equipment issue when stocks were available.",
+                "description": "The M1938 Canvas Leggings were worn over the lower leg and boot by American soldiers at Bataan.",
                 "location": "Uniforms & Equipment Hall — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Material", "value": "Canvas (olive drab)"},
-                    {"key": "Fastening", "value": "Metal hooks and eyelets"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Material",
+                        "value": "Canvas (olive drab)"
+                    },
+                    {
+                        "key": "Fastening",
+                        "value": "Metal hooks and eyelets"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -914,15 +1276,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 24,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/service_shoe",
@@ -930,12 +1292,21 @@
             "scroll": {
                 "title": "Army Service Shoe (Leather)",
                 "category": "American Uniform Equipment",
-                "description": "The standard-issue Army leather service shoe proved problematic in Bataan's jungle terrain, where mud, water crossings, and sharp terrain quickly deteriorated the leather. During the four-month siege, many shoes wore out beyond repair as the supply situation collapsed. By April 1942, some defenders of Bataan were fighting barefoot or wearing crude sandals fashioned from whatever materials were at hand — a stark testament to the total failure of USAFFE supply lines.",
+                "description": "The standard-issue Army leather service shoe proved problematic in Bataan's jungle terrain, where mud, water crossings, and sharp terrain quickly deteriorated the leather.",
                 "location": "Uniforms & Equipment Hall — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Material", "value": "Russet leather"},
-                    {"key": "Type", "value": "Low-quarter service shoe"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Material",
+                        "value": "Russet leather"
+                    },
+                    {
+                        "key": "Type",
+                        "value": "Low-quarter service shoe"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -946,15 +1317,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 25,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/gas_mask",
@@ -962,13 +1333,25 @@
             "scroll": {
                 "title": "M2A2 Service Gas Mask",
                 "category": "USAFFE Protective Equipment",
-                "description": "The M2A2 Lightweight Service Gas Mask was issued to USAFFE soldiers as protection against potential Japanese chemical weapons use. In practice, Japanese forces did not deploy poison gas during the Bataan campaign, and the bulky masks became an additional burden for already overloaded soldiers battling food and ammunition shortages. The mask featured a canister filter providing protection against mustard gas, chlorine, and other chemical warfare agents.",
+                "description": "The M2A2 Lightweight Service Gas Mask was issued to USAFFE soldiers as protection against potential Japanese chemical weapons use.",
                 "location": "Protective Equipment Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Type", "value": "Service Mask (lightweight)"},
-                    {"key": "Protection", "value": "Chemical warfare agents"},
-                    {"key": "Canister Filter", "value": "Yes"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Type",
+                        "value": "Service Mask (lightweight)"
+                    },
+                    {
+                        "key": "Protection",
+                        "value": "Chemical warfare agents"
+                    },
+                    {
+                        "key": "Canister Filter",
+                        "value": "Yes"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -979,15 +1362,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 26,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/web_pistol_belt",
@@ -995,13 +1378,25 @@
             "scroll": {
                 "title": "M1936 Web Pistol Belt",
                 "category": "USAFFE Load-Bearing Equipment",
-                "description": "The M1936 Web Pistol Belt was the primary load-bearing belt for USAFFE officers and pistol-armed soldiers at Bataan. Made from olive drab cotton webbing, it served as the foundation for attaching the M1916 holster, magazine pouches, first aid pouch, and canteen. Officers of both the Philippine Army and U.S. forces wore the M1936 pistol belt with their M1911A1 Colt .45 throughout the Bataan campaign.",
+                "description": "The M1936 Web Pistol Belt was the primary load-bearing belt for USAFFE officers and pistol-armed soldiers at Bataan.",
                 "location": "Equipment Hall — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Material", "value": "Olive drab cotton webbing"},
-                    {"key": "Buckle", "value": "Open-end brass slide"},
-                    {"key": "Compatible", "value": "M1916 holster, pouches, canteen"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Material",
+                        "value": "Olive drab cotton webbing"
+                    },
+                    {
+                        "key": "Buckle",
+                        "value": "Open-end brass slide"
+                    },
+                    {
+                        "key": "Compatible",
+                        "value": "M1916 holster, pouches, canteen"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -1012,15 +1407,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 27,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/suspenders",
@@ -1028,13 +1423,25 @@
             "scroll": {
                 "title": "M1936 Field Suspenders",
                 "category": "USAFFE Load-Bearing Equipment",
-                "description": "The M1936 Field Suspenders were paired with the M1936 Pistol Belt and M1923 Cartridge Belt to distribute the weight of a soldier's combat load during the Battle of Bataan. Made from heavy olive drab cotton webbing with metal wire hooks, they transferred equipment weight from the hips to the shoulders — critical when soldiers carried ammunition, rations, and gear through Bataan's rugged jungle terrain for months of continuous fighting.",
+                "description": "The M1936 Field Suspenders were paired with the M1936 Pistol Belt and M1923 Cartridge Belt to distribute the weight of a soldier's combat load during the Battle of Bataan.",
                 "location": "Equipment Hall — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Material", "value": "Olive drab cotton webbing"},
-                    {"key": "Hooks", "value": "Metal wire"},
-                    {"key": "Compatible", "value": "M1936 Pistol Belt, M1923 Cartridge Belt"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Material",
+                        "value": "Olive drab cotton webbing"
+                    },
+                    {
+                        "key": "Hooks",
+                        "value": "Metal wire"
+                    },
+                    {
+                        "key": "Compatible",
+                        "value": "M1936 Pistol Belt, M1923 Cartridge Belt"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -1045,15 +1452,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 28,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/haversack",
@@ -1061,12 +1468,21 @@
             "scroll": {
                 "title": "M1928 Haversack",
                 "category": "USAFFE Load-Bearing Equipment",
-                "description": "The M1928 Haversack was the standard individual field pack of American infantrymen at Bataan. Attached to the M1936 suspenders, it carried a soldier's rations, personal items, blanket roll, and spare ammunition. As the Bataan siege stretched into its fourth month and food rations were cut to one-quarter the standard daily allowance, haversacks that once carried days of field rations became depressingly light — a grim reflection of the collapsing supply situation.",
+                "description": "The M1928 Haversack was the standard individual field pack of American infantrymen at Bataan.",
                 "location": "Field Equipment Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Material", "value": "Olive drab canvas"},
-                    {"key": "Attachment", "value": "M1936 Suspenders"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Material",
+                        "value": "Olive drab canvas"
+                    },
+                    {
+                        "key": "Attachment",
+                        "value": "M1936 Suspenders"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -1077,15 +1493,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 29,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/map_case",
@@ -1093,12 +1509,21 @@
             "scroll": {
                 "title": "M1938 Canvas Map Case",
                 "category": "USAFFE Officer Field Equipment",
-                "description": "The M1938 Canvas Map Case was carried by USAFFE officers during the Battle of Bataan to protect maps, operational orders, and intelligence reports from tropical humidity and rain. Officers coordinating the complex defensive lines — the Abucay-Mauban line and later the Orion-Bagac line — relied on accurate topographic maps stored in these waterproof canvas cases to direct their troops across the rugged Bataan Peninsula.",
+                "description": "The M1938 Canvas Map Case was carried by USAFFE officers during the Battle of Bataan to protect maps, operational orders, and intelligence reports from tropical humidity and rain.",
                 "location": "Officers' Equipment Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Material", "value": "Waterproofed canvas"},
-                    {"key": "Size", "value": "Approx. 28x38 cm"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Material",
+                        "value": "Waterproofed canvas"
+                    },
+                    {
+                        "key": "Size",
+                        "value": "Approx. 28x38 cm"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -1109,15 +1534,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 30,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/rifle_sling",
@@ -1125,13 +1550,25 @@
             "scroll": {
                 "title": "M1907 Rifle Sling",
                 "category": "USAFFE Infantry Equipment",
-                "description": "The M1907 leather rifle sling was standard issue for the M1903 Springfield and M1 Garand rifles carried by every USAFFE infantryman at Bataan. More than a carrying strap, the properly adjusted M1907 sling stabilized a rifleman's aim in the standing, kneeling, and prone positions — techniques critical for the long-range rifle fire used to slow advancing Japanese infantry. As defenders retreated southward through the jungle, slings kept rifles accessible during forced marches under fire.",
+                "description": "The M1907 leather rifle sling was standard issue for the M1903 Springfield and M1 Garand rifles carried by every USAFFE infantryman at Bataan.",
                 "location": "Field Equipment Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Material", "value": "Russet leather"},
-                    {"key": "Width", "value": "2.5 cm"},
-                    {"key": "Compatible", "value": "M1903 Springfield, M1 Garand"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Material",
+                        "value": "Russet leather"
+                    },
+                    {
+                        "key": "Width",
+                        "value": "2.5 cm"
+                    },
+                    {
+                        "key": "Compatible",
+                        "value": "M1903 Springfield, M1 Garand"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -1142,15 +1579,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 31,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/t_handle_entren",
@@ -1158,14 +1595,29 @@
             "scroll": {
                 "title": "M1910 T-Handle Entrenching Tool",
                 "category": "USAFFE Field Engineering Equipment",
-                "description": "The M1910 T-Handle Entrenching Tool was carried by every USAFFE infantryman defending Bataan. The ability to quickly dig a fighting foxhole was the difference between life and death under relentless Japanese artillery bombardment. USAFFE engineers and infantry units used entrenching tools to construct the extensive defensive lines, anti-tank ditches, and machine gun positions that enabled the four-month resistance on the Bataan Peninsula.",
+                "description": "The M1910 T-Handle Entrenching Tool was carried by every USAFFE infantryman defending Bataan.",
                 "location": "Field Equipment Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Weight", "value": "0.86 kg"},
-                    {"key": "Blade", "value": "Steel spade"},
-                    {"key": "Handle", "value": "Wood T-grip"},
-                    {"key": "Action", "value": "Folding"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Weight",
+                        "value": "0.86 kg"
+                    },
+                    {
+                        "key": "Blade",
+                        "value": "Steel spade"
+                    },
+                    {
+                        "key": "Handle",
+                        "value": "Wood T-grip"
+                    },
+                    {
+                        "key": "Action",
+                        "value": "Folding"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -1176,15 +1628,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 32,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/lensatic_compass",
@@ -1192,13 +1644,25 @@
             "scroll": {
                 "title": "M1938 Lensatic Compass",
                 "category": "USAFFE Navigation Equipment",
-                "description": "The M1938 Lensatic Compass was the standard military compass issued to American officers and NCOs during the Bataan campaign. Essential for navigation through the dense jungle and mountainous terrain of the Bataan Peninsula, it allowed patrols to maintain direction even when landmarks were obscured by the jungle canopy. USAFFE scouts and patrol leaders relied on their lensatic compass for night movements and flanking operations against Japanese positions.",
+                "description": "The M1938 Lensatic Compass was the standard military compass issued to American officers and NCOs during the Bataan campaign.",
                 "location": "Officers' Equipment Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Type", "value": "Lensatic (liquid-damped)"},
-                    {"key": "Accuracy", "value": "+/- 1 degree"},
-                    {"key": "Material", "value": "Aluminum housing"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Type",
+                        "value": "Lensatic (liquid-damped)"
+                    },
+                    {
+                        "key": "Accuracy",
+                        "value": "+/- 1 degree"
+                    },
+                    {
+                        "key": "Material",
+                        "value": "Aluminum housing"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -1209,15 +1673,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 33,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/field_telephone",
@@ -1225,13 +1689,25 @@
             "scroll": {
                 "title": "EE-8 Field Telephone",
                 "category": "USAFFE Communications Equipment",
-                "description": "The EE-8 Field Telephone was the primary tactical communications device used by USAFFE units during the Battle of Bataan. Connected by WD-1 telephone wire strung between command posts and frontline units, the EE-8 enabled real-time coordination of defensive fire and troop movements. USAFFE signal corps soldiers worked continuously under fire to repair telephone lines cut by Japanese artillery — when wire was destroyed, runners and radio took over.",
+                "description": "The EE-8 Field Telephone was the primary tactical communications device used by USAFFE units during the Battle of Bataan.",
                 "location": "Communications Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Type", "value": "Magneto-powered field telephone"},
-                    {"key": "Wire Range", "value": "Up to 35 km"},
-                    {"key": "Weight", "value": "2.3 kg"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Type",
+                        "value": "Magneto-powered field telephone"
+                    },
+                    {
+                        "key": "Wire Range",
+                        "value": "Up to 35 km"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "2.3 kg"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -1242,15 +1718,15 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 34,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-003",
             "division_id": "D-21",
             "bundle_key": "artifacts/atabrine_medicine",
@@ -1258,13 +1734,25 @@
             "scroll": {
                 "title": "Atabrine (Quinacrine) Medicine",
                 "category": "USAFFE Medical Supply",
-                "description": "Atabrine — quinacrine hydrochloride — was the synthetic anti-malarial drug administered to American and Filipino USAFFE soldiers at Bataan. Malaria was catastrophic among the defenders: by the end of the siege, an estimated 80-90% of all USAFFE soldiers suffered from the disease. With quinine exhausted and Atabrine stocks critically low by early 1942, malaria incapacitated thousands of defenders who might otherwise have held the line. A small bottle of Atabrine became one of the most valuable objects in Bataan.",
+                "description": "Atabrine — quinacrine hydrochloride — was the synthetic anti-malarial drug administered to American and Filipino USAFFE soldiers at Bataan.",
                 "location": "Medical Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Active Ingredient", "value": "Quinacrine HCl"},
-                    {"key": "Dose", "value": "100mg tablets"},
-                    {"key": "Use", "value": "Anti-malarial prophylaxis and treatment"},
-                    {"key": "Origin", "value": "United States"}
+                    {
+                        "key": "Active Ingredient",
+                        "value": "Quinacrine HCl"
+                    },
+                    {
+                        "key": "Dose",
+                        "value": "100mg tablets"
+                    },
+                    {
+                        "key": "Use",
+                        "value": "Anti-malarial prophylaxis and treatment"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
                 ]
             }
         },
@@ -1275,30 +1763,514 @@
             "anchor_mode": "gps",
             "gps_progression_mode": "distance_chain",
             "sequence_index": 35,
-            "distance_from_previous_meters": 1.0,
-            "spawn_distance_from_player_meters": 1.0,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
             "spawn_height_offset_meters": -0.4,
             "spawn_presentation": "camera_forward",
             "marker_name": "",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-001",
-            "shared_soldier_ids": ["S-003"],
+            "shared_soldier_ids": [
+                "S-003"
+            ],
             "division_id": "D-21",
             "bundle_key": "artifacts/aidpouch",
             "tracking_lost_behavior": "freeze",
             "scroll": {
                 "title": "M1942 First Aid Pouch",
                 "category": "USAFFE Medical Equipment",
-                "description": "The M1942 First Aid Pouch was standard-issue medical equipment carried by every USAFFE infantryman at Bataan. Each pouch contained a field dressing bandage, iodine swab, sulfanilamide powder for wound infection, and a morphine syrette for pain. During the Bataan Death March and the siege itself, medics and soldiers alike depended on these pouches to treat wounds under fire — but supplies ran critically short by early 1942. Both Filipino and American soldiers shared whatever medical supplies remained, reflecting the combined USAFFE spirit of the Bataan defenders.",
+                "description": "The M1942 First Aid Pouch was standard-issue medical equipment carried by every USAFFE infantryman at Bataan.",
                 "location": "Medical Display — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Contents", "value": "Field dressing, iodine, sulfanilamide, morphine syrette"},
-                    {"key": "Issue", "value": "Standard USAFFE infantryman kit"},
-                    {"key": "Origin", "value": "United States"},
-                    {"key": "Year", "value": "1942"}
+                    {
+                        "key": "Contents",
+                        "value": "Field dressing, iodine, sulfanilamide, morphine syrette"
+                    },
+                    {
+                        "key": "Issue",
+                        "value": "Standard USAFFE infantryman kit"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    },
+                    {
+                        "key": "Year",
+                        "value": "1942"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "GPS-TEST-036",
+            "name": "Binoculars",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "gps_progression_mode": "distance_chain",
+            "sequence_index": 36,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
+            "spawn_height_offset_meters": -0.4,
+            "spawn_presentation": "camera_forward",
+            "marker_name": "",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
+            "soldier_id": "S-003",
+            "division_id": "D-21",
+            "bundle_key": "artifacts/binoculars",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "M3 Binoculars",
+                "category": "USAFFE Observation Equipment",
+                "description": "Military binoculars were essential observation tools for USAFFE officers and scouts during the Battle of Bataan.",
+                "location": "Officers' Equipment Display — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Magnification",
+                        "value": "6x"
+                    },
+                    {
+                        "key": "Objective Lens",
+                        "value": "30mm"
+                    },
+                    {
+                        "key": "Field of View",
+                        "value": "8 degrees"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "GPS-TEST-037",
+            "name": "Carlisle First Aid Bandage",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "gps_progression_mode": "distance_chain",
+            "sequence_index": 37,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
+            "spawn_height_offset_meters": -0.4,
+            "spawn_presentation": "camera_forward",
+            "marker_name": "",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
+            "soldier_id": "S-001",
+            "shared_soldier_ids": [
+                "S-003"
+            ],
+            "division_id": "D-21",
+            "bundle_key": "artifacts/carlisle_first_aid",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "Carlisle Model First Aid Bandage",
+                "category": "USAFFE Medical Supply",
+                "description": "The Carlisle Model First Aid Bandage was the standard individual field dressing issued to every USAFFE soldier at Bataan.",
+                "location": "Medical Display — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Type",
+                        "value": "Sterile pressure dressing"
+                    },
+                    {
+                        "key": "Pad Size",
+                        "value": "4 x 7 inches"
+                    },
+                    {
+                        "key": "Packaging",
+                        "value": "Sealed foil wrapper"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "GPS-TEST-038",
+            "name": "Dog Tags",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "gps_progression_mode": "distance_chain",
+            "sequence_index": 38,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
+            "spawn_height_offset_meters": -0.4,
+            "spawn_presentation": "camera_forward",
+            "marker_name": "",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
+            "soldier_id": "S-003",
+            "shared_soldier_ids": [
+                "S-001"
+            ],
+            "division_id": "D-21",
+            "bundle_key": "artifacts/dog_tags",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "Identification Tags (Dog Tags)",
+                "category": "USAFFE Personal Equipment",
+                "description": "Military identification tags — called dog tags — were worn by every USAFFE soldier at Bataan bearing name, serial number, blood type, and religion.",
+                "location": "Personal Equipment Display — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Material",
+                        "value": "Monel metal (nickel-copper alloy)"
+                    },
+                    {
+                        "key": "Size",
+                        "value": "35 x 51 mm each"
+                    },
+                    {
+                        "key": "Info Stamped",
+                        "value": "Name, serial, blood type, religion"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "GPS-TEST-039",
+            "name": "Flashlight",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "gps_progression_mode": "distance_chain",
+            "sequence_index": 39,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
+            "spawn_height_offset_meters": -0.4,
+            "spawn_presentation": "camera_forward",
+            "marker_name": "",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
+            "soldier_id": "S-003",
+            "division_id": "D-21",
+            "bundle_key": "artifacts/flashlight",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "TL-122 Military Flashlight",
+                "category": "USAFFE Field Equipment",
+                "description": "The TL-122 angle-head flashlight was standard issue for American soldiers in the Pacific Theater.",
+                "location": "Field Equipment Display — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Type",
+                        "value": "Angle-head military flashlight"
+                    },
+                    {
+                        "key": "Power",
+                        "value": "2x D-cell batteries"
+                    },
+                    {
+                        "key": "Lens Options",
+                        "value": "Clear, red, blue, green"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "GPS-TEST-040",
+            "name": "Morphine Syrette",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "gps_progression_mode": "distance_chain",
+            "sequence_index": 40,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
+            "spawn_height_offset_meters": -0.4,
+            "spawn_presentation": "camera_forward",
+            "marker_name": "",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
+            "soldier_id": "S-003",
+            "shared_soldier_ids": [
+                "S-001"
+            ],
+            "division_id": "D-21",
+            "bundle_key": "artifacts/morphine_syrette",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "Morphine Tartrate Syrette",
+                "category": "USAFFE Medical Supply",
+                "description": "The morphine syrette — a collapsible metal tube with an attached needle — delivered a 30mg dose of morphine tartrate for battlefield pain management.",
+                "location": "Medical Display — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Dose",
+                        "value": "30mg morphine tartrate"
+                    },
+                    {
+                        "key": "Container",
+                        "value": "Collapsible metal tube"
+                    },
+                    {
+                        "key": "Use",
+                        "value": "Battlefield pain management / shock prevention"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "GPS-TEST-041",
+            "name": "Nambu Type 14 Pistol",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "gps_progression_mode": "distance_chain",
+            "sequence_index": 41,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
+            "spawn_height_offset_meters": -0.4,
+            "spawn_presentation": "camera_forward",
+            "marker_name": "",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
+            "soldier_id": "S-002",
+            "division_id": "D-31",
+            "bundle_key": "artifacts/nambu_pistol",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "Nambu Type 14 Pistol",
+                "category": "Imperial Japanese Sidearm",
+                "description": "The Nambu Type 14 semi-automatic pistol was the standard sidearm of Imperial Japanese Army officers during the Battle of Bataan.",
+                "location": "Enemy Forces Display — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Caliber",
+                        "value": "8mm Nambu"
+                    },
+                    {
+                        "key": "Capacity",
+                        "value": "8+1 rounds"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "0.9 kg"
+                    },
+                    {
+                        "key": "Action",
+                        "value": "Semi-automatic"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "Empire of Japan"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "GPS-TEST-042",
+            "name": "Senninbari Belt",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "gps_progression_mode": "distance_chain",
+            "sequence_index": 42,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
+            "spawn_height_offset_meters": -0.4,
+            "spawn_presentation": "camera_forward",
+            "marker_name": "",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
+            "soldier_id": "S-002",
+            "division_id": "D-31",
+            "bundle_key": "artifacts/senninbari_belt",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "Senninbari — Thousand Stitches Belt",
+                "category": "Imperial Japanese Cultural Artifact",
+                "description": "A white cotton \"thousand-stitch\" belt, each stitch sewn by a different woman as a charm for protection and good fortune.",
+                "location": "Japanese Cultural Artifacts — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Material",
+                        "value": "White cotton with red silk stitches"
+                    },
+                    {
+                        "key": "Stitches",
+                        "value": "1,000 (one per person)"
+                    },
+                    {
+                        "key": "Significance",
+                        "value": "Protection charm from family"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "Empire of Japan"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "GPS-TEST-043",
+            "name": "Shelter Half Tent",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "gps_progression_mode": "distance_chain",
+            "sequence_index": 43,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
+            "spawn_height_offset_meters": -0.4,
+            "spawn_presentation": "camera_forward",
+            "marker_name": "",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
+            "soldier_id": "S-003",
+            "shared_soldier_ids": [
+                "S-001"
+            ],
+            "division_id": "D-21",
+            "bundle_key": "artifacts/shelter_half_tent",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "M1934 Shelter Half",
+                "category": "USAFFE Field Equipment",
+                "description": "The M1934 Shelter Half was the individual field shelter carried by every USAFFE infantryman at Bataan.",
+                "location": "Field Equipment Display — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Material",
+                        "value": "Cotton duck canvas (waterproofed)"
+                    },
+                    {
+                        "key": "Size",
+                        "value": "Approx. 135 x 150 cm per half"
+                    },
+                    {
+                        "key": "Tent Type",
+                        "value": "Two-man pup tent (two halves)"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "United States"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "GPS-TEST-044",
+            "name": "Type 90 Steel Helmet",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "gps_progression_mode": "distance_chain",
+            "sequence_index": 44,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
+            "spawn_height_offset_meters": -0.4,
+            "spawn_presentation": "camera_forward",
+            "marker_name": "",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
+            "soldier_id": "S-002",
+            "division_id": "D-31",
+            "bundle_key": "artifacts/type_90_steel_helmet",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "Type 90 Steel Combat Helmet",
+                "category": "Imperial Japanese Protective Equipment",
+                "description": "The Type 90 Steel Combat Helmet was the standard headgear of Imperial Japanese Army soldiers who assaulted the Bataan Peninsula in 1942.",
+                "location": "Enemy Forces Display — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Material",
+                        "value": "Manganese steel"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "0.75 kg"
+                    },
+                    {
+                        "key": "Emblem",
+                        "value": "Cherry blossom star"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "Empire of Japan"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "GPS-TEST-045",
+            "name": "Type 92 Heavy Machine Gun",
+            "type": "collectible",
+            "anchor_mode": "gps",
+            "gps_progression_mode": "distance_chain",
+            "sequence_index": 45,
+            "distance_from_previous_meters": 2,
+            "spawn_distance_from_player_meters": 1,
+            "spawn_height_offset_meters": -0.4,
+            "spawn_presentation": "camera_forward",
+            "marker_name": "",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
+            "soldier_id": "S-002",
+            "division_id": "D-31",
+            "bundle_key": "artifacts/type_92_heavy_machine_gun",
+            "tracking_lost_behavior": "freeze",
+            "scroll": {
+                "title": "Type 92 Heavy Machine Gun",
+                "category": "Imperial Japanese Heavy Support Weapon",
+                "description": "Nicknamed the \"woodpecker\" for its slow firing rhythm, it was the Imperial Japanese Army's primary heavy machine gun at Bataan.",
+                "location": "Enemy Forces Display — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Caliber",
+                        "value": "7.7x58mm Semi-Rimmed"
+                    },
+                    {
+                        "key": "Rate of Fire",
+                        "value": "450 rpm"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "55.3 kg (with tripod)"
+                    },
+                    {
+                        "key": "Feed",
+                        "value": "30-round strips"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "Empire of Japan"
+                    }
                 ]
             }
         },
@@ -1308,10 +2280,10 @@
             "type": "collectible",
             "anchor_mode": "image",
             "marker_name": "bolo_knife_display_case",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-001",
             "division_id": "D-21",
             "bundle_key": "artifacts/bolo_knife",
@@ -1319,12 +2291,21 @@
             "scroll": {
                 "title": "Bolo Knife",
                 "category": "Filipino Infantry Weapon",
-                "description": "Standard-issue weapon of Filipino guerrilla fighters during the Battle of Bataan, 1942. Used by soldiers of the USAFFE Philippine Army in close-combat situations across the jungle terrain of Bataan.",
+                "description": "Standard-issue weapon of Filipino guerrilla fighters during the Battle of Bataan, 1942.",
                 "location": "Weapons Display, West Wing — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Blade Length", "value": "45 cm"},
-                    {"key": "Origin", "value": "Philippines"},
-                    {"key": "Year Used", "value": "1941-1942"}
+                    {
+                        "key": "Blade Length",
+                        "value": "45 cm"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "Philippines"
+                    },
+                    {
+                        "key": "Year Used",
+                        "value": "1941-1942"
+                    }
                 ]
             }
         },
@@ -1337,7 +2318,7 @@
             "gps_lat": 14.554712,
             "gps_lng": 120.424683,
             "gps_altitude": 12.5,
-            "gps_geofence_radius_meters": 15.0,
+            "gps_geofence_radius_meters": 15,
             "soldier_id": "S-002",
             "division_id": "D-31",
             "bundle_key": "artifacts/arisaka_rifle",
@@ -1345,13 +2326,25 @@
             "scroll": {
                 "title": "Type 38 Arisaka Rifle",
                 "category": "Imperial Infantry Weapon",
-                "description": "Primary bolt-action rifle of the Imperial Japanese Army during the Battle of Bataan, 1942. Known for its remarkable length and accuracy, designed by Colonel Arisaka Nariakira.",
+                "description": "Primary bolt-action rifle of the Imperial Japanese Army during the Battle of Bataan, 1942.",
                 "location": "North Entrance — Memorial Grounds",
                 "specs": [
-                    {"key": "Cartridge", "value": "6.5x50mmSR"},
-                    {"key": "Action", "value": "Bolt-action"},
-                    {"key": "Weight", "value": "3.95 kg"},
-                    {"key": "Origin", "value": "Empire of Japan"}
+                    {
+                        "key": "Cartridge",
+                        "value": "6.5x50mmSR"
+                    },
+                    {
+                        "key": "Action",
+                        "value": "Bolt-action"
+                    },
+                    {
+                        "key": "Weight",
+                        "value": "3.95 kg"
+                    },
+                    {
+                        "key": "Origin",
+                        "value": "Empire of Japan"
+                    }
                 ]
             }
         },
@@ -1361,10 +2354,10 @@
             "type": "info_only",
             "anchor_mode": "image",
             "marker_name": "21st_division_emblem_wall",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 0.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
             "soldier_id": "",
             "division_id": "",
             "bundle_key": "",
@@ -1372,12 +2365,21 @@
             "scroll": {
                 "title": "21st Division - Mountain Watchers",
                 "category": "Philippine Army Division",
-                "description": "The 21st Division was one of the ten reserve divisions of the Philippine Army mobilized in 1941. They defended the northern sector of the Bataan Peninsula during the fierce winter offensive.",
+                "description": "The 21st Division was one of the ten reserve divisions of the Philippine Army mobilized in 1941.",
                 "location": "Division Emblems Hall — Mt. Samat Shrine",
                 "specs": [
-                    {"key": "Activated", "value": "September 1, 1941"},
-                    {"key": "Area Defended", "value": "North Bataan"},
-                    {"key": "Commander", "value": "Brig. Gen. Mateo Capinpin"}
+                    {
+                        "key": "Activated",
+                        "value": "September 1, 1941"
+                    },
+                    {
+                        "key": "Area Defended",
+                        "value": "North Bataan"
+                    },
+                    {
+                        "key": "Commander",
+                        "value": "Brig. Gen. Mateo Capinpin"
+                    }
                 ]
             }
         },
@@ -1387,10 +2389,10 @@
             "type": "info_only",
             "anchor_mode": "image",
             "marker_name": "dambana_cross_photo",
-            "gps_lat": 0.0,
-            "gps_lng": 0.0,
-            "gps_altitude": 0.0,
-            "gps_geofence_radius_meters": 0.0,
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
             "soldier_id": "",
             "division_id": "",
             "bundle_key": "",
@@ -1398,12 +2400,548 @@
             "scroll": {
                 "title": "Dambana ng Kagitingan",
                 "category": "National Shrine",
-                "description": "The Shrine of Valor stands atop Mt. Samat in Bataan, Philippines. Built to commemorate the gallantry and heroism of Filipino and American soldiers during the Battle of Bataan in World War II.",
+                "description": "The Shrine of Valor stands atop Mt. Samat in Bataan, Philippines.",
                 "location": "Summit — Mt. Samat National Shrine",
                 "specs": [
-                    {"key": "Height", "value": "92 meters"},
-                    {"key": "Constructed", "value": "1966"},
-                    {"key": "Dedicated", "value": "April 9, 1966"}
+                    {
+                        "key": "Height",
+                        "value": "92 meters"
+                    },
+                    {
+                        "key": "Constructed",
+                        "value": "1966"
+                    },
+                    {
+                        "key": "Dedicated",
+                        "value": "April 9, 1966"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-001",
+            "name": "USAFFE",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_usaffe",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "USAFFE",
+                "category": "USAFFE Command Emblem",
+                "description": "The USAFFE eagle emblem represents the combined American-Filipino command that fought the Battle of Bataan.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-002",
+            "name": "11th Division",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_11th_division",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "11th Division",
+                "category": "Philippine Army Division Emblem",
+                "description": "The 11th Division was one of the Philippine Army reserve divisions mobilized in 1941 and deployed to defend the Bataan Peninsula.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-003",
+            "name": "41st Division",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_41st_division",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "41st Division",
+                "category": "Philippine Army Division Emblem",
+                "description": "The 41st Division, Philippine Army was mobilized in 1941 and fought under I Corps during the Battle of Bataan.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-004",
+            "name": "51st Division",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_51st_division",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "51st Division",
+                "category": "Philippine Army Division Emblem",
+                "description": "The 51st Division, Philippine Army served under II Corps during the Battle of Bataan, defending the eastern sector of the Bataan defensive lines.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-005",
+            "name": "71st Division",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_71st_division",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "71st Division",
+                "category": "Philippine Army Division Emblem",
+                "description": "The 71st Division, Philippine Army was a reserve division mobilized in 1941 and assigned to I Corps during the Battle of Bataan.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-006",
+            "name": "91st Division",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_91st_division",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "91st Division",
+                "category": "Philippine Army Division Emblem",
+                "description": "The 91st Division, Philippine Army was mobilized from the Visayas region and deployed to Bataan as part of the USAFFE defense.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-007",
+            "name": "Air Corps",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_air_corps",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "Air Corps",
+                "category": "Philippine Army Air Arm Emblem",
+                "description": "The Philippine Army Air Corps was the air arm of the Philippine Army at the outbreak of WWII.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-008",
+            "name": "PN Off Shore Patrol",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_pn_offshore_patrol",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "PN Off Shore Patrol",
+                "category": "Philippine Navy Emblem",
+                "description": "The Philippine Navy Off Shore Patrol was the naval component of USAFFE during the Battle of Bataan.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-009",
+            "name": "1st Regular Division",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_1st_regular_division",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "1st Regular Division",
+                "category": "Philippine Army Division Emblem",
+                "description": "The 1st Regular Division was the premier regular combat division of the Philippine Army — composed of professional soldiers rather than reservists.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-010",
+            "name": "2nd Regular Division",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_2nd_regular_division",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "2nd Regular Division",
+                "category": "Philippine Army Division Emblem",
+                "description": "The 2nd Regular Division was the second of the Philippine Army's professional regular divisions deployed at Bataan.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-011",
+            "name": "31st Division",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_31st_division",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "31st Division",
+                "category": "Philippine Army Division Emblem",
+                "description": "The 31st Division, Philippine Army was a reserve division mobilized in 1941 and assigned to I Corps during the Battle of Bataan.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-012",
+            "name": "81st Division",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_81st_division",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "81st Division",
+                "category": "Philippine Army Division Emblem",
+                "description": "The 81st Division, Philippine Army was a reserve division mobilized from the Visayas in 1941 and deployed to Bataan under I Corps.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-013",
+            "name": "101st Division",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_101st_division",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "101st Division",
+                "category": "Philippine Army Division Emblem",
+                "description": "The 101st Division, Philippine Army was one of the last reserve divisions committed to the Bataan defense.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-014",
+            "name": "61st Division",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_61st_division",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "61st Division",
+                "category": "Philippine Army Division Emblem",
+                "description": "The 61st Division was one of the Philippine Army's reserve divisions mobilized in 1941 as part of the Bataan defense order of battle.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-015",
+            "name": "HPA",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_hpa",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "HPA",
+                "category": "Philippine Army Command Emblem",
+                "description": "HPA, Headquarters Philippine Army, was the central command overseeing all Philippine Army divisions during the Battle of Bataan.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-016",
+            "name": "Philippine Department",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_philippine_department",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "Philippine Department",
+                "category": "U.S. Army Pre-War Command Emblem",
+                "description": "The Philippine Department was the U.S. Army's administrative command in the Philippines before USAFFE was formed in July 1941.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EMBLEM-017",
+            "name": "Philippine Division",
+            "type": "info_only",
+            "anchor_mode": "image",
+            "marker_name": "emblem_philippine_division",
+            "gps_lat": 0,
+            "gps_lng": 0,
+            "gps_altitude": 0,
+            "gps_geofence_radius_meters": 0,
+            "soldier_id": "",
+            "division_id": "",
+            "bundle_key": "",
+            "tracking_lost_behavior": "hide",
+            "scroll": {
+                "title": "Philippine Division",
+                "category": "U.S. Army Division Emblem",
+                "description": "The Philippine Division was a U.S. Army division that included the 31st U.S. Infantry and Philippine Scout regiments, among the most distinguished formations in the Pacific.",
+                "location": "Division Emblems Hall — Mt. Samat Shrine",
+                "specs": [
+                    {
+                        "key": "Branch",
+                        "value": "Philippine Army"
+                    },
+                    {
+                        "key": "Campaign",
+                        "value": "Battle of Bataan (1942)"
+                    }
                 ]
             }
         }
@@ -1426,7 +2964,11 @@
                 "GPS-TEST-013",
                 "GPS-TEST-014",
                 "GPS-TEST-015",
-                "GPS-TEST-035"
+                "GPS-TEST-035",
+                "GPS-TEST-037",
+                "GPS-TEST-038",
+                "GPS-TEST-040",
+                "GPS-TEST-043"
             ],
             "token_badge": {
                 "badge_id": "BADGE-S-001",
@@ -1445,7 +2987,11 @@
                 "GPS-TEST-017",
                 "GPS-TEST-018",
                 "GPS-TEST-019",
-                "GPS-TEST-020"
+                "GPS-TEST-020",
+                "GPS-TEST-041",
+                "GPS-TEST-042",
+                "GPS-TEST-044",
+                "GPS-TEST-045"
             ],
             "token_badge": {
                 "badge_id": "BADGE-S-002",
@@ -1485,7 +3031,13 @@
                 "GPS-TEST-032",
                 "GPS-TEST-033",
                 "GPS-TEST-034",
-                "GPS-TEST-035"
+                "GPS-TEST-035",
+                "GPS-TEST-036",
+                "GPS-TEST-037",
+                "GPS-TEST-038",
+                "GPS-TEST-039",
+                "GPS-TEST-040",
+                "GPS-TEST-043"
             ],
             "token_badge": {
                 "badge_id": "BADGE-S-003",

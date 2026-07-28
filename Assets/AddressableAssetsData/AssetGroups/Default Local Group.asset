@@ -30,6 +30,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 254cd27c79610954d8fc64096e13a39b
+    m_Address: artifacts/carlisle_first _aid
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2c2b442292c12794cb4e8cb534b67e6b
     m_Address: artifacts/thompson
     m_ReadOnly: 0
@@ -57,6 +62,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 455eaf60611cad74ea3e8903adf4a0cf
     m_Address: artifacts/automata
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 58467b6073015b747a0212a27af27644
+    m_Address: artifacts/type_90_steel_helmet
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -100,13 +110,28 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 953d0bc3e0427af4e89632ac4dfdcca1
+    m_Address: artifacts/morphine_syrette
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9772d713abe07d84d845220d76bd886c
     m_Address: artifacts/rice_ration_sack
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9d7e1f552a10b6645bbfbdf9982c04a9
+    m_Address: artifacts/type_92_heavy_machine_gun
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a40ae591d2c019547b5047bf7ee605d1
     m_Address: artifacts/web_pistol_belt
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a54636b70132ee249a881e3280f3d0f1
+    m_Address: artifacts/shelter_half_tent
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -125,6 +150,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: acfef5528c16771419c60b9a37a51571
+    m_Address: artifacts/binoculars
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b29496b0ed0edca4a94a4948a010b915
     m_Address: artifacts/type_96_light_machine_gun
     m_ReadOnly: 0
@@ -132,6 +162,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b97488cd95a91f34a9bbb10846cbba16
     m_Address: artifacts/bamboo_stretcher
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ba24f4dd76bcbfe4dac564c513d266a0
+    m_Address: artifacts/nambu_pistol
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -155,8 +190,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cc6ca562e46c8154fab10a2aee7176e8
+    m_Address: artifacts/dog_tags
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d40f003b84f942340bb1b994c9946920
     m_Address: artifacts/atabrine_medicine
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d5c0eadb0b7ca274e8ad19fa7e86e219
+    m_Address: artifacts/senninbari belt
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -187,6 +232,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f0e4a2ecc44bd60489cae0d9eccc73bd
     m_Address: artifacts/aidpouch
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f90106f040b13604497d434b9a507504
+    m_Address: artifacts/flashlight
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

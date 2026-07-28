@@ -131,6 +131,18 @@ public class OfflineGPSRouteManager : MonoBehaviour
 
         _routeCheckTimer = 0f;
 
+        // Sacred exclusion zone (e.g. the memorial building) — never spawn GPS artifacts
+        // there, and hide anything already presented if the player walks into it.
+        if (GeofenceGuard.Instance != null && GeofenceGuard.Instance.IsInsideExclusionZone)
+        {
+            if (!string.IsNullOrEmpty(ActiveArtifactId))
+            {
+                ArtifactSpawner.Instance?.Despawn(ActiveArtifactId);
+                DestroyPresentationAnchor(ActiveArtifactId);
+            }
+            return;
+        }
+
         if (!DependenciesReady())
             return;
 
@@ -276,7 +288,8 @@ public class OfflineGPSRouteManager : MonoBehaviour
                && GPSRouteStateStore.Instance != null
                && LocationServiceManager.Instance != null
                && ArtifactSpawner.Instance != null
-               && Camera.main != null;
+               && Camera.main != null
+               && (GeofenceGuard.Instance == null || GeofenceGuard.Instance.IsInsideGeofence);
     }
 
     private void ReloadRouteArtifacts()

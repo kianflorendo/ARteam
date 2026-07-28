@@ -12,58 +12,188 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 848409ee8ba454f42a5ddff137688a27, type: 3}
   m_Name: MtSamatImageLibrary
   m_EditorClassIdentifier: Unity.XR.ARSubsystems::UnityEngine.XR.ARSubsystems.XRReferenceImageLibrary
-  m_GuidLow: 5077979813324305950
-  m_GuidHigh: 17945682702330676374
+  m_GuidLow: 5483619495591974153
+  m_GuidHigh: 7652890939066440338
   m_DataStore:
     m_Storage: []
   m_Images:
   - m_SerializedGuid:
-      m_GuidLow: 5191551798499150049
-      m_GuidHigh: 11848565556084226724
+      m_GuidLow: 5238842208079364337
+      m_GuidHigh: 3589318082849858970
     m_SerializedTextureGuid:
-      m_GuidLow: 11868219236824959657
-      m_GuidHigh: 10447740638496237163
-    m_Size: {x: 0.15, y: 0.26666668}
+      m_GuidLow: 15637630414309940649
+      m_GuidHigh: 18355941257151709529
+    m_Size: {x: 0.5, y: 0.8888889}
     m_SpecifySize: 1
-    m_Name: test_image_1
+    m_Name: 21st_division_emblem_wall
     m_Texture: {fileID: 0}
   - m_SerializedGuid:
-      m_GuidLow: 4927835940350254101
-      m_GuidHigh: 7347043347971951515
+      m_GuidLow: 4703186369329148788
+      m_GuidHigh: 13542944005789748924
     m_SerializedTextureGuid:
-      m_GuidLow: 12395289622261430957
-      m_GuidHigh: 13021246632190505272
-    m_Size: {x: 0.15, y: 0.26666668}
+      m_GuidLow: 4711941567543349454
+      m_GuidHigh: 11042584562512282105
+    m_Size: {x: 0.5, y: 0.8888889}
     m_SpecifySize: 1
-    m_Name: test_image_2
+    m_Name: emblem_usaffe
     m_Texture: {fileID: 0}
   - m_SerializedGuid:
-      m_GuidLow: 5468630632084493618
-      m_GuidHigh: 10350735233340618395
+      m_GuidLow: 5023812287421731152
+      m_GuidHigh: 1778957170190017952
     m_SerializedTextureGuid:
-      m_GuidLow: 14637937254633151706
-      m_GuidHigh: 6308799092299277769
-    m_Size: {x: 0.15, y: 0.084375}
+      m_GuidLow: 14876750729738680988
+      m_GuidHigh: 11174289502613790570
+    m_Size: {x: 0.5, y: 0.8888889}
     m_SpecifySize: 1
-    m_Name: test_image_3
+    m_Name: emblem_11th_division
     m_Texture: {fileID: 0}
   - m_SerializedGuid:
-      m_GuidLow: 5089531414631423264
-      m_GuidHigh: 17347638114103904146
+      m_GuidLow: 5511938834138200266
+      m_GuidHigh: 3176133332796810370
     m_SerializedTextureGuid:
-      m_GuidLow: 7342097090758395038
-      m_GuidHigh: 16086257832854866456
-    m_Size: {x: 0.15, y: 0.26666668}
+      m_GuidLow: 9782975158071269596
+      m_GuidHigh: 39209608555931273
+    m_Size: {x: 0.5, y: 0.8888889}
     m_SpecifySize: 1
-    m_Name: test_image_4
+    m_Name: emblem_41st_division
     m_Texture: {fileID: 0}
   - m_SerializedGuid:
-      m_GuidLow: 5408327142969457554
-      m_GuidHigh: 14805986506646058115
+      m_GuidLow: 5591259809155801079
+      m_GuidHigh: 11713022752420584628
     m_SerializedTextureGuid:
-      m_GuidLow: 17137558477191101263
-      m_GuidHigh: 16493572410866831704
-    m_Size: {x: 0.15, y: 0.26666668}
+      m_GuidLow: 4157999652746635225
+      m_GuidHigh: 2608090643856954233
+    m_Size: {x: 0.5, y: 0.8888889}
     m_SpecifySize: 1
-    m_Name: test_image_5
+    m_Name: emblem_51st_division
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4808439527811552390
+      m_GuidHigh: 8568017997956371385
+    m_SerializedTextureGuid:
+      m_GuidLow: 1969442726616788911
+      m_GuidHigh: 4942009976895082411
+    m_Size: {x: 0.5, y: 0.8888889}
+    m_SpecifySize: 1
+    m_Name: emblem_71st_division
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5482460932398395707
+      m_GuidHigh: 14942550216007032251
+    m_SerializedTextureGuid:
+      m_GuidLow: 8576115571892792615
+      m_GuidHigh: 2726873776891721257
+    m_Size: {x: 0.5, y: 0.8888889}
+    m_SpecifySize: 1
+    m_Name: emblem_91st_division
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4883905815284560301
+      m_GuidHigh: 3229816100052737210
+    m_SerializedTextureGuid:
+      m_GuidLow: 1996489470295121961
+      m_GuidHigh: 10169520137761325275
+    m_Size: {x: 0.5, y: 0.8888889}
+    m_SpecifySize: 1
+    m_Name: emblem_air_corps
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5322751341700735644
+      m_GuidHigh: 3992076171715311746
+    m_SerializedTextureGuid:
+      m_GuidLow: 8314945131541704050
+      m_GuidHigh: 5280176767046201944
+    m_Size: {x: 0.5, y: 0.8888889}
+    m_SpecifySize: 1
+    m_Name: emblem_pn_offshore_patrol
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5268004766209697339
+      m_GuidHigh: 6967404983631938238
+    m_SerializedTextureGuid:
+      m_GuidLow: 9909202014237079564
+      m_GuidHigh: 1591209448467634682
+    m_Size: {x: 0.5, y: 0.8888889}
+    m_SpecifySize: 1
+    m_Name: emblem_1st_regular_division
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5606924532703946079
+      m_GuidHigh: 5695550198892582557
+    m_SerializedTextureGuid:
+      m_GuidLow: 12034994456304337181
+      m_GuidHigh: 4967884888984611579
+    m_Size: {x: 0.5, y: 0.8888889}
+    m_SpecifySize: 1
+    m_Name: emblem_2nd_regular_division
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4641021252978209263
+      m_GuidHigh: 13501470858395098544
+    m_SerializedTextureGuid:
+      m_GuidLow: 8432040178015313688
+      m_GuidHigh: 17612557009323121642
+    m_Size: {x: 0.5, y: 0.8888889}
+    m_SpecifySize: 1
+    m_Name: emblem_31st_division
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5424564869331256396
+      m_GuidHigh: 9359170356882697138
+    m_SerializedTextureGuid:
+      m_GuidLow: 2680826347276042403
+      m_GuidHigh: 14960344006860469963
+    m_Size: {x: 0.5, y: 0.8888889}
+    m_SpecifySize: 1
+    m_Name: emblem_81st_division
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5624745688442979965
+      m_GuidHigh: 15769185997282128546
+    m_SerializedTextureGuid:
+      m_GuidLow: 9409267856167952246
+      m_GuidHigh: 7081341311295514392
+    m_Size: {x: 0.5, y: 0.8888889}
+    m_SpecifySize: 1
+    m_Name: emblem_101st_division
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 4733087581191237112
+      m_GuidHigh: 12595086972357535934
+    m_SerializedTextureGuid:
+      m_GuidLow: 8607708946671300138
+      m_GuidHigh: 2586740044108354843
+    m_Size: {x: 0.5, y: 0.8888889}
+    m_SpecifySize: 1
+    m_Name: emblem_61st_division
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5636202255354763744
+      m_GuidHigh: 2124134931480963205
+    m_SerializedTextureGuid:
+      m_GuidLow: 11093676542649946238
+      m_GuidHigh: 6818122913891621083
+    m_Size: {x: 0.5, y: 0.8888889}
+    m_SpecifySize: 1
+    m_Name: emblem_hpa
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5087337334997664747
+      m_GuidHigh: 14803310002007013297
+    m_SerializedTextureGuid:
+      m_GuidLow: 14327268503961514882
+      m_GuidHigh: 10334559352531954664
+    m_Size: {x: 0.5, y: 0.8888889}
+    m_SpecifySize: 1
+    m_Name: emblem_philippine_department
+    m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5139602767450685855
+      m_GuidHigh: 16968167455445228718
+    m_SerializedTextureGuid:
+      m_GuidLow: 9868545513863582263
+      m_GuidHigh: 6937315464948647387
+    m_Size: {x: 0.5, y: 0.8888889}
+    m_SpecifySize: 1
+    m_Name: emblem_philippine_division
     m_Texture: {fileID: 0}
